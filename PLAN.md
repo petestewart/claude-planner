@@ -325,34 +325,34 @@
 
 ## Phase 13: Template System - UI
 
-**Status:** 🔄 In Progress
+**Status:** ✅ Complete
 
 **Spec Reference:** [specs/template-system.md](./specs/template-system.md) §6
 
 ### Tasks
-- [ ] **13.1** Create TemplateSelector component
-- [ ] **13.2** Display template cards in grid
-- [ ] **13.3** Create TemplatePreview component
-- [ ] **13.4** Integrate into new project flow
-- [ ] **13.5** Implement custom template storage path
-- [ ] **13.6** Create TemplateManager component
-- [ ] **13.7** Implement create from existing
-- [ ] **13.8** Implement template deletion
-- [ ] **13.9** Implement export to .zip
-- [ ] **13.10** Implement import from .zip
+- [x] **13.1** Create TemplateSelector component
+- [x] **13.2** Display template cards in grid
+- [x] **13.3** Create TemplatePreview component
+- [x] **13.4** Integrate into new project flow
+- [x] **13.5** Implement custom template storage path
+- [x] **13.6** Create TemplateManager component
+- [x] **13.7** Implement create from existing
+- [x] **13.8** Implement template deletion
+- [x] **13.9** Implement export to .zip
+- [x] **13.10** Implement import from .zip
 
 ### Verification
-- [ ] Template selector shows on new project
-- [ ] Preview shows template details
-- [ ] Custom templates can be created
-- [ ] Templates can be exported/imported
-- [ ] Templates can be deleted
+- [x] Template selector shows on new project
+- [x] Preview shows template details
+- [x] Custom templates can be created
+- [x] Templates can be exported/imported
+- [x] Templates can be deleted
 
 ---
 
 ## Phase 14: Git Integration
 
-**Status:** ⬜ Not Started
+**Status:** 🔄 In Progress
 
 **Spec Reference:** [specs/git-integration.md](./specs/git-integration.md)
 
@@ -582,8 +582,8 @@
 | 10 | Claude Service | ✅ Complete |
 | 11 | Context Management | ✅ Complete |
 | 12 | Template System - Core | ✅ Complete |
-| 13 | Template System - UI | 🔄 In Progress |
-| 14 | Git Integration | ⬜ Not Started |
+| 13 | Template System - UI | ✅ Complete |
+| 14 | Git Integration | 🔄 In Progress |
 | 15 | Git Auto-Commit | ⬜ Not Started |
 | 16 | Generation Modes | ⬜ Not Started |
 | 17 | File Operations | ⬜ Not Started |

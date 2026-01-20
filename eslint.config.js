@@ -40,6 +40,11 @@ export default [
         AbortSignal: 'readonly',
         React: 'readonly',
         navigator: 'readonly',
+        confirm: 'readonly',
+        Blob: 'readonly',
+        URL: 'readonly',
+        HTMLInputElement: 'readonly',
+        HTMLSelectElement: 'readonly',
         // Jest globals
         jest: 'readonly',
         describe: 'readonly',

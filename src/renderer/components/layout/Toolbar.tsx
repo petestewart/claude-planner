@@ -1,12 +1,14 @@
 import type { ReactElement } from 'react'
 import { useFileStore } from '../../stores/fileStore'
+import { useLayoutStore } from '../../stores/layoutStore'
 import styles from './Toolbar.module.css'
 
 export function Toolbar(): ReactElement {
   const setRootPath = useFileStore((state) => state.setRootPath)
+  const openNewProjectWizard = useLayoutStore((state) => state.openNewProjectWizard)
 
   const handleNewProject = (): void => {
-    // TODO: Implement new project flow
+    openNewProjectWizard()
   }
 
   const handleOpenProject = async (): Promise<void> => {

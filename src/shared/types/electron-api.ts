@@ -45,6 +45,10 @@ export interface ElectronAPI {
     list(): Promise<TemplateInfo[]>
     get(id: string): Promise<Template>
     save(template: Template): Promise<void>
+    delete(id: string): Promise<void>
+    getCustomPath(): Promise<string>
+    getDefaultPath(): Promise<string>
+    setCustomPath(path: string | null): Promise<void>
   }
 }
 

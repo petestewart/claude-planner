@@ -13,9 +13,30 @@ export class TemplateService {
   private loader: TemplateLoader
   private renderer: TemplateRenderer
 
-  constructor() {
-    this.loader = new TemplateLoader()
+  constructor(customTemplatesPath?: string) {
+    this.loader = new TemplateLoader(customTemplatesPath)
     this.renderer = new TemplateRenderer()
+  }
+
+  /**
+   * Get the custom templates path
+   */
+  getCustomTemplatesPath(): string {
+    return this.loader.getCustomTemplatesPath()
+  }
+
+  /**
+   * Get the default custom templates path
+   */
+  getDefaultCustomTemplatesPath(): string {
+    return this.loader.getDefaultCustomPath()
+  }
+
+  /**
+   * Set a custom templates path
+   */
+  setCustomTemplatesPath(path: string | null): void {
+    this.loader.setCustomPath(path)
   }
 
   /**

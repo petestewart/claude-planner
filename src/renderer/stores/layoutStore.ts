@@ -11,6 +11,8 @@ interface LayoutState {
   minRightPanelWidth: number
   /** Whether panels are collapsed */
   leftPanelCollapsed: boolean
+  /** Whether new project wizard is open */
+  newProjectWizardOpen: boolean
 }
 
 interface LayoutActions {
@@ -18,6 +20,8 @@ interface LayoutActions {
   setFileBrowserHeight: (height: number) => void
   toggleLeftPanel: () => void
   resetLayout: () => void
+  openNewProjectWizard: () => void
+  closeNewProjectWizard: () => void
 }
 
 type LayoutStore = LayoutState & LayoutActions
@@ -28,6 +32,7 @@ const DEFAULT_LAYOUT: LayoutState = {
   minLeftPanelWidth: 300,
   minRightPanelWidth: 400,
   leftPanelCollapsed: false,
+  newProjectWizardOpen: false,
 }
 
 export const useLayoutStore = create<LayoutStore>()(
@@ -47,6 +52,10 @@ export const useLayoutStore = create<LayoutStore>()(
         set((state) => ({ leftPanelCollapsed: !state.leftPanelCollapsed })),
 
       resetLayout: () => set(DEFAULT_LAYOUT),
+
+      openNewProjectWizard: () => set({ newProjectWizardOpen: true }),
+
+      closeNewProjectWizard: () => set({ newProjectWizardOpen: false }),
     }),
     { name: 'spec-planner-layout' }
   )

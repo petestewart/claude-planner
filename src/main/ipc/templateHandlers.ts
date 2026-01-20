@@ -46,4 +46,25 @@ export function registerTemplateHandlers(): void {
       return templateService.renderTemplate(templateId, variables)
     }
   )
+
+  /**
+   * Get the custom templates path
+   */
+  ipcMain.handle('template:getCustomPath', async () => {
+    return templateService.getCustomTemplatesPath()
+  })
+
+  /**
+   * Get the default custom templates path
+   */
+  ipcMain.handle('template:getDefaultPath', async () => {
+    return templateService.getDefaultCustomTemplatesPath()
+  })
+
+  /**
+   * Set a custom templates path
+   */
+  ipcMain.handle('template:setCustomPath', async (_event, path: string | null) => {
+    templateService.setCustomTemplatesPath(path)
+  })
 }

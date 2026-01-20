@@ -66,6 +66,10 @@ const api: ElectronAPI = {
     list: () => ipcRenderer.invoke('template:list'),
     get: (id: string) => ipcRenderer.invoke('template:get', id),
     save: (template) => ipcRenderer.invoke('template:save', template),
+    delete: (id: string) => ipcRenderer.invoke('template:delete', id),
+    getCustomPath: () => ipcRenderer.invoke('template:getCustomPath'),
+    getDefaultPath: () => ipcRenderer.invoke('template:getDefaultPath'),
+    setCustomPath: (path: string | null) => ipcRenderer.invoke('template:setCustomPath', path),
   },
 }
 

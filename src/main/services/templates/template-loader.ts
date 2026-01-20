@@ -9,15 +9,33 @@ import type { Template, TemplateInfo } from '../../../shared/types/template'
 export class TemplateLoader {
   private builtInPath: string
   private customPath: string
+  private defaultCustomPath: string
 
-  constructor() {
+  constructor(customPath?: string) {
     // Built-in templates are bundled with the app
     this.builtInPath = app.isPackaged
       ? path.join(process.resourcesPath, 'templates')
       : path.join(__dirname, '../../../../templates')
 
-    // Custom templates are stored in user data
-    this.customPath = path.join(app.getPath('userData'), 'templates')
+    // Default custom templates location in user data
+    this.defaultCustomPath = path.join(app.getPath('userData'), 'templates')
+
+    // Custom path can be overridden
+    this.customPath = customPath || this.defaultCustomPath
+  }
+
+  /**
+   * Set a custom templates path
+   */
+  setCustomPath(customPath: string | null): void {
+    this.customPath = customPath || this.defaultCustomPath
+  }
+
+  /**
+   * Get the default custom templates path
+   */
+  getDefaultCustomPath(): string {
+    return this.defaultCustomPath
   }
 
   /**
