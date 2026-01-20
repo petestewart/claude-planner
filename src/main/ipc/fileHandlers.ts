@@ -3,7 +3,10 @@ import {
   listDirectory,
   readFile,
   writeFile,
+  createFile,
   createDirectory,
+  renameFile,
+  deleteFile,
 } from '../services/files/fileService'
 import { fileWatcher } from '../services/files/fileWatcher'
 
@@ -18,6 +21,18 @@ export function registerFileHandlers(): void {
 
   ipcMain.handle('file:write', async (_event, filePath: string, content: string) => {
     return writeFile(filePath, content)
+  })
+
+  ipcMain.handle('file:create', async (_event, filePath: string, content?: string) => {
+    return createFile(filePath, content ?? '')
+  })
+
+  ipcMain.handle('file:rename', async (_event, oldPath: string, newPath: string) => {
+    return renameFile(oldPath, newPath)
+  })
+
+  ipcMain.handle('file:delete', async (_event, filePath: string) => {
+    return deleteFile(filePath)
   })
 
   ipcMain.handle('dir:create', async (_event, dirPath: string) => {

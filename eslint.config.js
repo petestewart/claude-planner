@@ -48,8 +48,11 @@ export default [
         CustomEvent: 'readonly',
         WindowEventMap: 'readonly',
         EventListener: 'readonly',
+        Node: 'readonly',
+        prompt: 'readonly',
         // Node.js globals
         Buffer: 'readonly',
+        NodeJS: 'readonly',
         // Jest globals
         jest: 'readonly',
         describe: 'readonly',

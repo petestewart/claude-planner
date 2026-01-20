@@ -433,34 +433,34 @@
 
 ## Phase 17: File Operations
 
-**Status:** 🔄 In Progress
+**Status:** ✅ Complete
 
 **Spec Reference:** [specs/file-browser.md](./specs/file-browser.md) §5
 
 ### Tasks
-- [ ] **17.1** Implement `file:create` IPC handler
-- [ ] **17.2** Implement `file:rename` IPC handler
-- [ ] **17.3** Implement `file:delete` IPC handler (move to trash)
-- [ ] **17.4** Create ContextMenu component
-- [ ] **17.5** Add context menu to file browser
-- [ ] **17.6** Implement inline rename editing
-- [ ] **17.7** Add delete confirmation dialog
-- [ ] **17.8** Add "New File" toolbar button
-- [ ] **17.9** Add "New Folder" toolbar button
-- [ ] **17.10** Test all file operations
+- [x] **17.1** Implement `file:create` IPC handler
+- [x] **17.2** Implement `file:rename` IPC handler
+- [x] **17.3** Implement `file:delete` IPC handler (move to trash)
+- [x] **17.4** Create ContextMenu component
+- [x] **17.5** Add context menu to file browser
+- [x] **17.6** Implement inline rename editing
+- [x] **17.7** Add delete confirmation dialog
+- [x] **17.8** Add "New File" toolbar button
+- [x] **17.9** Add "New Folder" toolbar button
+- [x] **17.10** Test all file operations
 
 ### Verification
-- [ ] Right-click shows context menu
-- [ ] New file creates empty file
-- [ ] Rename works inline
-- [ ] Delete moves to trash
-- [ ] Operations trigger tree refresh
+- [x] Right-click shows context menu
+- [x] New file creates empty file
+- [x] Rename works inline
+- [x] Delete moves to trash
+- [x] Operations trigger tree refresh
 
 ---
 
 ## Phase 18: Settings & Preferences
 
-**Status:** ⬜ Not Started
+**Status:** 🔄 In Progress
 
 **Spec Reference:** Various specs
 

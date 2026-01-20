@@ -7,6 +7,11 @@ const api: ElectronAPI = {
     read: (path: string) => ipcRenderer.invoke('file:read', path),
     write: (path: string, content: string) =>
       ipcRenderer.invoke('file:write', path, content),
+    create: (path: string, content?: string) =>
+      ipcRenderer.invoke('file:create', path, content),
+    rename: (oldPath: string, newPath: string) =>
+      ipcRenderer.invoke('file:rename', oldPath, newPath),
+    delete: (path: string) => ipcRenderer.invoke('file:delete', path),
     list: (path: string) => ipcRenderer.invoke('file:list', path),
     watchStart: (path: string) => ipcRenderer.invoke('file:watch:start', path),
     watchStop: (path: string) => ipcRenderer.invoke('file:watch:stop', path),

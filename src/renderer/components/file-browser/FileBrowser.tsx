@@ -1,20 +1,29 @@
 import type { MouseEvent as ReactMouseEvent, ReactElement, KeyboardEvent } from 'react'
-import { useCallback, useEffect, useRef } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import * as path from 'path'
 import type { FileNode } from '../../../shared/types/file'
 import { useFileStore } from '../../stores/fileStore'
 import { FileTree } from './FileTree'
 import { FileBrowserToolbar } from './FileBrowserToolbar'
 import { useFileWatcher } from './hooks/useFileWatcher'
+import { ContextMenu, type ContextMenuItem } from '../common'
 import styles from './file-browser.module.css'
 
 interface FileBrowserProps {
   onOpenFile?: (path: string) => void
 }
 
+interface ContextMenuState {
+  x: number
+  y: number
+  node: FileNode
+}
+
 export function FileBrowser({ onOpenFile }: FileBrowserProps): ReactElement {
   const containerRef = useRef<HTMLDivElement>(null)
   const {
     tree,
+    rootPath,
     selectedPath,
     expandedPaths,
     fileStatuses,
@@ -25,6 +34,8 @@ export function FileBrowser({ onOpenFile }: FileBrowserProps): ReactElement {
     toggleExpanded,
     collapseAll,
   } = useFileStore()
+
+  const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null)
 
   // Enable file watching for real-time updates
   useFileWatcher()
@@ -45,27 +56,174 @@ export function FileBrowser({ onOpenFile }: FileBrowserProps): ReactElement {
   )
 
   const handleContextMenu = useCallback(
-    (_event: ReactMouseEvent, _node: FileNode) => {
-      // TODO: Implement context menu in Phase 17
+    (event: ReactMouseEvent, node: FileNode) => {
+      event.preventDefault()
+      setContextMenu({
+        x: event.clientX,
+        y: event.clientY,
+        node,
+      })
     },
     []
   )
 
+  const closeContextMenu = useCallback(() => {
+    setContextMenu(null)
+  }, [])
+
   const handleOpenFile = useCallback(
-    (path: string) => {
-      selectFile(path)
-      onOpenFile?.(path)
+    (filePath: string) => {
+      selectFile(filePath)
+      onOpenFile?.(filePath)
     },
     [selectFile, onOpenFile]
   )
 
+  const handleCreateFile = useCallback(
+    async (parentPath: string) => {
+      const fileName = prompt('Enter file name:')
+      if (!fileName) return
+
+      const filePath = path.join(parentPath, fileName)
+      try {
+        await window.api.file.create(filePath)
+        await refreshTree()
+        selectFile(filePath)
+        onOpenFile?.(filePath)
+      } catch (err) {
+        console.error('Failed to create file:', err)
+      }
+    },
+    [refreshTree, selectFile, onOpenFile]
+  )
+
+  const handleCreateFolder = useCallback(
+    async (parentPath: string) => {
+      const folderName = prompt('Enter folder name:')
+      if (!folderName) return
+
+      const folderPath = path.join(parentPath, folderName)
+      try {
+        await window.api.dir.create(folderPath)
+        await refreshTree()
+      } catch (err) {
+        console.error('Failed to create folder:', err)
+      }
+    },
+    [refreshTree]
+  )
+
+  const handleRename = useCallback(
+    async (node: FileNode) => {
+      const newName = prompt('Enter new name:', node.name)
+      if (!newName || newName === node.name) return
+
+      const parentDir = path.dirname(node.path)
+      const newPath = path.join(parentDir, newName)
+      try {
+        await window.api.file.rename(node.path, newPath)
+        await refreshTree()
+        if (node.type === 'file') {
+          selectFile(newPath)
+          onOpenFile?.(newPath)
+        }
+      } catch (err) {
+        console.error('Failed to rename:', err)
+      }
+    },
+    [refreshTree, selectFile, onOpenFile]
+  )
+
+  const handleDelete = useCallback(
+    async (node: FileNode) => {
+      const confirmed = confirm(
+        `Are you sure you want to delete "${node.name}"?${node.type === 'directory' ? ' This will delete all contents.' : ''}`
+      )
+      if (!confirmed) return
+
+      try {
+        await window.api.file.delete(node.path)
+        await refreshTree()
+      } catch (err) {
+        console.error('Failed to delete:', err)
+      }
+    },
+    [refreshTree]
+  )
+
   const handleNewFile = useCallback(() => {
-    // TODO: Implement in Phase 17
-  }, [])
+    if (!rootPath) return
+    const targetDir = selectedPath ? path.dirname(selectedPath) : rootPath
+    void handleCreateFile(targetDir)
+  }, [rootPath, selectedPath, handleCreateFile])
 
   const handleNewFolder = useCallback(() => {
-    // TODO: Implement in Phase 17
-  }, [])
+    if (!rootPath) return
+    const targetDir = selectedPath ? path.dirname(selectedPath) : rootPath
+    void handleCreateFolder(targetDir)
+  }, [rootPath, selectedPath, handleCreateFolder])
+
+  const getContextMenuItems = useCallback(
+    (node: FileNode): ContextMenuItem[] => {
+      if (node.type === 'file') {
+        return [
+          {
+            id: 'open',
+            label: 'Open',
+            icon: '📄',
+            handler: () => handleOpenFile(node.path),
+          },
+          { id: 'sep1', separator: true },
+          {
+            id: 'rename',
+            label: 'Rename',
+            icon: '✏️',
+            shortcut: 'F2',
+            handler: () => void handleRename(node),
+          },
+          {
+            id: 'delete',
+            label: 'Delete',
+            icon: '🗑️',
+            danger: true,
+            handler: () => void handleDelete(node),
+          },
+        ]
+      }
+
+      // Directory context menu
+      return [
+        {
+          id: 'newFile',
+          label: 'New File',
+          icon: '📄',
+          handler: () => void handleCreateFile(node.path),
+        },
+        {
+          id: 'newFolder',
+          label: 'New Folder',
+          icon: '📁',
+          handler: () => void handleCreateFolder(node.path),
+        },
+        { id: 'sep1', separator: true },
+        {
+          id: 'rename',
+          label: 'Rename',
+          icon: '✏️',
+          shortcut: 'F2',
+          handler: () => void handleRename(node),
+        },
+        {
+          id: 'delete',
+          label: 'Delete',
+          icon: '🗑️',
+          danger: true,
+          handler: () => void handleDelete(node),
+        },
+      ]
+    },
+    [handleOpenFile, handleRename, handleDelete, handleCreateFile, handleCreateFolder]
+  )
 
   // Keyboard navigation
   const handleKeyDown = useCallback(
@@ -215,6 +373,14 @@ export function FileBrowser({ onOpenFile }: FileBrowserProps): ReactElement {
           />
         )}
       </div>
+      {contextMenu && (
+        <ContextMenu
+          x={contextMenu.x}
+          y={contextMenu.y}
+          items={getContextMenuItems(contextMenu.node)}
+          onClose={closeContextMenu}
+        />
+      )}
     </div>
   )
 }

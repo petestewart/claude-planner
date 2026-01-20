@@ -17,6 +17,9 @@ export interface ElectronAPI {
   file: {
     read(path: string): Promise<string>
     write(path: string, content: string): Promise<void>
+    create(path: string, content?: string): Promise<void>
+    rename(oldPath: string, newPath: string): Promise<void>
+    delete(path: string): Promise<void>
     list(path: string): Promise<FileNode>
     watchStart(path: string): Promise<void>
     watchStop(path: string): Promise<void>
