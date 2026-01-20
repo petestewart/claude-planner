@@ -1,10 +1,11 @@
-import { dialog, ipcMain } from 'electron'
+import { dialog, ipcMain, BrowserWindow } from 'electron'
 import {
   listDirectory,
   readFile,
   writeFile,
   createDirectory,
 } from '../services/files/fileService'
+import { fileWatcher } from '../services/files/fileWatcher'
 
 export function registerFileHandlers(): void {
   ipcMain.handle('file:list', async (_event, dirPath: string) => {
@@ -30,12 +31,16 @@ export function registerFileHandlers(): void {
     return result.canceled ? null : result.filePaths[0] ?? null
   })
 
-  // Placeholder handlers for watch functionality (Phase 4)
-  ipcMain.handle('file:watch:start', async (_event, _dirPath: string) => {
-    // TODO: Implement file watching in Phase 4
+  // File watching handlers
+  ipcMain.handle('file:watch:start', async (event, dirPath: string) => {
+    const window = BrowserWindow.fromWebContents(event.sender)
+    if (window) {
+      fileWatcher.setMainWindow(window)
+    }
+    return fileWatcher.startWatching(dirPath)
   })
 
-  ipcMain.handle('file:watch:stop', async (_event, _dirPath: string) => {
-    // TODO: Implement file watching in Phase 4
+  ipcMain.handle('file:watch:stop', async (_event, dirPath: string) => {
+    return fileWatcher.stopWatching(dirPath)
   })
 }

@@ -4,6 +4,7 @@ import type { FileNode } from '../../../shared/types/file'
 import { useFileStore } from '../../stores/fileStore'
 import { FileTree } from './FileTree'
 import { FileBrowserToolbar } from './FileBrowserToolbar'
+import { useFileWatcher } from './hooks/useFileWatcher'
 import styles from './file-browser.module.css'
 
 interface FileBrowserProps {
@@ -24,6 +25,9 @@ export function FileBrowser({ onOpenFile }: FileBrowserProps): ReactElement {
     toggleExpanded,
     collapseAll,
   } = useFileStore()
+
+  // Enable file watching for real-time updates
+  useFileWatcher()
 
   const handleSelect = useCallback(
     (path: string) => {

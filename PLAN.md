@@ -83,33 +83,33 @@
 
 ## Phase 4: File Watching
 
-**Status:** 🔄 In Progress
+**Status:** ✅ Complete
 
 **Spec Reference:** [specs/file-browser.md](./specs/file-browser.md) §7
 
 ### Tasks
-- [ ] **4.1** Set up chokidar in main process
-- [ ] **4.2** Implement `file:watch:start` IPC handler
-- [ ] **4.3** Implement `file:watch:stop` IPC handler
-- [ ] **4.4** Create useFileWatcher hook in renderer
-- [ ] **4.5** Handle 'add' events (new file indicator)
-- [ ] **4.6** Handle 'change' events (modified indicator)
-- [ ] **4.7** Handle 'unlink' events (remove from tree)
-- [ ] **4.8** Add status indicator CSS (green dot, orange dot)
-- [ ] **4.9** Auto-clear status indicators after timeout
-- [ ] **4.10** Test with external file modifications
+- [x] **4.1** Set up chokidar in main process
+- [x] **4.2** Implement `file:watch:start` IPC handler
+- [x] **4.3** Implement `file:watch:stop` IPC handler
+- [x] **4.4** Create useFileWatcher hook in renderer
+- [x] **4.5** Handle 'add' events (new file indicator)
+- [x] **4.6** Handle 'change' events (modified indicator)
+- [x] **4.7** Handle 'unlink' events (remove from tree)
+- [x] **4.8** Add status indicator CSS (green dot, orange dot)
+- [x] **4.9** Auto-clear status indicators after timeout
+- [x] **4.10** Test with external file modifications
 
 ### Verification
-- [ ] Creating file externally adds to tree
-- [ ] Modifying file shows indicator
-- [ ] Deleting file removes from tree
-- [ ] Indicators clear after 3 seconds
+- [x] Creating file externally adds to tree
+- [x] Modifying file shows indicator
+- [x] Deleting file removes from tree
+- [x] Indicators clear after 3 seconds
 
 ---
 
 ## Phase 5: Markdown Editor - Basic
 
-**Status:** ⬜ Not Started
+**Status:** 🔄 In Progress
 
 **Spec Reference:** [specs/markdown-editor.md](./specs/markdown-editor.md)
 
@@ -573,8 +573,8 @@
 | 1 | Project Setup | ✅ Complete |
 | 2 | Core Layout | ✅ Complete |
 | 3 | File Browser | ✅ Complete |
-| 4 | File Watching | 🔄 In Progress |
-| 5 | Markdown Editor - Basic | ⬜ Not Started |
+| 4 | File Watching | ✅ Complete |
+| 5 | Markdown Editor - Basic | 🔄 In Progress |
 | 6 | Markdown Editor - WYSIWYG | ⬜ Not Started |
 | 7 | Editor File Sync | ⬜ Not Started |
 | 8 | Chat Interface - Display | ⬜ Not Started |
