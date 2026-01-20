@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { useLayoutStore } from '../stores/layoutStore'
+import { useEditorStore } from '../stores/editorStore'
 
 interface KeyboardShortcut {
   key: string
@@ -32,6 +33,7 @@ function matchesShortcut(
 
 export function useKeyboardShortcuts(): void {
   const toggleLeftPanel = useLayoutStore((state) => state.toggleLeftPanel)
+  const saveActiveFile = useEditorStore((state) => state.saveActiveFile)
 
   useEffect(() => {
     const shortcuts: KeyboardShortcut[] = [
@@ -40,19 +42,14 @@ export function useKeyboardShortcuts(): void {
         modifiers: { meta: true, ctrl: true },
         action: toggleLeftPanel,
       },
+      {
+        key: 's',
+        modifiers: { meta: true, ctrl: true },
+        action: () => void saveActiveFile(),
+      },
     ]
 
     const handleKeyDown = (event: KeyboardEvent): void => {
-      // Ignore shortcuts when typing in input fields
-      const target = event.target as HTMLElement
-      if (
-        target.tagName === 'INPUT' ||
-        target.tagName === 'TEXTAREA' ||
-        target.isContentEditable
-      ) {
-        return
-      }
-
       for (const shortcut of shortcuts) {
         if (matchesShortcut(event, shortcut)) {
           event.preventDefault()
@@ -64,5 +61,5 @@ export function useKeyboardShortcuts(): void {
 
     document.addEventListener('keydown', handleKeyDown)
     return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [toggleLeftPanel])
+  }, [toggleLeftPanel, saveActiveFile])
 }

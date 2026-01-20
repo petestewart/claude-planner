@@ -109,34 +109,34 @@
 
 ## Phase 5: Markdown Editor - Basic
 
-**Status:** 🔄 In Progress
+**Status:** ✅ Complete
 
 **Spec Reference:** [specs/markdown-editor.md](./specs/markdown-editor.md)
 
 ### Tasks
-- [ ] **5.1** Create MarkdownEditor container component
-- [ ] **5.2** Implement TabBar for open files
-- [ ] **5.3** Set up CodeMirror 6 with markdown mode
-- [ ] **5.4** Add line numbers and basic styling
-- [ ] **5.5** Create EditorStore with Zustand
-- [ ] **5.6** Implement `file:read` IPC handler
-- [ ] **5.7** Connect file selection to editor opening
-- [ ] **5.8** Implement `file:write` IPC handler
-- [ ] **5.9** Add dirty state tracking
-- [ ] **5.10** Implement `Cmd+S` to save
+- [x] **5.1** Create MarkdownEditor container component
+- [x] **5.2** Implement TabBar for open files
+- [x] **5.3** Set up CodeMirror 6 with markdown mode
+- [x] **5.4** Add line numbers and basic styling
+- [x] **5.5** Create EditorStore with Zustand
+- [x] **5.6** Implement `file:read` IPC handler
+- [x] **5.7** Connect file selection to editor opening
+- [x] **5.8** Implement `file:write` IPC handler
+- [x] **5.9** Add dirty state tracking
+- [x] **5.10** Implement `Cmd+S` to save
 
 ### Verification
-- [ ] Clicking file in browser opens in editor
-- [ ] Markdown syntax highlighting works
-- [ ] Edits mark file as dirty (tab indicator)
-- [ ] `Cmd+S` saves file to disk
-- [ ] Multiple files can be open in tabs
+- [x] Clicking file in browser opens in editor
+- [x] Markdown syntax highlighting works
+- [x] Edits mark file as dirty (tab indicator)
+- [x] `Cmd+S` saves file to disk
+- [x] Multiple files can be open in tabs
 
 ---
 
 ## Phase 6: Markdown Editor - WYSIWYG
 
-**Status:** ⬜ Not Started
+**Status:** 🔄 In Progress
 
 **Spec Reference:** [specs/markdown-editor.md](./specs/markdown-editor.md) §4.4
 
@@ -574,8 +574,8 @@
 | 2 | Core Layout | ✅ Complete |
 | 3 | File Browser | ✅ Complete |
 | 4 | File Watching | ✅ Complete |
-| 5 | Markdown Editor - Basic | 🔄 In Progress |
-| 6 | Markdown Editor - WYSIWYG | ⬜ Not Started |
+| 5 | Markdown Editor - Basic | ✅ Complete |
+| 6 | Markdown Editor - WYSIWYG | 🔄 In Progress |
 | 7 | Editor File Sync | ⬜ Not Started |
 | 8 | Chat Interface - Display | ⬜ Not Started |
 | 9 | Chat Interface - Input | ⬜ Not Started |

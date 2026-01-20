@@ -1,0 +1,111 @@
+.editorContainer {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: var(--color-bg);
+}
+
+.tabBar {
+  display: flex;
+  align-items: center;
+  min-height: 36px;
+  background-color: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border);
+  overflow-x: auto;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  height: 36px;
+  font-size: 13px;
+  cursor: pointer;
+  border-right: 1px solid var(--color-border);
+  color: var(--color-text-secondary);
+  background-color: transparent;
+  transition: background-color var(--transition-fast);
+}
+
+.tab:hover {
+  background-color: var(--color-bg-tertiary);
+}
+
+.tab--active {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  border-bottom: 2px solid var(--color-accent);
+}
+
+.tabName {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tabDirtyIndicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-text-secondary);
+  margin-left: 8px;
+  flex-shrink: 0;
+}
+
+.tab--active .tabDirtyIndicator {
+  background-color: var(--color-warning);
+}
+
+.tabCloseButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  margin-left: 4px;
+  padding: 0;
+  font-size: 16px;
+  color: var(--color-text-secondary);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity var(--transition-fast), background-color var(--transition-fast);
+}
+
+.tab:hover .tabCloseButton {
+  opacity: 1;
+}
+
+.tabCloseButton:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--color-text);
+}
+
+.editorContent {
+  flex: 1;
+  overflow: hidden;
+}
+
+.codeEditor {
+  height: 100%;
+  overflow: auto;
+}
+
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: var(--spacing-sm);
+  color: var(--color-text-secondary);
+  font-size: 14px;
+}
+
+.hint {
+  font-size: 12px;
+  opacity: 0.7;
+}

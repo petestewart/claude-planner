@@ -1,7 +1,9 @@
 import type { ReactElement } from 'react'
 import { useCallback } from 'react'
 import { useLayoutStore } from '../../stores/layoutStore'
+import { useEditorStore } from '../../stores/editorStore'
 import { FileBrowser } from '../file-browser'
+import { MarkdownEditor } from '../editor'
 import { HorizontalDivider } from './HorizontalDivider'
 import styles from './LeftPanel.module.css'
 
@@ -11,6 +13,7 @@ interface LeftPanelProps {
 
 export function LeftPanel({ width }: LeftPanelProps): ReactElement {
   const { fileBrowserHeight, setFileBrowserHeight } = useLayoutStore()
+  const openFile = useEditorStore((state) => state.openFile)
 
   const handleDividerDrag = (deltaY: number): void => {
     // Convert pixel delta to percentage
@@ -23,10 +26,17 @@ export function LeftPanel({ width }: LeftPanelProps): ReactElement {
     }
   }
 
-  const handleOpenFile = useCallback((path: string) => {
-    // TODO: Open file in editor (Phase 5)
-    console.warn('Open file:', path)
-  }, [])
+  const handleOpenFile = useCallback(
+    (path: string) => {
+      // Only open markdown/text files in editor
+      const ext = path.split('.').pop()?.toLowerCase()
+      const textExtensions = ['md', 'txt', 'json', 'ts', 'tsx', 'js', 'jsx', 'css', 'html', 'yml', 'yaml']
+      if (ext && textExtensions.includes(ext)) {
+        void openFile(path)
+      }
+    },
+    [openFile]
+  )
 
   return (
     <aside className={styles.leftPanel} style={{ width }}>
@@ -41,10 +51,7 @@ export function LeftPanel({ width }: LeftPanelProps): ReactElement {
         className={styles.editorPanel}
         style={{ height: `${100 - fileBrowserHeight}%` }}
       >
-        <div className={styles.placeholder}>
-          <span>📝 Editor</span>
-          <span className={styles.hint}>Select a file to edit</span>
-        </div>
+        <MarkdownEditor />
       </div>
     </aside>
   )
