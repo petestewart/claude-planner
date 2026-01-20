@@ -40,6 +40,19 @@ export default [
         AbortSignal: 'readonly',
         React: 'readonly',
         navigator: 'readonly',
+        confirm: 'readonly',
+        Blob: 'readonly',
+        URL: 'readonly',
+        HTMLInputElement: 'readonly',
+        HTMLSelectElement: 'readonly',
+        CustomEvent: 'readonly',
+        WindowEventMap: 'readonly',
+        EventListener: 'readonly',
+        Node: 'readonly',
+        prompt: 'readonly',
+        // Node.js globals
+        Buffer: 'readonly',
+        NodeJS: 'readonly',
         // Jest globals
         jest: 'readonly',
         describe: 'readonly',
@@ -50,6 +63,7 @@ export default [
         afterEach: 'readonly',
         beforeAll: 'readonly',
         afterAll: 'readonly',
+        fail: 'readonly',
       },
     },
     plugins: {

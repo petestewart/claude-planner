@@ -1,0 +1,80 @@
+/* Context Menu Container */
+.contextMenu {
+  position: fixed;
+  z-index: 1000;
+  min-width: 160px;
+  max-width: 280px;
+  padding: 4px 0;
+  background-color: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-elevated);
+}
+
+/* Separator */
+.separator {
+  height: 1px;
+  margin: 4px 8px;
+  background-color: var(--color-border);
+}
+
+/* Menu Item */
+.menuItem {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 6px 12px;
+  font-size: 13px;
+  text-align: left;
+  color: var(--color-text);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.menuItem:hover:not(:disabled) {
+  background-color: var(--color-bg-secondary);
+}
+
+.menuItem:focus {
+  outline: none;
+  background-color: var(--color-bg-secondary);
+}
+
+/* Disabled state */
+.menuItemDisabled {
+  color: var(--color-text-secondary);
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Danger (destructive) state */
+.menuItemDanger {
+  color: var(--color-error);
+}
+
+.menuItemDanger:hover:not(:disabled) {
+  background-color: rgba(239, 68, 68, 0.1);
+}
+
+/* Menu Item Icon */
+.menuItemIcon {
+  width: 20px;
+  margin-right: 8px;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+/* Menu Item Label */
+.menuItemLabel {
+  flex: 1;
+}
+
+/* Menu Item Shortcut */
+.menuItemShortcut {
+  margin-left: 16px;
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  flex-shrink: 0;
+}

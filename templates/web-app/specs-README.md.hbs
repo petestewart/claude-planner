@@ -1,0 +1,35 @@
+# {{projectName}} Specifications
+
+Design documentation for {{projectName}} - a modern web application built with {{framework}}.
+
+{{projectDescription}}
+
+## Specification Index
+
+| Spec | Code | Purpose |
+|------|------|---------|
+| [architecture.md](./architecture.md) | `src/` | System design and module boundaries |
+| [ui-design.md](./ui-design.md) | `src/components/` | UI components and layout |
+{{#if hasBackend}}
+| [api-integration.md](./api-integration.md) | `src/services/` | Backend API integration |
+{{/if}}
+{{#if hasAuth}}
+| [authentication.md](./authentication.md) | `src/auth/` | Authentication and authorization |
+{{/if}}
+
+## Design Principles
+
+### Component Architecture
+
+- **Atomic Design:** Build from atoms to templates
+- **Separation of Concerns:** UI, state, and data fetching separated
+- **Reusability:** Design components for reuse
+- **Accessibility:** Follow WCAG guidelines
+
+### State Management
+
+- Local state for component-specific data
+- Global state for shared application data
+- Server state for API-fetched data (with caching)
+
+**Implementation Plan:** [PLAN.md](../PLAN.md) — Progress tracking with phase status

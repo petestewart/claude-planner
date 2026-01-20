@@ -1,0 +1,107 @@
+{
+  "id": "standard",
+  "name": "Standard",
+  "description": "General-purpose template for any project type",
+  "category": "other",
+  "version": "1.0.0",
+  "isBuiltIn": true,
+  "createdAt": "2025-01-20T00:00:00.000Z",
+  "updatedAt": "2025-01-20T00:00:00.000Z",
+  "files": [
+    {
+      "outputPath": "CLAUDE.md",
+      "template": "CLAUDE.md.hbs",
+      "description": "Agent guidelines and project overview",
+      "required": true
+    },
+    {
+      "outputPath": "specs/README.md",
+      "template": "specs-README.md.hbs",
+      "description": "Specification index",
+      "required": true
+    },
+    {
+      "outputPath": "PLAN.md",
+      "template": "PLAN.md.hbs",
+      "description": "Implementation plan and progress tracker",
+      "required": true
+    }
+  ],
+  "variables": [
+    {
+      "name": "projectName",
+      "label": "Project Name",
+      "type": "string",
+      "required": true,
+      "description": "The name of your project"
+    },
+    {
+      "name": "projectDescription",
+      "label": "Project Description",
+      "type": "multiline",
+      "required": true,
+      "description": "A brief description of what your project does"
+    },
+    {
+      "name": "targetLanguage",
+      "label": "Primary Language",
+      "type": "select",
+      "options": [
+        { "value": "typescript", "label": "TypeScript" },
+        { "value": "javascript", "label": "JavaScript" },
+        { "value": "python", "label": "Python" },
+        { "value": "rust", "label": "Rust" },
+        { "value": "go", "label": "Go" },
+        { "value": "java", "label": "Java" },
+        { "value": "other", "label": "Other" }
+      ],
+      "required": true,
+      "default": "typescript"
+    }
+  ],
+  "questionFlow": [
+    {
+      "id": "overview",
+      "title": "Project Overview",
+      "questions": [
+        {
+          "id": "problem",
+          "text": "What problem does this application solve?",
+          "type": "multiline",
+          "variable": "problemStatement",
+          "required": true,
+          "followUpPrompt": "Can you tell me more about the specific pain points users face?"
+        },
+        {
+          "id": "users",
+          "text": "Who are the target users?",
+          "type": "multiline",
+          "variable": "targetUsers",
+          "required": true
+        }
+      ]
+    },
+    {
+      "id": "features",
+      "title": "Core Features",
+      "questions": [
+        {
+          "id": "coreFeatures",
+          "text": "What are the must-have features?",
+          "type": "multiline",
+          "variable": "coreFeatures",
+          "required": true
+        },
+        {
+          "id": "niceToHave",
+          "text": "What features would be nice to have but aren't essential?",
+          "type": "multiline",
+          "variable": "niceToHaveFeatures",
+          "required": false
+        }
+      ]
+    }
+  ],
+  "defaultGenerationMode": "incremental",
+  "tags": ["general", "starter"]
+}

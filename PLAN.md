@@ -271,196 +271,196 @@
 
 ## Phase 11: Context Management
 
-**Status:** 🔄 In Progress
+**Status:** ✅ Complete
 
 **Spec Reference:** [specs/claude-integration.md](./specs/claude-integration.md) §4.4
 
 ### Tasks
-- [ ] **11.1** Create ProjectContext types
-- [ ] **11.2** Implement ContextBuilder
-- [ ] **11.3** Create ProjectStore with Zustand
-- [ ] **11.4** Track requirements from conversation
-- [ ] **11.5** Track decisions from conversation
-- [ ] **11.6** Include existing specs in context
-- [ ] **11.7** Add generation mode to context
-- [ ] **11.8** Test context size limits
-- [ ] **11.9** Implement context summarization (if needed)
-- [ ] **11.10** Persist project state to disk
+- [x] **11.1** Create ProjectContext types
+- [x] **11.2** Implement ContextBuilder
+- [x] **11.3** Create ProjectStore with Zustand
+- [x] **11.4** Track requirements from conversation
+- [x] **11.5** Track decisions from conversation
+- [x] **11.6** Include existing specs in context
+- [x] **11.7** Add generation mode to context
+- [x] **11.8** Test context size limits
+- [x] **11.9** Implement context summarization (if needed)
+- [x] **11.10** Persist project state to disk
 
 ### Verification
-- [ ] Context includes project info
-- [ ] Requirements tracked across messages
-- [ ] Decisions persist in context
-- [ ] Spec files summarized in context
-- [ ] Project state saves/loads
+- [x] Context includes project info
+- [x] Requirements tracked across messages
+- [x] Decisions persist in context
+- [x] Spec files summarized in context
+- [x] Project state saves/loads
 
 ---
 
 ## Phase 12: Template System - Core
 
-**Status:** ⬜ Not Started
+**Status:** ✅ Complete
 
 **Spec Reference:** [specs/template-system.md](./specs/template-system.md)
 
 ### Tasks
-- [ ] **12.1** Create Template types and interfaces
-- [ ] **12.2** Implement TemplateLoader for built-in templates
-- [ ] **12.3** Bundle standard template with app
-- [ ] **12.4** Set up Handlebars for rendering
-- [ ] **12.5** Implement TemplateRenderer
-- [ ] **12.6** Register custom Handlebars helpers
-- [ ] **12.7** Create TemplateService
-- [ ] **12.8** Register IPC handlers
-- [ ] **12.9** Test template rendering
-- [ ] **12.10** Create additional built-in templates
+- [x] **12.1** Create Template types and interfaces
+- [x] **12.2** Implement TemplateLoader for built-in templates
+- [x] **12.3** Bundle standard template with app
+- [x] **12.4** Set up Handlebars for rendering
+- [x] **12.5** Implement TemplateRenderer
+- [x] **12.6** Register custom Handlebars helpers
+- [x] **12.7** Create TemplateService
+- [x] **12.8** Register IPC handlers
+- [x] **12.9** Test template rendering
+- [x] **12.10** Create additional built-in templates
 
 ### Verification
-- [ ] Standard template loads
-- [ ] Template renders with variables
-- [ ] Multiple templates available
-- [ ] Handlebars helpers work
-- [ ] IPC returns template data
+- [x] Standard template loads
+- [x] Template renders with variables
+- [x] Multiple templates available
+- [x] Handlebars helpers work
+- [x] IPC returns template data
 
 ---
 
 ## Phase 13: Template System - UI
 
-**Status:** ⬜ Not Started
+**Status:** ✅ Complete
 
 **Spec Reference:** [specs/template-system.md](./specs/template-system.md) §6
 
 ### Tasks
-- [ ] **13.1** Create TemplateSelector component
-- [ ] **13.2** Display template cards in grid
-- [ ] **13.3** Create TemplatePreview component
-- [ ] **13.4** Integrate into new project flow
-- [ ] **13.5** Implement custom template storage path
-- [ ] **13.6** Create TemplateManager component
-- [ ] **13.7** Implement create from existing
-- [ ] **13.8** Implement template deletion
-- [ ] **13.9** Implement export to .zip
-- [ ] **13.10** Implement import from .zip
+- [x] **13.1** Create TemplateSelector component
+- [x] **13.2** Display template cards in grid
+- [x] **13.3** Create TemplatePreview component
+- [x] **13.4** Integrate into new project flow
+- [x] **13.5** Implement custom template storage path
+- [x] **13.6** Create TemplateManager component
+- [x] **13.7** Implement create from existing
+- [x] **13.8** Implement template deletion
+- [x] **13.9** Implement export to .zip
+- [x] **13.10** Implement import from .zip
 
 ### Verification
-- [ ] Template selector shows on new project
-- [ ] Preview shows template details
-- [ ] Custom templates can be created
-- [ ] Templates can be exported/imported
-- [ ] Templates can be deleted
+- [x] Template selector shows on new project
+- [x] Preview shows template details
+- [x] Custom templates can be created
+- [x] Templates can be exported/imported
+- [x] Templates can be deleted
 
 ---
 
 ## Phase 14: Git Integration
 
-**Status:** ⬜ Not Started
+**Status:** ✅ Complete
 
 **Spec Reference:** [specs/git-integration.md](./specs/git-integration.md)
 
 ### Tasks
-- [ ] **14.1** Create GitService types and interfaces
-- [ ] **14.2** Implement GitExecutor
-- [ ] **14.3** Implement init, isRepo
-- [ ] **14.4** Implement getStatus
-- [ ] **14.5** Implement stage, unstage
-- [ ] **14.6** Implement commit
-- [ ] **14.7** Implement DiffParser
-- [ ] **14.8** Register IPC handlers
-- [ ] **14.9** Create GitStatusIndicator component
-- [ ] **14.10** Add to status bar
+- [x] **14.1** Create GitService types and interfaces
+- [x] **14.2** Implement GitExecutor
+- [x] **14.3** Implement init, isRepo
+- [x] **14.4** Implement getStatus
+- [x] **14.5** Implement stage, unstage
+- [x] **14.6** Implement commit
+- [x] **14.7** Implement DiffParser
+- [x] **14.8** Register IPC handlers
+- [x] **14.9** Create GitStatusIndicator component
+- [x] **14.10** Add to status bar
 
 ### Verification
-- [ ] Git repo can be initialized
-- [ ] Status shows changes
-- [ ] Commits can be created
-- [ ] Diffs can be viewed
-- [ ] Status indicator updates
+- [x] Git repo can be initialized
+- [x] Status shows changes
+- [x] Commits can be created
+- [x] Diffs can be viewed
+- [x] Status indicator updates
 
 ---
 
 ## Phase 15: Git Auto-Commit
 
-**Status:** ⬜ Not Started
+**Status:** ✅ Complete
 
 **Spec Reference:** [specs/git-integration.md](./specs/git-integration.md) §4.1
 
 ### Tasks
-- [ ] **15.1** Implement auto-commit in GitService
-- [ ] **15.2** Add debounce logic
-- [ ] **15.3** Generate commit messages
-- [ ] **15.4** Connect to file watcher
-- [ ] **15.5** Add auto-commit toggle to settings
-- [ ] **15.6** Add auto-commit indicator to UI
-- [ ] **15.7** Persist auto-commit setting
-- [ ] **15.8** Test with rapid file changes
-- [ ] **15.9** Handle commit failures gracefully
-- [ ] **15.10** Log auto-commit activity
+- [x] **15.1** Implement auto-commit in GitService
+- [x] **15.2** Add debounce logic
+- [x] **15.3** Generate commit messages
+- [x] **15.4** Connect to file watcher
+- [x] **15.5** Add auto-commit toggle to settings
+- [x] **15.6** Add auto-commit indicator to UI
+- [x] **15.7** Persist auto-commit setting
+- [x] **15.8** Test with rapid file changes
+- [x] **15.9** Handle commit failures gracefully
+- [x] **15.10** Log auto-commit activity
 
 ### Verification
-- [ ] Auto-commit triggers on file save
-- [ ] Debounce prevents rapid commits
-- [ ] Commit messages are descriptive
-- [ ] Toggle enables/disables feature
-- [ ] Failures don't crash app
+- [x] Auto-commit triggers on file save
+- [x] Debounce prevents rapid commits
+- [x] Commit messages are descriptive
+- [x] Toggle enables/disables feature
+- [x] Failures don't crash app
 
 ---
 
 ## Phase 16: Generation Modes
 
-**Status:** ⬜ Not Started
+**Status:** ✅ Complete
 
 **Spec Reference:** [specs/architecture.md](./specs/architecture.md) §3.1
 
 ### Tasks
-- [ ] **16.1** Add generation mode to project settings
-- [ ] **16.2** Create mode selector in ChatHeader
-- [ ] **16.3** Implement incremental mode (one file, approval)
-- [ ] **16.4** Implement all-at-once mode
-- [ ] **16.5** Implement draft-then-refine mode
-- [ ] **16.6** Update context builder with mode instructions
-- [ ] **16.7** Add file approval UI for incremental
-- [ ] **16.8** Show draft indicators for draft mode
-- [ ] **16.9** Test each mode end-to-end
-- [ ] **16.10** Document mode differences
+- [x] **16.1** Add generation mode to project settings
+- [x] **16.2** Create mode selector in ChatHeader
+- [x] **16.3** Implement incremental mode (one file, approval)
+- [x] **16.4** Implement all-at-once mode
+- [x] **16.5** Implement draft-then-refine mode
+- [x] **16.6** Update context builder with mode instructions
+- [x] **16.7** Add file approval UI for incremental
+- [x] **16.8** Show draft indicators for draft mode
+- [x] **16.9** Test each mode end-to-end
+- [x] **16.10** Document mode differences
 
 ### Verification
-- [ ] Mode can be selected
-- [ ] Incremental asks for approval
-- [ ] All-at-once generates everything
-- [ ] Draft mode marks files as drafts
-- [ ] Context includes mode instructions
+- [x] Mode can be selected
+- [x] Incremental asks for approval
+- [x] All-at-once generates everything
+- [x] Draft mode marks files as drafts
+- [x] Context includes mode instructions
 
 ---
 
 ## Phase 17: File Operations
 
-**Status:** ⬜ Not Started
+**Status:** ✅ Complete
 
 **Spec Reference:** [specs/file-browser.md](./specs/file-browser.md) §5
 
 ### Tasks
-- [ ] **17.1** Implement `file:create` IPC handler
-- [ ] **17.2** Implement `file:rename` IPC handler
-- [ ] **17.3** Implement `file:delete` IPC handler (move to trash)
-- [ ] **17.4** Create ContextMenu component
-- [ ] **17.5** Add context menu to file browser
-- [ ] **17.6** Implement inline rename editing
-- [ ] **17.7** Add delete confirmation dialog
-- [ ] **17.8** Add "New File" toolbar button
-- [ ] **17.9** Add "New Folder" toolbar button
-- [ ] **17.10** Test all file operations
+- [x] **17.1** Implement `file:create` IPC handler
+- [x] **17.2** Implement `file:rename` IPC handler
+- [x] **17.3** Implement `file:delete` IPC handler (move to trash)
+- [x] **17.4** Create ContextMenu component
+- [x] **17.5** Add context menu to file browser
+- [x] **17.6** Implement inline rename editing
+- [x] **17.7** Add delete confirmation dialog
+- [x] **17.8** Add "New File" toolbar button
+- [x] **17.9** Add "New Folder" toolbar button
+- [x] **17.10** Test all file operations
 
 ### Verification
-- [ ] Right-click shows context menu
-- [ ] New file creates empty file
-- [ ] Rename works inline
-- [ ] Delete moves to trash
-- [ ] Operations trigger tree refresh
+- [x] Right-click shows context menu
+- [x] New file creates empty file
+- [x] Rename works inline
+- [x] Delete moves to trash
+- [x] Operations trigger tree refresh
 
 ---
 
 ## Phase 18: Settings & Preferences
 
-**Status:** ⬜ Not Started
+**Status:** 🔄 In Progress
 
 **Spec Reference:** Various specs
 
@@ -580,11 +580,11 @@
 | 8 | Chat Interface - Display | ✅ Complete |
 | 9 | Chat Interface - Input | ✅ Complete |
 | 10 | Claude Service | ✅ Complete |
-| 11 | Context Management | 🔄 In Progress |
-| 12 | Template System - Core | ⬜ Not Started |
-| 13 | Template System - UI | ⬜ Not Started |
-| 14 | Git Integration | ⬜ Not Started |
-| 15 | Git Auto-Commit | ⬜ Not Started |
+| 11 | Context Management | ✅ Complete |
+| 12 | Template System - Core | ✅ Complete |
+| 13 | Template System - UI | ✅ Complete |
+| 14 | Git Integration | ✅ Complete |
+| 15 | Git Auto-Commit | 🔄 In Progress |
 | 16 | Generation Modes | ⬜ Not Started |
 | 17 | File Operations | ⬜ Not Started |
 | 18 | Settings & Preferences | ⬜ Not Started |

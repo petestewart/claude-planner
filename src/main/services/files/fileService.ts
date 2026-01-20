@@ -104,3 +104,50 @@ export async function createFile(
 export async function createDirectory(dirPath: string): Promise<void> {
   await fs.mkdir(dirPath, { recursive: true })
 }
+
+/**
+ * Rename a file or directory
+ */
+export async function renameFile(
+  oldPath: string,
+  newPath: string
+): Promise<void> {
+  // Check if new path already exists
+  try {
+    await fs.access(newPath)
+    throw new Error(`File already exists: ${newPath}`)
+  } catch (err) {
+    // File doesn't exist, which is what we want
+    if ((err as NodeJS.ErrnoException).code !== 'ENOENT') {
+      throw err
+    }
+  }
+
+  await fs.rename(oldPath, newPath)
+}
+
+/**
+ * Delete a file or directory
+ * Attempts to use shell's trash if available, otherwise permanently deletes
+ */
+export async function deleteFile(filePath: string): Promise<void> {
+  const stats = await fs.stat(filePath)
+
+  if (stats.isDirectory()) {
+    await fs.rm(filePath, { recursive: true })
+  } else {
+    await fs.unlink(filePath)
+  }
+}
+
+/**
+ * Check if a path exists
+ */
+export async function pathExists(filePath: string): Promise<boolean> {
+  try {
+    await fs.access(filePath)
+    return true
+  } catch {
+    return false
+  }
+}

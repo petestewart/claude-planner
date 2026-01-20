@@ -1,11 +1,31 @@
-import type { ReactElement } from 'react'
+import type { ReactElement, ChangeEvent } from 'react'
 import { useEffect, useCallback, useRef } from 'react'
 import { useChatStore } from '../../stores/chatStore'
+import { useProjectStore } from '../../stores/projectStore'
+import type { GenerationMode } from '../../../shared/types/project'
 import { MessageList } from './MessageList'
 import { InputArea } from './InputArea'
 import type { InputAreaRef } from './InputArea'
 import { useClaude } from './hooks'
 import styles from './chat.module.css'
+
+/**
+ * Display labels for generation modes
+ */
+const MODE_LABELS: Record<GenerationMode, string> = {
+  incremental: 'Incremental',
+  'all-at-once': 'All at once',
+  'draft-then-refine': 'Draft & Refine',
+}
+
+/**
+ * Description tooltips for generation modes
+ */
+const MODE_DESCRIPTIONS: Record<GenerationMode, string> = {
+  incremental: 'Generate one file at a time, requiring approval',
+  'all-at-once': 'Generate all files in a single pass',
+  'draft-then-refine': 'Generate drafts first, then refine based on feedback',
+}
 
 interface ChatInterfaceProps {
   /** Project ID to start session for */
@@ -27,6 +47,12 @@ export function ChatInterface({
   const sendMessage = useChatStore((state) => state.sendMessage)
   const cancelGeneration = useChatStore((state) => state.cancelGeneration)
   const navigateHistory = useChatStore((state) => state.navigateHistory)
+
+  // Get generation mode from project store
+  const generationMode = useProjectStore(
+    (state) => state.project?.generationMode ?? 'incremental'
+  )
+  const setGenerationMode = useProjectStore((state) => state.setGenerationMode)
 
   // Initialize Claude service and set up stream listener
   useClaude(workingDirectory ? { workingDirectory } : {})
@@ -75,10 +101,34 @@ export function ChatInterface({
     [navigateHistory]
   )
 
+  const handleModeChange = useCallback(
+    (e: ChangeEvent<HTMLSelectElement>) => {
+      setGenerationMode(e.target.value as GenerationMode)
+    },
+    [setGenerationMode]
+  )
+
   return (
     <div className={styles.chatInterface}>
       <div className={styles.chatHeader}>
-        <h2 className={styles.chatHeaderTitle}>Chat</h2>
+        <div className={styles.chatHeaderLeft}>
+          <h2 className={styles.chatHeaderTitle}>Chat</h2>
+          <div className={styles.modeSelector}>
+            <span className={styles.modeSelectorLabel}>Mode:</span>
+            <select
+              className={styles.modeSelectorSelect}
+              value={generationMode}
+              onChange={handleModeChange}
+              title={MODE_DESCRIPTIONS[generationMode]}
+            >
+              {(Object.keys(MODE_LABELS) as GenerationMode[]).map((mode) => (
+                <option key={mode} value={mode} title={MODE_DESCRIPTIONS[mode]}>
+                  {MODE_LABELS[mode]}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
         <div className={styles.chatHeaderStatus}>
           <span
             className={`${styles.statusIndicator} ${

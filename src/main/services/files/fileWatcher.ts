@@ -14,12 +14,29 @@ const IGNORED_PATTERNS = [
   '**/coverage/**',
 ]
 
+type FileChangeCallback = (path: string, type: FileWatchEvent['type']) => void
+
 class FileWatcherService {
   private watchers: Map<string, FSWatcher> = new Map()
   private mainWindow: BrowserWindow | null = null
+  private callbacks: FileChangeCallback[] = []
 
   setMainWindow(window: BrowserWindow): void {
     this.mainWindow = window
+  }
+
+  /**
+   * Register a callback to be called when files change
+   * Used for features like auto-commit
+   */
+  onFileChange(callback: FileChangeCallback): () => void {
+    this.callbacks.push(callback)
+    return () => {
+      const index = this.callbacks.indexOf(callback)
+      if (index !== -1) {
+        this.callbacks.splice(index, 1)
+      }
+    }
   }
 
   async startWatching(dirPath: string): Promise<void> {
@@ -65,6 +82,16 @@ class FileWatcherService {
     type: FileWatchEvent['type'],
     path: string
   ): void {
+    // Call registered callbacks
+    for (const callback of this.callbacks) {
+      try {
+        callback(path, type)
+      } catch (err) {
+        console.error('File change callback error:', err)
+      }
+    }
+
+    // Send to renderer
     if (!this.mainWindow || this.mainWindow.isDestroyed()) return
 
     const event: FileWatchEvent = {
