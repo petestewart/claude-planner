@@ -1,0 +1,183 @@
+.fileBrowser {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--color-bg-secondary);
+  outline: none;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-bg-tertiary);
+}
+
+.toolbarTitle {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--color-text-secondary);
+}
+
+.toolbarActions {
+  display: flex;
+  gap: 2px;
+}
+
+.toolbarButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.toolbarButton:hover {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+
+.toolbarButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.fileTree {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-xs) 0;
+}
+
+.fileNode {
+  display: flex;
+  align-items: center;
+  padding: 4px 8px;
+  padding-left: calc(8px + var(--depth, 0) * 16px);
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  font-size: 13px;
+  color: var(--color-text);
+}
+
+.fileNode:hover {
+  background-color: var(--color-bg-tertiary);
+}
+
+.fileNode--selected {
+  background-color: var(--color-accent);
+  color: white;
+}
+
+.fileNode--selected:hover {
+  background-color: var(--color-accent-hover);
+}
+
+/* Status indicators */
+.fileNode--new::before,
+.fileNode--modified::before,
+.fileNode--error::before {
+  content: '';
+  position: absolute;
+  left: 4px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.fileNode--new::before {
+  background-color: var(--color-success);
+}
+
+.fileNode--modified::before {
+  background-color: var(--color-warning);
+}
+
+.fileNode--error::before {
+  background-color: var(--color-error);
+}
+
+.fileNode--generating {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.fileNodeChevron {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 2px;
+  font-size: 10px;
+  color: var(--color-text-secondary);
+  transition: transform var(--transition-fast);
+}
+
+.fileNodeChevron--expanded {
+  transform: rotate(90deg);
+}
+
+.fileIcon {
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+  flex-shrink: 0;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fileNodeName {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.emptyState,
+.error,
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  gap: var(--spacing-sm);
+  color: var(--color-text-secondary);
+  font-size: 13px;
+}
+
+.hint {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.error {
+  color: var(--color-error);
+}
+
+.error button {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: 12px;
+}

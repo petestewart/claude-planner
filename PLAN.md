@@ -56,34 +56,34 @@
 
 ## Phase 3: File Browser
 
-**Status:** 🔄 In Progress
+**Status:** ✅ Complete
 
 **Spec Reference:** [specs/file-browser.md](./specs/file-browser.md)
 
 ### Tasks
-- [ ] **3.1** Create FileNode types and interfaces
-- [ ] **3.2** Implement FileTree recursive component
-- [ ] **3.3** Implement FileTreeNode with expand/collapse
-- [ ] **3.4** Add FileIcon component with extension mapping
-- [ ] **3.5** Create FileStore with Zustand
-- [ ] **3.6** Implement `file:list` IPC handler (main process)
-- [ ] **3.7** Connect FileTree to IPC for real data
-- [ ] **3.8** Implement file selection (single click)
-- [ ] **3.9** Add keyboard navigation (arrows, enter)
-- [ ] **3.10** Implement FileBrowserToolbar (refresh, collapse all)
+- [x] **3.1** Create FileNode types and interfaces
+- [x] **3.2** Implement FileTree recursive component
+- [x] **3.3** Implement FileTreeNode with expand/collapse
+- [x] **3.4** Add FileIcon component with extension mapping
+- [x] **3.5** Create FileStore with Zustand
+- [x] **3.6** Implement `file:list` IPC handler (main process)
+- [x] **3.7** Connect FileTree to IPC for real data
+- [x] **3.8** Implement file selection (single click)
+- [x] **3.9** Add keyboard navigation (arrows, enter)
+- [x] **3.10** Implement FileBrowserToolbar (refresh, collapse all)
 
 ### Verification
-- [ ] File tree displays project directory
-- [ ] Folders expand/collapse on click
-- [ ] Files can be selected
-- [ ] Keyboard navigation works
-- [ ] Refresh button reloads tree
+- [x] File tree displays project directory
+- [x] Folders expand/collapse on click
+- [x] Files can be selected
+- [x] Keyboard navigation works
+- [x] Refresh button reloads tree
 
 ---
 
 ## Phase 4: File Watching
 
-**Status:** ⬜ Not Started
+**Status:** 🔄 In Progress
 
 **Spec Reference:** [specs/file-browser.md](./specs/file-browser.md) §7
 
@@ -572,8 +572,8 @@
 |-------|-------------|--------|
 | 1 | Project Setup | ✅ Complete |
 | 2 | Core Layout | ✅ Complete |
-| 3 | File Browser | 🔄 In Progress |
-| 4 | File Watching | ⬜ Not Started |
+| 3 | File Browser | ✅ Complete |
+| 4 | File Watching | 🔄 In Progress |
 | 5 | Markdown Editor - Basic | ⬜ Not Started |
 | 6 | Markdown Editor - WYSIWYG | ⬜ Not Started |
 | 7 | Editor File Sync | ⬜ Not Started |

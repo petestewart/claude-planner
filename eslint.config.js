@@ -34,6 +34,8 @@ export default [
         MouseEvent: 'readonly',
         KeyboardEvent: 'readonly',
         HTMLElement: 'readonly',
+        HTMLDivElement: 'readonly',
+        React: 'readonly',
         navigator: 'readonly',
         // Jest globals
         jest: 'readonly',

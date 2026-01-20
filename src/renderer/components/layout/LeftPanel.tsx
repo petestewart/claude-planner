@@ -1,5 +1,7 @@
 import type { ReactElement } from 'react'
+import { useCallback } from 'react'
 import { useLayoutStore } from '../../stores/layoutStore'
+import { FileBrowser } from '../file-browser'
 import { HorizontalDivider } from './HorizontalDivider'
 import styles from './LeftPanel.module.css'
 
@@ -21,16 +23,18 @@ export function LeftPanel({ width }: LeftPanelProps): ReactElement {
     }
   }
 
+  const handleOpenFile = useCallback((path: string) => {
+    // TODO: Open file in editor (Phase 5)
+    console.warn('Open file:', path)
+  }, [])
+
   return (
     <aside className={styles.leftPanel} style={{ width }}>
       <div
         className={styles.fileBrowser}
         style={{ height: `${fileBrowserHeight}%` }}
       >
-        <div className={styles.placeholder}>
-          <span>📁 File Browser</span>
-          <span className={styles.hint}>Project files will appear here</span>
-        </div>
+        <FileBrowser onOpenFile={handleOpenFile} />
       </div>
       <HorizontalDivider onDrag={handleDividerDrag} />
       <div

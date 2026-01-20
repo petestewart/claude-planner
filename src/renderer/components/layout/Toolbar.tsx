@@ -1,13 +1,19 @@
 import type { ReactElement } from 'react'
+import { useFileStore } from '../../stores/fileStore'
 import styles from './Toolbar.module.css'
 
 export function Toolbar(): ReactElement {
+  const setRootPath = useFileStore((state) => state.setRootPath)
+
   const handleNewProject = (): void => {
     // TODO: Implement new project flow
   }
 
-  const handleOpenProject = (): void => {
-    // TODO: Implement open project flow
+  const handleOpenProject = async (): Promise<void> => {
+    const path = await window.api.dir.select()
+    if (path) {
+      void setRootPath(path)
+    }
   }
 
   const handleSettings = (): void => {

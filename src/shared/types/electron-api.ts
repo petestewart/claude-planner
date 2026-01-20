@@ -10,7 +10,7 @@ export interface ElectronAPI {
   file: {
     read(path: string): Promise<string>
     write(path: string, content: string): Promise<void>
-    list(path: string): Promise<FileNode[]>
+    list(path: string): Promise<FileNode>
     watchStart(path: string): Promise<void>
     watchStop(path: string): Promise<void>
     onWatchEvent(callback: (event: FileWatchEvent) => void): () => void
