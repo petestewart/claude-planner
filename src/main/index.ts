@@ -3,6 +3,7 @@ import * as path from 'path'
 import { registerFileHandlers } from './ipc/fileHandlers'
 import { registerClaudeHandlers } from './ipc/claudeHandlers'
 import { registerProjectHandlers } from './ipc/projectHandlers'
+import { registerTemplateHandlers } from './ipc/templateHandlers'
 
 let mainWindow: BrowserWindow | null = null
 
@@ -43,6 +44,7 @@ app.whenReady().then(() => {
   registerFileHandlers()
   registerClaudeHandlers()
   registerProjectHandlers()
+  registerTemplateHandlers()
   createWindow()
 
   app.on('activate', () => {

@@ -298,34 +298,34 @@
 
 ## Phase 12: Template System - Core
 
-**Status:** 🔄 In Progress
+**Status:** ✅ Complete
 
 **Spec Reference:** [specs/template-system.md](./specs/template-system.md)
 
 ### Tasks
-- [ ] **12.1** Create Template types and interfaces
-- [ ] **12.2** Implement TemplateLoader for built-in templates
-- [ ] **12.3** Bundle standard template with app
-- [ ] **12.4** Set up Handlebars for rendering
-- [ ] **12.5** Implement TemplateRenderer
-- [ ] **12.6** Register custom Handlebars helpers
-- [ ] **12.7** Create TemplateService
-- [ ] **12.8** Register IPC handlers
-- [ ] **12.9** Test template rendering
-- [ ] **12.10** Create additional built-in templates
+- [x] **12.1** Create Template types and interfaces
+- [x] **12.2** Implement TemplateLoader for built-in templates
+- [x] **12.3** Bundle standard template with app
+- [x] **12.4** Set up Handlebars for rendering
+- [x] **12.5** Implement TemplateRenderer
+- [x] **12.6** Register custom Handlebars helpers
+- [x] **12.7** Create TemplateService
+- [x] **12.8** Register IPC handlers
+- [x] **12.9** Test template rendering
+- [x] **12.10** Create additional built-in templates
 
 ### Verification
-- [ ] Standard template loads
-- [ ] Template renders with variables
-- [ ] Multiple templates available
-- [ ] Handlebars helpers work
-- [ ] IPC returns template data
+- [x] Standard template loads
+- [x] Template renders with variables
+- [x] Multiple templates available
+- [x] Handlebars helpers work
+- [x] IPC returns template data
 
 ---
 
 ## Phase 13: Template System - UI
 
-**Status:** ⬜ Not Started
+**Status:** 🔄 In Progress
 
 **Spec Reference:** [specs/template-system.md](./specs/template-system.md) §6
 
@@ -581,8 +581,8 @@
 | 9 | Chat Interface - Input | ✅ Complete |
 | 10 | Claude Service | ✅ Complete |
 | 11 | Context Management | ✅ Complete |
-| 12 | Template System - Core | 🔄 In Progress |
-| 13 | Template System - UI | ⬜ Not Started |
+| 12 | Template System - Core | ✅ Complete |
+| 13 | Template System - UI | 🔄 In Progress |
 | 14 | Git Integration | ⬜ Not Started |
 | 15 | Git Auto-Commit | ⬜ Not Started |
 | 16 | Generation Modes | ⬜ Not Started |

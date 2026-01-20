@@ -1,0 +1,118 @@
+{
+  "id": "web-app",
+  "name": "Web Application",
+  "description": "Template for modern web applications (React, Vue, etc.)",
+  "category": "web-app",
+  "version": "1.0.0",
+  "isBuiltIn": true,
+  "createdAt": "2025-01-20T00:00:00.000Z",
+  "updatedAt": "2025-01-20T00:00:00.000Z",
+  "files": [
+    {
+      "outputPath": "CLAUDE.md",
+      "template": "CLAUDE.md.hbs",
+      "description": "Agent guidelines and project overview",
+      "required": true
+    },
+    {
+      "outputPath": "specs/README.md",
+      "template": "specs-README.md.hbs",
+      "description": "Specification index",
+      "required": true
+    },
+    {
+      "outputPath": "PLAN.md",
+      "template": "PLAN.md.hbs",
+      "description": "Implementation plan and progress tracker",
+      "required": true
+    }
+  ],
+  "variables": [
+    {
+      "name": "projectName",
+      "label": "Project Name",
+      "type": "string",
+      "required": true,
+      "description": "The name of your web application"
+    },
+    {
+      "name": "projectDescription",
+      "label": "Project Description",
+      "type": "multiline",
+      "required": true,
+      "description": "A brief description of what your web app does"
+    },
+    {
+      "name": "framework",
+      "label": "Frontend Framework",
+      "type": "select",
+      "options": [
+        { "value": "react", "label": "React" },
+        { "value": "vue", "label": "Vue" },
+        { "value": "svelte", "label": "Svelte" },
+        { "value": "nextjs", "label": "Next.js" },
+        { "value": "other", "label": "Other" }
+      ],
+      "required": true,
+      "default": "react"
+    },
+    {
+      "name": "hasBackend",
+      "label": "Includes Backend?",
+      "type": "boolean",
+      "default": true,
+      "required": false
+    },
+    {
+      "name": "hasAuth",
+      "label": "Requires Authentication?",
+      "type": "boolean",
+      "default": false,
+      "required": false
+    }
+  ],
+  "questionFlow": [
+    {
+      "id": "overview",
+      "title": "Project Overview",
+      "questions": [
+        {
+          "id": "appType",
+          "text": "What type of web application is this?",
+          "type": "multiline",
+          "variable": "appType",
+          "required": true
+        },
+        {
+          "id": "users",
+          "text": "Who will use this application?",
+          "type": "multiline",
+          "variable": "targetUsers",
+          "required": true
+        }
+      ]
+    },
+    {
+      "id": "ui",
+      "title": "User Interface",
+      "questions": [
+        {
+          "id": "pages",
+          "text": "What are the main pages/views?",
+          "type": "multiline",
+          "variable": "mainPages",
+          "required": true
+        },
+        {
+          "id": "responsive",
+          "text": "Does it need to work on mobile?",
+          "type": "boolean",
+          "variable": "isMobileResponsive",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "defaultGenerationMode": "incremental",
+  "tags": ["web", "frontend", "react", "vue"]
+}

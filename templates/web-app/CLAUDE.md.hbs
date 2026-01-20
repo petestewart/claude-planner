@@ -1,0 +1,92 @@
+# {{projectName}} - Agent Guidelines
+
+## Overview
+
+{{projectDescription}}
+
+## Specifications
+
+**IMPORTANT:** Before implementing any feature, consult `specs/README.md`.
+
+- **Assume NOT implemented.** Specs describe planned features that may not exist.
+- **Check the codebase first.** Specs describe intent; code describes reality.
+- **Use specs as guidance.** Follow the patterns and types defined in specs.
+
+## Commands
+
+### Frontend ({{framework}})
+{{#if (eq framework "react")}}
+- **Install:** `npm install`
+- **Dev:** `npm run dev`
+- **Build:** `npm run build`
+- **Test:** `npm test`
+- **Lint:** `npm run lint`
+{{/if}}
+{{#if (eq framework "vue")}}
+- **Install:** `npm install`
+- **Dev:** `npm run dev`
+- **Build:** `npm run build`
+- **Test:** `npm run test:unit`
+- **Lint:** `npm run lint`
+{{/if}}
+{{#if (eq framework "svelte")}}
+- **Install:** `npm install`
+- **Dev:** `npm run dev`
+- **Build:** `npm run build`
+- **Preview:** `npm run preview`
+{{/if}}
+{{#if (eq framework "nextjs")}}
+- **Install:** `npm install`
+- **Dev:** `npm run dev`
+- **Build:** `npm run build`
+- **Start:** `npm start`
+- **Lint:** `npm run lint`
+{{/if}}
+
+{{#if hasBackend}}
+### Backend
+- **Start:** `npm run server` or `npm run start:backend`
+- **Test:** `npm run test:backend`
+{{/if}}
+
+## Architecture
+
+### Tech Stack
+- **Framework:** {{framework}}
+- **Language:** TypeScript
+{{#if hasBackend}}
+- **Backend:** Node.js/Express (or similar)
+{{/if}}
+{{#if hasAuth}}
+- **Authentication:** Yes
+{{/if}}
+
+### Directory Structure
+```
+src/
+├── components/          # Reusable UI components
+├── pages/              # Page components
+├── hooks/              # Custom React hooks
+├── stores/             # State management
+├── services/           # API clients
+├── styles/             # Global styles
+└── utils/              # Utility functions
+```
+
+## Code Style
+
+- Use TypeScript strict mode
+- Prefer functional components with hooks
+- Use CSS Modules or styled-components
+- Follow component naming: PascalCase
+- Follow file naming: kebab-case
+- Write unit tests for complex logic
+
+{{#if hasAuth}}
+## Authentication
+
+This application requires user authentication.
+- Implement secure authentication flows
+- Protect sensitive routes
+- Handle token management securely
+{{/if}}

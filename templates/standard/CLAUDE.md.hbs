@@ -1,0 +1,90 @@
+# {{projectName}} - Agent Guidelines
+
+## Overview
+
+{{projectDescription}}
+
+## Specifications
+
+**IMPORTANT:** Before implementing any feature, consult `specs/README.md`.
+
+- **Assume NOT implemented.** Specs describe planned features that may not exist.
+- **Check the codebase first.** Specs describe intent; code describes reality.
+- **Use specs as guidance.** Follow the patterns and types defined in specs.
+
+## Commands
+
+{{#if (eq targetLanguage "typescript")}}
+### Build
+- **Install:** `npm install`
+- **Build:** `npm run build`
+- **Dev:** `npm run dev`
+- **Test:** `npm test`
+- **Lint:** `npm run lint`
+- **Type Check:** `npm run typecheck`
+{{/if}}
+
+{{#if (eq targetLanguage "javascript")}}
+### Build
+- **Install:** `npm install`
+- **Build:** `npm run build`
+- **Dev:** `npm run dev`
+- **Test:** `npm test`
+- **Lint:** `npm run lint`
+{{/if}}
+
+{{#if (eq targetLanguage "python")}}
+### Build
+- **Install:** `pip install -e .` or `poetry install`
+- **Test:** `pytest`
+- **Lint:** `ruff check .`
+- **Format:** `ruff format .`
+{{/if}}
+
+{{#if (eq targetLanguage "rust")}}
+### Build
+- **Build:** `cargo build`
+- **Run:** `cargo run`
+- **Test:** `cargo test`
+- **Lint:** `cargo clippy`
+- **Format:** `cargo fmt`
+{{/if}}
+
+{{#if (eq targetLanguage "go")}}
+### Build
+- **Build:** `go build`
+- **Run:** `go run .`
+- **Test:** `go test ./...`
+- **Lint:** `golangci-lint run`
+{{/if}}
+
+{{#if (eq targetLanguage "java")}}
+### Build
+- **Build:** `./gradlew build` or `mvn compile`
+- **Test:** `./gradlew test` or `mvn test`
+- **Run:** `./gradlew run` or `mvn exec:java`
+{{/if}}
+
+## Architecture
+
+### Tech Stack
+- **Language:** {{targetLanguage}}
+
+### Directory Structure
+```
+src/
+├── ...                    # Source code
+└── ...                    # Structure TBD based on requirements
+```
+
+## Code Style
+
+- Follow standard {{targetLanguage}} conventions
+- Use consistent formatting
+- Write clear, descriptive names
+- Add comments for complex logic
+- Prefer explicit over implicit
+
+## Environment Variables
+
+Environment variables (if any) will be documented here.
