@@ -10,7 +10,8 @@ import { prism, prismConfig } from '@milkdown/plugin-prism'
 import { nord } from '@milkdown/theme-nord'
 import styles from './editor.module.css'
 
-// Import Prism core and languages
+// Import Prism core first, then languages
+import 'prismjs'
 import 'prismjs/components/prism-typescript'
 import 'prismjs/components/prism-javascript'
 import 'prismjs/components/prism-jsx'

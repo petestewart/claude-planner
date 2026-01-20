@@ -8,7 +8,6 @@ Work on the current phase (the first phase with status "🔄 In Progress" or "�
 2. Read any referenced spec files before implementing
 3. Implement the task and write tests to verify it works
 4. Mark the task complete (`- [x]`) in PLAN.md
-5. Repeat until all tasks AND verification items in the phase are checked
 
 When a phase is complete:
 1. Change its status to "✅ Complete"
