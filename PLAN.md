@@ -163,34 +163,34 @@
 
 ## Phase 7: Editor File Sync
 
-**Status:** 🔄 In Progress
+**Status:** ✅ Complete
 
 **Spec Reference:** [specs/markdown-editor.md](./specs/markdown-editor.md) §6
 
 ### Tasks
-- [ ] **7.1** Implement useAutoSave hook
-- [ ] **7.2** Add auto-save toggle to settings
-- [ ] **7.3** Implement useFileSync hook
-- [ ] **7.4** Detect external changes to open files
-- [ ] **7.5** Auto-reload if no local changes
-- [ ] **7.6** Create ConflictDialog component
-- [ ] **7.7** Handle "keep mine" resolution
-- [ ] **7.8** Handle "load from disk" resolution
-- [ ] **7.9** Add unsaved changes warning on tab close
-- [ ] **7.10** Test with agent file modifications
+- [x] **7.1** Implement useAutoSave hook
+- [x] **7.2** Add auto-save toggle to settings
+- [x] **7.3** Implement useFileSync hook
+- [x] **7.4** Detect external changes to open files
+- [x] **7.5** Auto-reload if no local changes
+- [x] **7.6** Create ConflictDialog component
+- [x] **7.7** Handle "keep mine" resolution
+- [x] **7.8** Handle "load from disk" resolution
+- [x] **7.9** Add unsaved changes warning on tab close
+- [x] **7.10** Test with agent file modifications
 
 ### Verification
-- [ ] Auto-save works after delay
-- [ ] External changes detected
-- [ ] Conflict dialog appears when both changed
-- [ ] Resolutions apply correctly
-- [ ] Closing dirty tab warns user
+- [x] Auto-save works after delay
+- [x] External changes detected
+- [x] Conflict dialog appears when both changed
+- [x] Resolutions apply correctly
+- [x] Closing dirty tab warns user
 
 ---
 
 ## Phase 8: Chat Interface - Display
 
-**Status:** ⬜ Not Started
+**Status:** 🔄 In Progress
 
 **Spec Reference:** [specs/chat-interface.md](./specs/chat-interface.md)
 
@@ -576,8 +576,8 @@
 | 4 | File Watching | ✅ Complete |
 | 5 | Markdown Editor - Basic | ✅ Complete |
 | 6 | Markdown Editor - WYSIWYG | ✅ Complete |
-| 7 | Editor File Sync | 🔄 In Progress |
-| 8 | Chat Interface - Display | ⬜ Not Started |
+| 7 | Editor File Sync | ✅ Complete |
+| 8 | Chat Interface - Display | 🔄 In Progress |
 | 9 | Chat Interface - Input | ⬜ Not Started |
 | 10 | Claude Service | ⬜ Not Started |
 | 11 | Context Management | ⬜ Not Started |

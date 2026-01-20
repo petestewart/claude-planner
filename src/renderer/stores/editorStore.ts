@@ -16,12 +16,22 @@ interface OpenFile {
   scrollPosition: number
 }
 
+export interface FileConflict {
+  path: string
+  editorContent: string
+  diskContent: string
+  diskModifiedAt: string
+}
+
+export type ConflictResolution = 'keep-editor' | 'load-disk'
+
 interface EditorStore {
   activeFile: string | null
   openFiles: Map<string, OpenFile>
   mode: 'wysiwyg' | 'markdown'
   autoSaveEnabled: boolean
   autoSaveDelay: number
+  conflict: FileConflict | null
 
   // Actions
   openFile: (filePath: string) => Promise<void>
@@ -35,6 +45,9 @@ interface EditorStore {
   reloadFromDisk: (filePath: string) => Promise<void>
   setSelection: (filePath: string, selection: EditorSelection) => void
   markSaved: (filePath: string) => void
+  setAutoSaveEnabled: (enabled: boolean) => void
+  showConflict: (conflict: FileConflict) => void
+  resolveConflict: (resolution: ConflictResolution) => void
 }
 
 function getFileName(filePath: string): string {
@@ -47,6 +60,7 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
   mode: 'markdown',
   autoSaveEnabled: false,
   autoSaveDelay: 1000,
+  conflict: null,
 
   openFile: async (filePath: string) => {
     const { openFiles } = get()
@@ -198,5 +212,49 @@ export const useEditorStore = create<EditorStore>((set, get) => ({
       isDirty: false,
     })
     set({ openFiles: newOpenFiles })
+  },
+
+  setAutoSaveEnabled: (enabled: boolean) => {
+    set({ autoSaveEnabled: enabled })
+  },
+
+  showConflict: (conflict: FileConflict) => {
+    set({ conflict })
+  },
+
+  resolveConflict: (resolution: ConflictResolution) => {
+    const { conflict, openFiles } = get()
+    if (!conflict) return
+
+    const { path, diskContent } = conflict
+
+    if (resolution === 'load-disk') {
+      // Load content from disk, discard local changes
+      const file = openFiles.get(path)
+      if (file) {
+        const newOpenFiles = new Map(openFiles)
+        newOpenFiles.set(path, {
+          ...file,
+          content: diskContent,
+          savedContent: diskContent,
+          isDirty: false,
+          diskModifiedAt: conflict.diskModifiedAt,
+        })
+        set({ openFiles: newOpenFiles, conflict: null })
+      }
+    } else {
+      // Keep editor content, mark as dirty (needs to be saved to overwrite disk)
+      const file = openFiles.get(path)
+      if (file) {
+        const newOpenFiles = new Map(openFiles)
+        newOpenFiles.set(path, {
+          ...file,
+          // Content stays the same
+          // Mark as dirty so user knows they need to save
+          isDirty: true,
+        })
+        set({ openFiles: newOpenFiles, conflict: null })
+      }
+    }
   },
 }))

@@ -343,3 +343,97 @@
   background-color: var(--color-border);
   margin: 0 4px;
 }
+
+/* Conflict Dialog */
+.dialogOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.dialog {
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-elevated);
+  max-width: 450px;
+  width: 90%;
+}
+
+.dialogHeader {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.dialogTitle {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.dialogContent {
+  padding: 16px 20px;
+  color: var(--color-text-secondary);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.dialogContent p {
+  margin: 0 0 12px 0;
+}
+
+.dialogContent p:last-child {
+  margin-bottom: 0;
+}
+
+.dialogContent strong {
+  color: var(--color-text);
+}
+
+.dialogActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 20px;
+  border-top: 1px solid var(--color-border);
+}
+
+.dialogButtonPrimary {
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: white;
+  background-color: var(--color-accent);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color var(--transition-fast);
+}
+
+.dialogButtonPrimary:hover {
+  background-color: var(--color-accent-hover);
+}
+
+.dialogButtonSecondary {
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text);
+  background-color: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.dialogButtonSecondary:hover {
+  background-color: var(--color-bg-tertiary);
+}
