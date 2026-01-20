@@ -29,34 +29,34 @@
 
 ## Phase 2: Core Layout
 
-**Status:** 🔄 In Progress
+**Status:** ✅ Complete
 
 **Spec Reference:** [specs/ui-layout.md](./specs/ui-layout.md)
 
 ### Tasks
-- [ ] **2.1** Create App component shell with CSS variables
-- [ ] **2.2** Implement Toolbar component (placeholder actions)
-- [ ] **2.3** Implement StatusBar component
-- [ ] **2.4** Create MainLayout with CSS Grid structure
-- [ ] **2.5** Implement vertical PanelResizer (left/right)
-- [ ] **2.6** Implement horizontal divider in left panel
-- [ ] **2.7** Create LayoutStore with Zustand
-- [ ] **2.8** Add layout persistence to localStorage
-- [ ] **2.9** Implement panel collapse behavior
-- [ ] **2.10** Add keyboard shortcuts for panel toggle
+- [x] **2.1** Create App component shell with CSS variables
+- [x] **2.2** Implement Toolbar component (placeholder actions)
+- [x] **2.3** Implement StatusBar component
+- [x] **2.4** Create MainLayout with CSS Grid structure
+- [x] **2.5** Implement vertical PanelResizer (left/right)
+- [x] **2.6** Implement horizontal divider in left panel
+- [x] **2.7** Create LayoutStore with Zustand
+- [x] **2.8** Add layout persistence to localStorage
+- [x] **2.9** Implement panel collapse behavior
+- [x] **2.10** Add keyboard shortcuts for panel toggle
 
 ### Verification
-- [ ] Window renders with toolbar, main area, status bar
-- [ ] Left/right panels resize via drag
-- [ ] File browser/editor areas resize via drag
-- [ ] Layout persists across app restarts
-- [ ] `Cmd+B` toggles left panel
+- [x] Window renders with toolbar, main area, status bar
+- [x] Left/right panels resize via drag
+- [x] File browser/editor areas resize via drag
+- [x] Layout persists across app restarts
+- [x] `Cmd+B` toggles left panel
 
 ---
 
 ## Phase 3: File Browser
 
-**Status:** ⬜ Not Started
+**Status:** 🔄 In Progress
 
 **Spec Reference:** [specs/file-browser.md](./specs/file-browser.md)
 
@@ -571,8 +571,8 @@
 | Phase | Description | Status |
 |-------|-------------|--------|
 | 1 | Project Setup | ✅ Complete |
-| 2 | Core Layout | 🔄 In Progress |
-| 3 | File Browser | ⬜ Not Started |
+| 2 | Core Layout | ✅ Complete |
+| 3 | File Browser | 🔄 In Progress |
 | 4 | File Watching | ⬜ Not Started |
 | 5 | Markdown Editor - Basic | ⬜ Not Started |
 | 6 | Markdown Editor - WYSIWYG | ⬜ Not Started |

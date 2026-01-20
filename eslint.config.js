@@ -32,6 +32,9 @@ export default [
         JSX: 'readonly',
         Electron: 'readonly',
         MouseEvent: 'readonly',
+        KeyboardEvent: 'readonly',
+        HTMLElement: 'readonly',
+        navigator: 'readonly',
         // Jest globals
         jest: 'readonly',
         describe: 'readonly',
