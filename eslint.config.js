@@ -35,6 +35,7 @@ export default [
         KeyboardEvent: 'readonly',
         HTMLElement: 'readonly',
         HTMLDivElement: 'readonly',
+        HTMLTextAreaElement: 'readonly',
         React: 'readonly',
         navigator: 'readonly',
         // Jest globals

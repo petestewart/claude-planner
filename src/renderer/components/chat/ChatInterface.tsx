@@ -1,7 +1,9 @@
 import type { ReactElement } from 'react'
-import { useEffect } from 'react'
+import { useEffect, useCallback, useRef } from 'react'
 import { useChatStore } from '../../stores/chatStore'
 import { MessageList } from './MessageList'
+import { InputArea } from './InputArea'
+import type { InputAreaRef } from './InputArea'
 import styles from './chat.module.css'
 
 interface ChatInterfaceProps {
@@ -12,9 +14,15 @@ interface ChatInterfaceProps {
 export function ChatInterface({
   projectId = 'default',
 }: ChatInterfaceProps): ReactElement {
+  const inputAreaRef = useRef<InputAreaRef>(null)
   const session = useChatStore((state) => state.session)
   const status = useChatStore((state) => state.status)
+  const inputValue = useChatStore((state) => state.inputValue)
   const startSession = useChatStore((state) => state.startSession)
+  const setInputValue = useChatStore((state) => state.setInputValue)
+  const sendMessage = useChatStore((state) => state.sendMessage)
+  const cancelGeneration = useChatStore((state) => state.cancelGeneration)
+  const navigateHistory = useChatStore((state) => state.navigateHistory)
 
   // Start a session when component mounts
   useEffect(() => {
@@ -23,8 +31,42 @@ export function ChatInterface({
     }
   }, [session, startSession, projectId])
 
+  // Global Cmd+J (Ctrl+J on Linux/Windows) shortcut to focus chat input
+  useEffect(() => {
+    const handleKeyDown = (e: globalThis.KeyboardEvent): void => {
+      // Cmd+J on Mac, Ctrl+J on Windows/Linux
+      if ((e.metaKey || e.ctrlKey) && e.key === 'j') {
+        e.preventDefault()
+        inputAreaRef.current?.focus()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [])
+
   const messages = session?.messages ?? []
   const isStreaming = status === 'streaming' || status === 'waiting'
+  const isGenerating = status === 'waiting' || status === 'streaming'
+
+  const handleSend = useCallback(() => {
+    if (inputValue.trim()) {
+      sendMessage(inputValue)
+    }
+  }, [inputValue, sendMessage])
+
+  const handleCancel = useCallback(() => {
+    cancelGeneration()
+  }, [cancelGeneration])
+
+  const handleHistoryNavigate = useCallback(
+    (direction: 'up' | 'down') => {
+      navigateHistory(direction)
+    },
+    [navigateHistory]
+  )
 
   return (
     <div className={styles.chatInterface}>
@@ -47,11 +89,16 @@ export function ChatInterface({
         </div>
       </div>
       <MessageList messages={messages} isStreaming={isStreaming} />
-      <div className={styles.inputAreaPlaceholder}>
-        <span className={styles.inputPlaceholderText}>
-          Chat input will be implemented in Phase 9
-        </span>
-      </div>
+      <InputArea
+        ref={inputAreaRef}
+        value={inputValue}
+        onChange={setInputValue}
+        onSend={handleSend}
+        onCancel={handleCancel}
+        onHistoryNavigate={handleHistoryNavigate}
+        disabled={isGenerating}
+        isGenerating={isGenerating}
+      />
     </div>
   )
 }

@@ -217,34 +217,34 @@
 
 ## Phase 9: Chat Interface - Input
 
-**Status:** 🔄 In Progress
+**Status:** ✅ Complete
 
 **Spec Reference:** [specs/chat-interface.md](./specs/chat-interface.md) §4.7
 
 ### Tasks
-- [ ] **9.1** Create InputArea component
-- [ ] **9.2** Implement auto-resize textarea
-- [ ] **9.3** Add send button
-- [ ] **9.4** Handle Enter to send, Shift+Enter for newline
-- [ ] **9.5** Track input history in store
-- [ ] **9.6** Implement up/down arrow history navigation
-- [ ] **9.7** Add Escape to clear input
-- [ ] **9.8** Add `Cmd+J` global shortcut to focus
-- [ ] **9.9** Disable input during generation
-- [ ] **9.10** Add cancel button during generation
+- [x] **9.1** Create InputArea component
+- [x] **9.2** Implement auto-resize textarea
+- [x] **9.3** Add send button
+- [x] **9.4** Handle Enter to send, Shift+Enter for newline
+- [x] **9.5** Track input history in store
+- [x] **9.6** Implement up/down arrow history navigation
+- [x] **9.7** Add Escape to clear input
+- [x] **9.8** Add `Cmd+J` global shortcut to focus
+- [x] **9.9** Disable input during generation
+- [x] **9.10** Add cancel button during generation
 
 ### Verification
-- [ ] Messages can be sent
-- [ ] Enter sends, Shift+Enter adds line
-- [ ] Up arrow recalls previous messages
-- [ ] `Cmd+J` focuses chat input
-- [ ] Cancel button stops generation
+- [x] Messages can be sent
+- [x] Enter sends, Shift+Enter adds line
+- [x] Up arrow recalls previous messages
+- [x] `Cmd+J` focuses chat input
+- [x] Cancel button stops generation
 
 ---
 
 ## Phase 10: Claude Service
 
-**Status:** ⬜ Not Started
+**Status:** 🔄 In Progress
 
 **Spec Reference:** [specs/claude-integration.md](./specs/claude-integration.md)
 
@@ -578,8 +578,8 @@
 | 6 | Markdown Editor - WYSIWYG | ✅ Complete |
 | 7 | Editor File Sync | ✅ Complete |
 | 8 | Chat Interface - Display | ✅ Complete |
-| 9 | Chat Interface - Input | 🔄 In Progress |
-| 10 | Claude Service | ⬜ Not Started |
+| 9 | Chat Interface - Input | ✅ Complete |
+| 10 | Claude Service | 🔄 In Progress |
 | 11 | Context Management | ⬜ Not Started |
 | 12 | Template System - Core | ⬜ Not Started |
 | 13 | Template System - UI | ⬜ Not Started |
