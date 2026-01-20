@@ -109,3 +109,237 @@
   font-size: 12px;
   opacity: 0.7;
 }
+
+/* Editor Header - contains mode toggle */
+.editorHeader {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 4px 8px;
+  background-color: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* Mode Toggle */
+.modeToggle {
+  display: flex;
+  padding: 2px;
+  background-color: var(--color-bg-tertiary);
+  border-radius: var(--radius-md);
+}
+
+.modeToggleButton {
+  padding: 4px 12px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.modeToggleButton:hover {
+  color: var(--color-text);
+}
+
+.modeToggleButton--active {
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+/* WYSIWYG Editor */
+.wysiwygEditor {
+  height: 100%;
+  overflow: auto;
+}
+
+.wysiwygEditor .milkdown {
+  padding: 24px 32px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* WYSIWYG Typography - Override Milkdown nord theme */
+.wysiwygEditor :global(.milkdown) {
+  font-family: var(--font-family);
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--color-text);
+}
+
+.wysiwygEditor :global(.milkdown .editor) {
+  background-color: var(--color-bg);
+}
+
+.wysiwygEditor h1 {
+  font-size: 2em;
+  font-weight: 700;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 0.3em;
+  color: var(--color-text);
+}
+
+.wysiwygEditor h2 {
+  font-size: 1.5em;
+  font-weight: 600;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  color: var(--color-text);
+}
+
+.wysiwygEditor h3 {
+  font-size: 1.25em;
+  font-weight: 600;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  color: var(--color-text);
+}
+
+.wysiwygEditor h4 {
+  font-size: 1.1em;
+  font-weight: 600;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  color: var(--color-text);
+}
+
+.wysiwygEditor h5,
+.wysiwygEditor h6 {
+  font-size: 1em;
+  font-weight: 600;
+  margin-top: 1.5em;
+  margin-bottom: 0.5em;
+  color: var(--color-text-secondary);
+}
+
+.wysiwygEditor p {
+  margin: 1em 0;
+}
+
+.wysiwygEditor code {
+  font-family: var(--font-family-mono);
+  font-size: 0.9em;
+  background-color: var(--color-bg-tertiary);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.wysiwygEditor pre {
+  background-color: var(--color-bg-tertiary);
+  padding: 16px;
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+}
+
+.wysiwygEditor pre code {
+  background: none;
+  padding: 0;
+}
+
+.wysiwygEditor blockquote {
+  border-left: 4px solid var(--color-accent);
+  padding-left: 16px;
+  margin-left: 0;
+  color: var(--color-text-secondary);
+}
+
+.wysiwygEditor table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1em 0;
+}
+
+.wysiwygEditor th,
+.wysiwygEditor td {
+  border: 1px solid var(--color-border);
+  padding: 8px 12px;
+  text-align: left;
+}
+
+.wysiwygEditor th {
+  background-color: var(--color-bg-secondary);
+  font-weight: 600;
+}
+
+.wysiwygEditor ul,
+.wysiwygEditor ol {
+  padding-left: 2em;
+  margin: 1em 0;
+}
+
+.wysiwygEditor li {
+  margin: 0.25em 0;
+}
+
+.wysiwygEditor a {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.wysiwygEditor a:hover {
+  text-decoration: underline;
+}
+
+.wysiwygEditor hr {
+  border: none;
+  border-top: 1px solid var(--color-border);
+  margin: 2em 0;
+}
+
+/* Task list checkboxes */
+.wysiwygEditor input[type="checkbox"] {
+  margin-right: 8px;
+}
+
+/* Editor Toolbar */
+.editorToolbar {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 4px 8px;
+  background-color: var(--color-bg-secondary);
+  border-bottom: 1px solid var(--color-border);
+  flex-wrap: wrap;
+}
+
+.toolbarButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 6px;
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.toolbarButton:hover:not(:disabled) {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text);
+}
+
+.toolbarButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.toolbarButton code {
+  font-family: var(--font-family-mono);
+  font-size: 10px;
+}
+
+.toolbarDivider {
+  width: 1px;
+  height: 20px;
+  background-color: var(--color-border);
+  margin: 0 4px;
+}

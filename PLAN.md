@@ -136,34 +136,34 @@
 
 ## Phase 6: Markdown Editor - WYSIWYG
 
-**Status:** 🔄 In Progress
+**Status:** ✅ Complete
 
 **Spec Reference:** [specs/markdown-editor.md](./specs/markdown-editor.md) §4.4
 
 ### Tasks
-- [ ] **6.1** Install and configure Milkdown
-- [ ] **6.2** Enable core plugins (headings, lists, etc.)
-- [ ] **6.3** Enable code block syntax highlighting
-- [ ] **6.4** Enable table support
-- [ ] **6.5** Create ModeToggle component
-- [ ] **6.6** Implement mode switching logic
-- [ ] **6.7** Preserve content when switching modes
-- [ ] **6.8** Add `Cmd+Shift+M` shortcut for toggle
-- [ ] **6.9** Create EditorToolbar with format buttons
-- [ ] **6.10** Style WYSIWYG content (typography)
+- [x] **6.1** Install and configure Milkdown
+- [x] **6.2** Enable core plugins (headings, lists, etc.)
+- [x] **6.3** Enable code block syntax highlighting
+- [x] **6.4** Enable table support
+- [x] **6.5** Create ModeToggle component
+- [x] **6.6** Implement mode switching logic
+- [x] **6.7** Preserve content when switching modes
+- [x] **6.8** Add `Cmd+Shift+M` shortcut for toggle
+- [x] **6.9** Create EditorToolbar with format buttons
+- [x] **6.10** Style WYSIWYG content (typography)
 
 ### Verification
-- [ ] Toggle switches between WYSIWYG and markdown
-- [ ] Content preserved during switch
-- [ ] WYSIWYG shows rich formatting
-- [ ] Toolbar buttons apply formatting
-- [ ] Code blocks have syntax highlighting
+- [x] Toggle switches between WYSIWYG and markdown
+- [x] Content preserved during switch
+- [x] WYSIWYG shows rich formatting
+- [x] Toolbar buttons apply formatting
+- [x] Code blocks have syntax highlighting
 
 ---
 
 ## Phase 7: Editor File Sync
 
-**Status:** ⬜ Not Started
+**Status:** 🔄 In Progress
 
 **Spec Reference:** [specs/markdown-editor.md](./specs/markdown-editor.md) §6
 
@@ -575,8 +575,8 @@
 | 3 | File Browser | ✅ Complete |
 | 4 | File Watching | ✅ Complete |
 | 5 | Markdown Editor - Basic | ✅ Complete |
-| 6 | Markdown Editor - WYSIWYG | 🔄 In Progress |
-| 7 | Editor File Sync | ⬜ Not Started |
+| 6 | Markdown Editor - WYSIWYG | ✅ Complete |
+| 7 | Editor File Sync | 🔄 In Progress |
 | 8 | Chat Interface - Display | ⬜ Not Started |
 | 9 | Chat Interface - Input | ⬜ Not Started |
 | 10 | Claude Service | ⬜ Not Started |

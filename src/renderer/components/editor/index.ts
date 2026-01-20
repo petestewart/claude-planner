@@ -1,3 +1,7 @@
 export { MarkdownEditor } from './MarkdownEditor'
 export { CodeEditor } from './CodeEditor'
+export { WysiwygEditor } from './WysiwygEditor'
 export { TabBar } from './TabBar'
+export { ModeToggle } from './ModeToggle'
+export { EditorToolbar } from './EditorToolbar'
+export type { FormatAction } from './EditorToolbar'
