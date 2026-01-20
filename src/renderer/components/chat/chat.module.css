@@ -1,0 +1,378 @@
+/* Chat Interface Container */
+.chatInterface {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background-color: var(--color-bg);
+}
+
+/* Chat Header */
+.chatHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--color-border);
+  background-color: var(--color-bg-secondary);
+}
+
+.chatHeaderTitle {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
+  color: var(--color-text);
+}
+
+.chatHeaderStatus {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.statusIndicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.statusIndicator--idle {
+  background-color: var(--color-success);
+}
+
+.statusIndicator--active {
+  background-color: var(--color-warning);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.statusText {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+/* Message List Container */
+.messageListContainer {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.messageList {
+  height: 100%;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+/* Scroll to Bottom Button */
+.scrollToBottomButton {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+  box-shadow: var(--shadow-elevated);
+}
+
+.scrollToBottomButton:hover {
+  background-color: var(--color-bg-secondary);
+}
+
+/* Message */
+.message {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.message--user {
+  flex-direction: row-reverse;
+}
+
+.messageAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.messageAvatar--user {
+  background-color: var(--color-accent);
+  color: white;
+}
+
+.messageAvatar--assistant {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text);
+}
+
+.messageBody {
+  max-width: 80%;
+  min-width: 0;
+}
+
+.messageContent {
+  padding: 12px 16px;
+  border-radius: 12px;
+  background-color: var(--color-bg-secondary);
+}
+
+.messageContent--user {
+  background-color: var(--color-accent);
+  color: white;
+}
+
+.messageContent--user .messageText {
+  color: white;
+}
+
+.messageContent--user .messageText a {
+  color: white;
+  text-decoration: underline;
+}
+
+.messageTimestamp {
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  margin-top: 4px;
+  padding-left: 4px;
+}
+
+.message--user .messageTimestamp {
+  text-align: right;
+  padding-right: 4px;
+  padding-left: 0;
+}
+
+/* Message Text (Markdown Content) */
+.messageText {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--color-text);
+}
+
+.messageText p {
+  margin: 0.5em 0;
+}
+
+.messageText p:first-child {
+  margin-top: 0;
+}
+
+.messageText p:last-child {
+  margin-bottom: 0;
+}
+
+.messageText h1,
+.messageText h2,
+.messageText h3,
+.messageText h4,
+.messageText h5,
+.messageText h6 {
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.messageText h1 {
+  font-size: 1.5em;
+}
+
+.messageText h2 {
+  font-size: 1.3em;
+}
+
+.messageText h3 {
+  font-size: 1.1em;
+}
+
+.messageText ul,
+.messageText ol {
+  margin: 0.5em 0;
+  padding-left: 1.5em;
+}
+
+.messageText li {
+  margin: 0.25em 0;
+}
+
+.messageText blockquote {
+  margin: 0.5em 0;
+  padding-left: 1em;
+  border-left: 3px solid var(--color-border);
+  color: var(--color-text-secondary);
+}
+
+.inlineCode {
+  font-family: var(--font-family-mono);
+  font-size: 0.9em;
+  background-color: var(--color-bg-tertiary);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+}
+
+.preBlock {
+  background-color: var(--color-bg-tertiary);
+  padding: 12px;
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+  margin: 0.5em 0;
+}
+
+.codeBlock {
+  font-family: var(--font-family-mono);
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.link {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+/* Streaming Cursor */
+.streamingCursor {
+  display: inline-block;
+  width: 8px;
+  height: 16px;
+  background-color: var(--color-text);
+  animation: blink 1s step-end infinite;
+  margin-left: 2px;
+  vertical-align: text-bottom;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
+/* Message Error */
+.messageError {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background-color: rgba(239, 68, 68, 0.1);
+  border-radius: var(--radius-sm);
+  color: var(--color-error);
+  font-size: 13px;
+}
+
+/* File Changes */
+.fileChanges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--color-border);
+}
+
+.fileChange {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  font-size: 12px;
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+}
+
+.fileChange:hover {
+  opacity: 0.8;
+}
+
+.fileChange--created {
+  background-color: rgba(34, 197, 94, 0.1);
+  color: #22c55e;
+}
+
+.fileChange--modified {
+  background-color: rgba(249, 115, 22, 0.1);
+  color: #f97316;
+}
+
+.fileChange--deleted {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.fileChangeIcon {
+  font-weight: 700;
+  font-family: var(--font-family-mono);
+}
+
+.fileChangePath {
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Typing Indicator */
+.typingIndicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  color: var(--color-text-secondary);
+  font-size: 13px;
+}
+
+.typingDots {
+  display: flex;
+  gap: 4px;
+}
+
+.typingDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--color-text-secondary);
+  animation: bounce 1.4s ease-in-out infinite;
+}
+
+.typingDot:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typingDot:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+  0%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-6px); }
+}
+
+/* Input Area Placeholder (for Phase 8) */
+.inputAreaPlaceholder {
+  border-top: 1px solid var(--color-border);
+  padding: 16px;
+  text-align: center;
+}
+
+.inputPlaceholderText {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+}
