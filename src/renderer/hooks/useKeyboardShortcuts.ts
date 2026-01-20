@@ -33,6 +33,7 @@ function matchesShortcut(
 
 export function useKeyboardShortcuts(): void {
   const toggleLeftPanel = useLayoutStore((state) => state.toggleLeftPanel)
+  const openSettingsModal = useLayoutStore((state) => state.openSettingsModal)
   const saveActiveFile = useEditorStore((state) => state.saveActiveFile)
 
   useEffect(() => {
@@ -46,6 +47,11 @@ export function useKeyboardShortcuts(): void {
         key: 's',
         modifiers: { meta: true, ctrl: true },
         action: () => void saveActiveFile(),
+      },
+      {
+        key: ',',
+        modifiers: { meta: true, ctrl: true },
+        action: openSettingsModal,
       },
     ]
 
@@ -61,5 +67,5 @@ export function useKeyboardShortcuts(): void {
 
     document.addEventListener('keydown', handleKeyDown)
     return () => document.removeEventListener('keydown', handleKeyDown)
-  }, [toggleLeftPanel, saveActiveFile])
+  }, [toggleLeftPanel, openSettingsModal, saveActiveFile])
 }

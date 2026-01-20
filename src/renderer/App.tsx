@@ -5,6 +5,7 @@ import { MainLayout } from './components/layout/MainLayout'
 import { StatusBar } from './components/layout/StatusBar'
 import { NewProjectWizard } from './components/templates'
 import type { NewProjectConfig } from './components/templates'
+import { SettingsModal } from './components/settings'
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
 import { useLayoutStore } from './stores/layoutStore'
 import { useProjectStore } from './stores/projectStore'
@@ -15,6 +16,8 @@ export function App(): ReactElement {
 
   const newProjectWizardOpen = useLayoutStore((state) => state.newProjectWizardOpen)
   const closeNewProjectWizard = useLayoutStore((state) => state.closeNewProjectWizard)
+  const settingsModalOpen = useLayoutStore((state) => state.settingsModalOpen)
+  const closeSettingsModal = useLayoutStore((state) => state.closeSettingsModal)
   const createProject = useProjectStore((state) => state.createProject)
   const setTemplateId = useProjectStore((state) => state.setTemplateId)
   const setRootPath = useFileStore((state) => state.setRootPath)
@@ -40,6 +43,7 @@ export function App(): ReactElement {
         onClose={closeNewProjectWizard}
         onProjectCreate={handleProjectCreate}
       />
+      <SettingsModal isOpen={settingsModalOpen} onClose={closeSettingsModal} />
     </div>
   )
 }

@@ -1,6 +1,7 @@
 import type { ReactElement } from 'react'
 import { useCallback, useMemo, useEffect, useState } from 'react'
 import { useEditorStore } from '../../stores/editorStore'
+import { useSettingsStore } from '../../stores/settingsStore'
 import { TabBar } from './TabBar'
 import { CodeEditor } from './CodeEditor'
 import { WysiwygEditor } from './WysiwygEditor'
@@ -17,13 +18,14 @@ export function MarkdownEditor(): ReactElement {
     openFiles,
     mode,
     autoSaveEnabled,
-    autoSaveDelay,
     setActiveFile,
     closeFile,
     updateContent,
     saveActiveFile,
     setMode,
   } = useEditorStore()
+
+  const autoSaveDelay = useSettingsStore((state) => state.autoSaveDelay)
 
   const files = useMemo(() => {
     return Array.from(openFiles.values()).map((f) => ({

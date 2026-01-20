@@ -13,6 +13,8 @@ interface LayoutState {
   leftPanelCollapsed: boolean
   /** Whether new project wizard is open */
   newProjectWizardOpen: boolean
+  /** Whether settings modal is open */
+  settingsModalOpen: boolean
 }
 
 interface LayoutActions {
@@ -22,6 +24,8 @@ interface LayoutActions {
   resetLayout: () => void
   openNewProjectWizard: () => void
   closeNewProjectWizard: () => void
+  openSettingsModal: () => void
+  closeSettingsModal: () => void
 }
 
 type LayoutStore = LayoutState & LayoutActions
@@ -33,6 +37,7 @@ const DEFAULT_LAYOUT: LayoutState = {
   minRightPanelWidth: 400,
   leftPanelCollapsed: false,
   newProjectWizardOpen: false,
+  settingsModalOpen: false,
 }
 
 export const useLayoutStore = create<LayoutStore>()(
@@ -56,6 +61,10 @@ export const useLayoutStore = create<LayoutStore>()(
       openNewProjectWizard: () => set({ newProjectWizardOpen: true }),
 
       closeNewProjectWizard: () => set({ newProjectWizardOpen: false }),
+
+      openSettingsModal: () => set({ settingsModalOpen: true }),
+
+      closeSettingsModal: () => set({ settingsModalOpen: false }),
     }),
     { name: 'spec-planner-layout' }
   )

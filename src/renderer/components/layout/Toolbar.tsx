@@ -6,6 +6,7 @@ import styles from './Toolbar.module.css'
 export function Toolbar(): ReactElement {
   const setRootPath = useFileStore((state) => state.setRootPath)
   const openNewProjectWizard = useLayoutStore((state) => state.openNewProjectWizard)
+  const openSettingsModal = useLayoutStore((state) => state.openSettingsModal)
 
   const handleNewProject = (): void => {
     openNewProjectWizard()
@@ -19,7 +20,7 @@ export function Toolbar(): ReactElement {
   }
 
   const handleSettings = (): void => {
-    // TODO: Implement settings modal
+    openSettingsModal()
   }
 
   return (

@@ -460,34 +460,34 @@
 
 ## Phase 18: Settings & Preferences
 
-**Status:** 🔄 In Progress
+**Status:** ✅ Complete
 
 **Spec Reference:** Various specs
 
 ### Tasks
-- [ ] **18.1** Create Settings modal component
-- [ ] **18.2** Add Editor section (auto-save, default mode)
-- [ ] **18.3** Add Git section (auto-commit, message template)
-- [ ] **18.4** Add Claude section (CLI path, timeout)
-- [ ] **18.5** Add Template section (custom path)
-- [ ] **18.6** Create SettingsStore with persistence
-- [ ] **18.7** Apply settings across app
-- [ ] **18.8** Add settings button to toolbar
-- [ ] **18.9** Add keyboard shortcut `Cmd+,`
-- [ ] **18.10** Test settings persistence
+- [x] **18.1** Create Settings modal component
+- [x] **18.2** Add Editor section (auto-save, default mode)
+- [x] **18.3** Add Git section (auto-commit, message template)
+- [x] **18.4** Add Claude section (CLI path, timeout)
+- [x] **18.5** Add Template section (custom path)
+- [x] **18.6** Create SettingsStore with persistence
+- [x] **18.7** Apply settings across app
+- [x] **18.8** Add settings button to toolbar
+- [x] **18.9** Add keyboard shortcut `Cmd+,`
+- [x] **18.10** Test settings persistence
 
 ### Verification
-- [ ] Settings modal opens
-- [ ] Changes persist across restart
-- [ ] Settings apply immediately
-- [ ] All sections functional
-- [ ] `Cmd+,` opens settings
+- [x] Settings modal opens
+- [x] Changes persist across restart
+- [x] Settings apply immediately
+- [x] All sections functional
+- [x] `Cmd+,` opens settings
 
 ---
 
 ## Phase 19: Error Handling & Polish
 
-**Status:** ⬜ Not Started
+**Status:** 🔄 In Progress
 
 **Spec Reference:** Various error handling sections
 
@@ -584,10 +584,10 @@
 | 12 | Template System - Core | ✅ Complete |
 | 13 | Template System - UI | ✅ Complete |
 | 14 | Git Integration | ✅ Complete |
-| 15 | Git Auto-Commit | 🔄 In Progress |
-| 16 | Generation Modes | ⬜ Not Started |
-| 17 | File Operations | ⬜ Not Started |
-| 18 | Settings & Preferences | ⬜ Not Started |
-| 19 | Error Handling & Polish | ⬜ Not Started |
+| 15 | Git Auto-Commit | ✅ Complete |
+| 16 | Generation Modes | ✅ Complete |
+| 17 | File Operations | ✅ Complete |
+| 18 | Settings & Preferences | ✅ Complete |
+| 19 | Error Handling & Polish | 🔄 In Progress |
 | 20 | Testing | ⬜ Not Started |
 | 21 | Packaging & Distribution | ⬜ Not Started |
