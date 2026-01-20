@@ -16,6 +16,12 @@
   background-color: var(--color-bg-secondary);
 }
 
+.chatHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
 .chatHeaderTitle {
   font-size: 14px;
   font-weight: 600;
@@ -27,6 +33,37 @@
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+/* Mode Selector */
+.modeSelector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modeSelectorLabel {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.modeSelectorSelect {
+  padding: 4px 8px;
+  font-size: 12px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.modeSelectorSelect:hover {
+  border-color: var(--color-text-secondary);
+}
+
+.modeSelectorSelect:focus {
+  outline: none;
+  border-color: var(--color-accent);
 }
 
 .statusIndicator {

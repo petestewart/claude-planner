@@ -1,5 +1,6 @@
 import type { CSSProperties, MouseEvent as ReactMouseEvent, ReactElement } from 'react'
 import type { FileNode, FileStatus } from '../../../shared/types/file'
+import type { GeneratedFile } from '../../../shared/types/project'
 import { FileIcon } from './FileIcon'
 import styles from './file-browser.module.css'
 
@@ -8,6 +9,8 @@ interface FileTreeNodeProps {
   isSelected: boolean
   isExpanded: boolean
   status: FileStatus
+  /** Generation status for spec files (draft, approved, modified) */
+  generationStatus?: GeneratedFile['status']
   onSelect: () => void
   onToggle: () => void
   onContextMenu: (event: ReactMouseEvent) => void
@@ -19,6 +22,7 @@ export function FileTreeNode({
   isSelected,
   isExpanded,
   status,
+  generationStatus,
   onSelect,
   onToggle,
   onContextMenu,
@@ -66,6 +70,14 @@ export function FileTreeNode({
         expanded={isExpanded}
       />
       <span className={styles.fileNodeName}>{node.name}</span>
+      {generationStatus && (
+        <span
+          className={`${styles.generationBadge} ${styles[`generationBadge--${generationStatus}`]}`}
+          title={`Generated file: ${generationStatus}`}
+        >
+          {generationStatus === 'draft' ? 'D' : generationStatus === 'approved' ? '✓' : '~'}
+        </span>
+      )}
     </div>
   )
 }

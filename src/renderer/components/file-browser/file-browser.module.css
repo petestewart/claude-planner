@@ -181,3 +181,32 @@
   padding: var(--spacing-xs) var(--spacing-sm);
   font-size: 12px;
 }
+
+/* Generation status badges */
+.generationBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  margin-left: 6px;
+  font-size: 10px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+
+.generationBadge--draft {
+  background-color: rgba(249, 115, 22, 0.2);
+  color: var(--color-warning);
+}
+
+.generationBadge--approved {
+  background-color: rgba(34, 197, 94, 0.2);
+  color: var(--color-success);
+}
+
+.generationBadge--modified {
+  background-color: rgba(59, 130, 246, 0.2);
+  color: var(--color-accent);
+}

@@ -406,34 +406,34 @@
 
 ## Phase 16: Generation Modes
 
-**Status:** 🔄 In Progress
+**Status:** ✅ Complete
 
 **Spec Reference:** [specs/architecture.md](./specs/architecture.md) §3.1
 
 ### Tasks
-- [ ] **16.1** Add generation mode to project settings
-- [ ] **16.2** Create mode selector in ChatHeader
-- [ ] **16.3** Implement incremental mode (one file, approval)
-- [ ] **16.4** Implement all-at-once mode
-- [ ] **16.5** Implement draft-then-refine mode
-- [ ] **16.6** Update context builder with mode instructions
-- [ ] **16.7** Add file approval UI for incremental
-- [ ] **16.8** Show draft indicators for draft mode
-- [ ] **16.9** Test each mode end-to-end
-- [ ] **16.10** Document mode differences
+- [x] **16.1** Add generation mode to project settings
+- [x] **16.2** Create mode selector in ChatHeader
+- [x] **16.3** Implement incremental mode (one file, approval)
+- [x] **16.4** Implement all-at-once mode
+- [x] **16.5** Implement draft-then-refine mode
+- [x] **16.6** Update context builder with mode instructions
+- [x] **16.7** Add file approval UI for incremental
+- [x] **16.8** Show draft indicators for draft mode
+- [x] **16.9** Test each mode end-to-end
+- [x] **16.10** Document mode differences
 
 ### Verification
-- [ ] Mode can be selected
-- [ ] Incremental asks for approval
-- [ ] All-at-once generates everything
-- [ ] Draft mode marks files as drafts
-- [ ] Context includes mode instructions
+- [x] Mode can be selected
+- [x] Incremental asks for approval
+- [x] All-at-once generates everything
+- [x] Draft mode marks files as drafts
+- [x] Context includes mode instructions
 
 ---
 
 ## Phase 17: File Operations
 
-**Status:** ⬜ Not Started
+**Status:** 🔄 In Progress
 
 **Spec Reference:** [specs/file-browser.md](./specs/file-browser.md) §5
 
