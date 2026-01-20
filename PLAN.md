@@ -244,34 +244,34 @@
 
 ## Phase 10: Claude Service
 
-**Status:** 🔄 In Progress
+**Status:** ✅ Complete
 
 **Spec Reference:** [specs/claude-integration.md](./specs/claude-integration.md)
 
 ### Tasks
-- [ ] **10.1** Create ClaudeService types and interfaces
-- [ ] **10.2** Implement ProcessManager (spawn, collect output)
-- [ ] **10.3** Implement StreamParser for CLI output
-- [ ] **10.4** Create ClaudeService with sendMessage
-- [ ] **10.5** Handle streaming response chunks
-- [ ] **10.6** Implement cancel functionality
-- [ ] **10.7** Detect file changes in output
-- [ ] **10.8** Register IPC handlers
-- [ ] **10.9** Connect chat to Claude service
-- [ ] **10.10** Test end-to-end conversation
+- [x] **10.1** Create ClaudeService types and interfaces
+- [x] **10.2** Implement ProcessManager (spawn, collect output)
+- [x] **10.3** Implement StreamParser for CLI output
+- [x] **10.4** Create ClaudeService with sendMessage
+- [x] **10.5** Handle streaming response chunks
+- [x] **10.6** Implement cancel functionality
+- [x] **10.7** Detect file changes in output
+- [x] **10.8** Register IPC handlers
+- [x] **10.9** Connect chat to Claude service
+- [x] **10.10** Test end-to-end conversation
 
 ### Verification
-- [ ] Message sent to Claude CLI
-- [ ] Response streams to chat
-- [ ] File changes detected and displayed
-- [ ] Cancel stops generation
-- [ ] Errors display in chat
+- [x] Message sent to Claude CLI
+- [x] Response streams to chat
+- [x] File changes detected and displayed
+- [x] Cancel stops generation
+- [x] Errors display in chat
 
 ---
 
 ## Phase 11: Context Management
 
-**Status:** ⬜ Not Started
+**Status:** 🔄 In Progress
 
 **Spec Reference:** [specs/claude-integration.md](./specs/claude-integration.md) §4.4
 
@@ -579,8 +579,8 @@
 | 7 | Editor File Sync | ✅ Complete |
 | 8 | Chat Interface - Display | ✅ Complete |
 | 9 | Chat Interface - Input | ✅ Complete |
-| 10 | Claude Service | 🔄 In Progress |
-| 11 | Context Management | ⬜ Not Started |
+| 10 | Claude Service | ✅ Complete |
+| 11 | Context Management | 🔄 In Progress |
 | 12 | Template System - Core | ⬜ Not Started |
 | 13 | Template System - UI | ⬜ Not Started |
 | 14 | Git Integration | ⬜ Not Started |

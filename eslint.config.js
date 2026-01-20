@@ -36,6 +36,8 @@ export default [
         HTMLElement: 'readonly',
         HTMLDivElement: 'readonly',
         HTMLTextAreaElement: 'readonly',
+        AbortController: 'readonly',
+        AbortSignal: 'readonly',
         React: 'readonly',
         navigator: 'readonly',
         // Jest globals

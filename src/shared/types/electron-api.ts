@@ -1,5 +1,5 @@
 import type { FileNode, FileWatchEvent } from './file'
-import type { GitStatus, ClaudeStatus } from './git'
+import type { GitStatus, ClaudeStatus, StreamEvent, ClaudeInitOptions, ClaudeInitResult } from './git'
 import type { ProjectState } from './project'
 import type { TemplateInfo, Template } from './template'
 
@@ -22,8 +22,9 @@ export interface ElectronAPI {
   }
 
   claude: {
-    send(message: string, context: ProjectState): Promise<void>
-    onStream(callback: (chunk: string) => void): () => void
+    init(options: ClaudeInitOptions): Promise<ClaudeInitResult>
+    send(message: string, context?: ProjectState): Promise<void>
+    onStream(callback: (event: StreamEvent) => void): () => void
     cancel(): Promise<void>
     getStatus(): Promise<ClaudeStatus>
   }

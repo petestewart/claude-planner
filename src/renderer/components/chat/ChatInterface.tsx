@@ -4,15 +4,19 @@ import { useChatStore } from '../../stores/chatStore'
 import { MessageList } from './MessageList'
 import { InputArea } from './InputArea'
 import type { InputAreaRef } from './InputArea'
+import { useClaude } from './hooks'
 import styles from './chat.module.css'
 
 interface ChatInterfaceProps {
   /** Project ID to start session for */
   projectId?: string
+  /** Working directory for Claude CLI */
+  workingDirectory?: string
 }
 
 export function ChatInterface({
   projectId = 'default',
+  workingDirectory,
 }: ChatInterfaceProps): ReactElement {
   const inputAreaRef = useRef<InputAreaRef>(null)
   const session = useChatStore((state) => state.session)
@@ -23,6 +27,9 @@ export function ChatInterface({
   const sendMessage = useChatStore((state) => state.sendMessage)
   const cancelGeneration = useChatStore((state) => state.cancelGeneration)
   const navigateHistory = useChatStore((state) => state.navigateHistory)
+
+  // Initialize Claude service and set up stream listener
+  useClaude(workingDirectory ? { workingDirectory } : {})
 
   // Start a session when component mounts
   useEffect(() => {

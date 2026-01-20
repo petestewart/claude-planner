@@ -30,14 +30,15 @@ const api: ElectronAPI = {
   },
 
   claude: {
+    init: (options) => ipcRenderer.invoke('claude:init', options),
     send: (message: string, context) =>
       ipcRenderer.invoke('claude:send', message, context),
     onStream: (callback) => {
       const listener = (
         _event: Electron.IpcRendererEvent,
-        chunk: string
+        event: Parameters<typeof callback>[0]
       ): void => {
-        callback(chunk)
+        callback(event)
       }
       ipcRenderer.on('claude:stream', listener)
       return () => {

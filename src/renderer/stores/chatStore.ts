@@ -160,14 +160,30 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     // Add placeholder assistant message that will be streamed into
     addMessage({ role: 'assistant', content: '', isStreaming: true })
 
-    // TODO: Call Claude service via IPC
-    // For now, we'll just simulate the response
-    // The actual implementation will be in Phase 10
+    // Call Claude service via IPC
+    // The response streaming is handled via the claude:stream event listener
+    // in the useClaude hook
+    try {
+      if (window.api?.claude?.send) {
+        await window.api.claude.send(content.trim())
+      }
+    } catch (error) {
+      get().setError(error instanceof Error ? error.message : 'Failed to send message')
+    }
   },
 
   cancelGeneration: async () => {
     const { session } = get()
     if (!session) return
+
+    // Send cancel signal via IPC
+    try {
+      if (window.api?.claude?.cancel) {
+        await window.api.claude.cancel()
+      }
+    } catch (error) {
+      console.error('Failed to cancel generation:', error)
+    }
 
     // Mark the current streaming message as complete
     const messages = session.messages
@@ -184,8 +200,6 @@ export const useChatStore = create<ChatStore>((set, get) => ({
         status: 'idle',
       })
     }
-
-    // TODO: Send cancel signal via IPC
   },
 
   appendStreamChunk: (chunk: string) => {
