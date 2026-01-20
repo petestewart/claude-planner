@@ -6,6 +6,7 @@ import { StatusBar } from './components/layout/StatusBar'
 import { NewProjectWizard } from './components/templates'
 import type { NewProjectConfig } from './components/templates'
 import { SettingsModal } from './components/settings'
+import { ToastContainer } from './components/common'
 import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
 import { useLayoutStore } from './stores/layoutStore'
 import { useProjectStore } from './stores/projectStore'
@@ -44,6 +45,7 @@ export function App(): ReactElement {
         onProjectCreate={handleProjectCreate}
       />
       <SettingsModal isOpen={settingsModalOpen} onClose={closeSettingsModal} />
+      <ToastContainer />
     </div>
   )
 }

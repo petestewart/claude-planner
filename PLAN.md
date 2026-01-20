@@ -492,14 +492,14 @@
 **Spec Reference:** Various error handling sections
 
 ### Tasks
-- [ ] **19.1** Create Toast notification system
-- [ ] **19.2** Add error boundaries in React
-- [ ] **19.3** Implement retry logic for failed operations
-- [ ] **19.4** Add loading states throughout UI
-- [ ] **19.5** Add empty states (no files, no messages)
-- [ ] **19.6** Improve accessibility (ARIA labels, focus)
-- [ ] **19.7** Add window menu (File, Edit, View, Help)
-- [ ] **19.8** Add About dialog
+- [x] **19.1** Create Toast notification system
+- [x] **19.2** Add error boundaries in React
+- [x] **19.3** Implement retry logic for failed operations
+- [x] **19.4** Add loading states throughout UI
+- [x] **19.5** Add empty states (no files, no messages)
+- [x] **19.6** Improve accessibility (ARIA labels, focus)
+- [x] **19.7** Add window menu (File, Edit, View, Help)
+- [x] **19.8** Add About dialog
 - [ ] **19.9** Handle uncaught exceptions in main process
 - [ ] **19.10** Test edge cases and error scenarios
 
