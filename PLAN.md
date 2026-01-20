@@ -271,34 +271,34 @@
 
 ## Phase 11: Context Management
 
-**Status:** 🔄 In Progress
+**Status:** ✅ Complete
 
 **Spec Reference:** [specs/claude-integration.md](./specs/claude-integration.md) §4.4
 
 ### Tasks
-- [ ] **11.1** Create ProjectContext types
-- [ ] **11.2** Implement ContextBuilder
-- [ ] **11.3** Create ProjectStore with Zustand
-- [ ] **11.4** Track requirements from conversation
-- [ ] **11.5** Track decisions from conversation
-- [ ] **11.6** Include existing specs in context
-- [ ] **11.7** Add generation mode to context
-- [ ] **11.8** Test context size limits
-- [ ] **11.9** Implement context summarization (if needed)
-- [ ] **11.10** Persist project state to disk
+- [x] **11.1** Create ProjectContext types
+- [x] **11.2** Implement ContextBuilder
+- [x] **11.3** Create ProjectStore with Zustand
+- [x] **11.4** Track requirements from conversation
+- [x] **11.5** Track decisions from conversation
+- [x] **11.6** Include existing specs in context
+- [x] **11.7** Add generation mode to context
+- [x] **11.8** Test context size limits
+- [x] **11.9** Implement context summarization (if needed)
+- [x] **11.10** Persist project state to disk
 
 ### Verification
-- [ ] Context includes project info
-- [ ] Requirements tracked across messages
-- [ ] Decisions persist in context
-- [ ] Spec files summarized in context
-- [ ] Project state saves/loads
+- [x] Context includes project info
+- [x] Requirements tracked across messages
+- [x] Decisions persist in context
+- [x] Spec files summarized in context
+- [x] Project state saves/loads
 
 ---
 
 ## Phase 12: Template System - Core
 
-**Status:** ⬜ Not Started
+**Status:** 🔄 In Progress
 
 **Spec Reference:** [specs/template-system.md](./specs/template-system.md)
 
@@ -580,8 +580,8 @@
 | 8 | Chat Interface - Display | ✅ Complete |
 | 9 | Chat Interface - Input | ✅ Complete |
 | 10 | Claude Service | ✅ Complete |
-| 11 | Context Management | 🔄 In Progress |
-| 12 | Template System - Core | ⬜ Not Started |
+| 11 | Context Management | ✅ Complete |
+| 12 | Template System - Core | 🔄 In Progress |
 | 13 | Template System - UI | ⬜ Not Started |
 | 14 | Git Integration | ⬜ Not Started |
 | 15 | Git Auto-Commit | ⬜ Not Started |

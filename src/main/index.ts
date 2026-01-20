@@ -2,6 +2,7 @@ import { app, BrowserWindow } from 'electron'
 import * as path from 'path'
 import { registerFileHandlers } from './ipc/fileHandlers'
 import { registerClaudeHandlers } from './ipc/claudeHandlers'
+import { registerProjectHandlers } from './ipc/projectHandlers'
 
 let mainWindow: BrowserWindow | null = null
 
@@ -41,6 +42,7 @@ function createWindow(): void {
 app.whenReady().then(() => {
   registerFileHandlers()
   registerClaudeHandlers()
+  registerProjectHandlers()
   createWindow()
 
   app.on('activate', () => {
