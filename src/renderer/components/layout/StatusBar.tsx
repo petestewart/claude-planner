@@ -1,10 +1,12 @@
 import type { ReactElement } from 'react'
+import { GitStatusIndicator } from '../git'
 import styles from './StatusBar.module.css'
 
 interface StatusBarProps {
   claudeStatus?: 'connected' | 'disconnected' | 'error'
   gitEnabled?: boolean
   autoCommitEnabled?: boolean
+  onAutoCommitChange?: (enabled: boolean) => void
   cursorPosition?: { line: number; column: number } | null
   currentFile?: string | null
 }
@@ -13,6 +15,7 @@ export function StatusBar({
   claudeStatus = 'disconnected',
   gitEnabled = false,
   autoCommitEnabled = false,
+  onAutoCommitChange,
   cursorPosition = null,
   currentFile = null,
 }: StatusBarProps): ReactElement {
@@ -38,9 +41,11 @@ export function StatusBar({
       </div>
       <div className={styles.center}>
         {gitEnabled && (
-          <span className={styles.item}>
-            Auto-commit: {autoCommitEnabled ? 'ON' : 'OFF'}
-          </span>
+          <GitStatusIndicator
+            autoCommitEnabled={autoCommitEnabled}
+            {...(onAutoCommitChange ? { onAutoCommitChange } : {})}
+            showDetails
+          />
         )}
       </div>
       <div className={styles.right}>

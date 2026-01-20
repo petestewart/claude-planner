@@ -45,6 +45,11 @@ export default [
         URL: 'readonly',
         HTMLInputElement: 'readonly',
         HTMLSelectElement: 'readonly',
+        CustomEvent: 'readonly',
+        WindowEventMap: 'readonly',
+        EventListener: 'readonly',
+        // Node.js globals
+        Buffer: 'readonly',
         // Jest globals
         jest: 'readonly',
         describe: 'readonly',
@@ -55,6 +60,7 @@ export default [
         afterEach: 'readonly',
         beforeAll: 'readonly',
         afterAll: 'readonly',
+        fail: 'readonly',
       },
     },
     plugins: {

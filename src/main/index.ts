@@ -4,6 +4,7 @@ import { registerFileHandlers } from './ipc/fileHandlers'
 import { registerClaudeHandlers } from './ipc/claudeHandlers'
 import { registerProjectHandlers } from './ipc/projectHandlers'
 import { registerTemplateHandlers } from './ipc/templateHandlers'
+import { registerGitHandlers } from './ipc/gitHandlers'
 
 let mainWindow: BrowserWindow | null = null
 
@@ -45,6 +46,7 @@ app.whenReady().then(() => {
   registerClaudeHandlers()
   registerProjectHandlers()
   registerTemplateHandlers()
+  registerGitHandlers()
   createWindow()
 
   app.on('activate', () => {

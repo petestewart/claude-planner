@@ -1,20 +1,5 @@
-/**
- * Git repository status
- */
-export interface GitStatus {
-  branch: string
-  staged: GitFileChange[]
-  unstaged: GitFileChange[]
-  untracked: string[]
-  ahead: number
-  behind: number
-}
-
-export interface GitFileChange {
-  path: string
-  status: 'added' | 'modified' | 'deleted' | 'renamed'
-  oldPath?: string // For renamed files
-}
+// Note: Git types (GitStatus, FileStatus, etc.) are now in
+// src/main/services/git/types.ts and re-exported via the service
 
 /**
  * Claude service status

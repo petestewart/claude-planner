@@ -50,11 +50,18 @@ const api: ElectronAPI = {
   },
 
   git: {
-    init: (path: string) => ipcRenderer.invoke('git:init', path),
-    commit: (message: string, files: string[]) =>
-      ipcRenderer.invoke('git:commit', message, files),
+    init: (cwd: string, options?) => ipcRenderer.invoke('git:init', cwd, options),
+    connect: (cwd: string, options?) => ipcRenderer.invoke('git:connect', cwd, options),
+    isRepo: (cwd?: string) => ipcRenderer.invoke('git:isRepo', cwd),
     status: () => ipcRenderer.invoke('git:status'),
-    diff: (file?: string) => ipcRenderer.invoke('git:diff', file),
+    stage: (files: string[]) => ipcRenderer.invoke('git:stage', files),
+    stageAll: () => ipcRenderer.invoke('git:stageAll'),
+    unstage: (files: string[]) => ipcRenderer.invoke('git:unstage', files),
+    commit: (message: string) => ipcRenderer.invoke('git:commit', message),
+    diff: (options?) => ipcRenderer.invoke('git:diff', options),
+    log: (limit?: number) => ipcRenderer.invoke('git:log', limit),
+    setAutoCommit: (enabled: boolean) => ipcRenderer.invoke('git:setAutoCommit', enabled),
+    triggerAutoCommit: () => ipcRenderer.invoke('git:triggerAutoCommit'),
   },
 
   project: {

@@ -352,34 +352,34 @@
 
 ## Phase 14: Git Integration
 
-**Status:** 🔄 In Progress
+**Status:** ✅ Complete
 
 **Spec Reference:** [specs/git-integration.md](./specs/git-integration.md)
 
 ### Tasks
-- [ ] **14.1** Create GitService types and interfaces
-- [ ] **14.2** Implement GitExecutor
-- [ ] **14.3** Implement init, isRepo
-- [ ] **14.4** Implement getStatus
-- [ ] **14.5** Implement stage, unstage
-- [ ] **14.6** Implement commit
-- [ ] **14.7** Implement DiffParser
-- [ ] **14.8** Register IPC handlers
-- [ ] **14.9** Create GitStatusIndicator component
-- [ ] **14.10** Add to status bar
+- [x] **14.1** Create GitService types and interfaces
+- [x] **14.2** Implement GitExecutor
+- [x] **14.3** Implement init, isRepo
+- [x] **14.4** Implement getStatus
+- [x] **14.5** Implement stage, unstage
+- [x] **14.6** Implement commit
+- [x] **14.7** Implement DiffParser
+- [x] **14.8** Register IPC handlers
+- [x] **14.9** Create GitStatusIndicator component
+- [x] **14.10** Add to status bar
 
 ### Verification
-- [ ] Git repo can be initialized
-- [ ] Status shows changes
-- [ ] Commits can be created
-- [ ] Diffs can be viewed
-- [ ] Status indicator updates
+- [x] Git repo can be initialized
+- [x] Status shows changes
+- [x] Commits can be created
+- [x] Diffs can be viewed
+- [x] Status indicator updates
 
 ---
 
 ## Phase 15: Git Auto-Commit
 
-**Status:** ⬜ Not Started
+**Status:** 🔄 In Progress
 
 **Spec Reference:** [specs/git-integration.md](./specs/git-integration.md) §4.1
 
@@ -583,8 +583,8 @@
 | 11 | Context Management | ✅ Complete |
 | 12 | Template System - Core | ✅ Complete |
 | 13 | Template System - UI | ✅ Complete |
-| 14 | Git Integration | 🔄 In Progress |
-| 15 | Git Auto-Commit | ⬜ Not Started |
+| 14 | Git Integration | ✅ Complete |
+| 15 | Git Auto-Commit | 🔄 In Progress |
 | 16 | Generation Modes | ⬜ Not Started |
 | 17 | File Operations | ⬜ Not Started |
 | 18 | Settings & Preferences | ⬜ Not Started |
