@@ -1,0 +1,45 @@
+.statusBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--statusbar-height);
+  padding: 0 var(--spacing-md);
+  background-color: var(--color-accent);
+  color: white;
+  font-size: 12px;
+}
+
+.left,
+.center,
+.right {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.left {
+  flex: 1;
+  justify-content: flex-start;
+}
+
+.center {
+  flex: 1;
+  justify-content: center;
+}
+
+.right {
+  flex: 1;
+  justify-content: flex-end;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}

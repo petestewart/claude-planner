@@ -1,0 +1,12 @@
+.divider {
+  height: 4px;
+  cursor: row-resize;
+  background-color: var(--color-border);
+  transition: background-color 0.15s ease;
+  flex-shrink: 0;
+}
+
+.divider:hover,
+.divider.active {
+  background-color: var(--color-primary);
+}

@@ -1,0 +1,7 @@
+.mainLayout {
+  display: grid;
+  grid-template-columns: var(--current-left-panel-width) var(--panel-divider-width) 1fr;
+  grid-template-rows: 1fr;
+  height: calc(100vh - var(--toolbar-height) - var(--statusbar-height));
+  overflow: hidden;
+}

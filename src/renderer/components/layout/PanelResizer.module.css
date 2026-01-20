@@ -1,0 +1,36 @@
+.resizer {
+  width: 4px;
+  cursor: col-resize;
+  background-color: var(--color-border);
+  transition: background-color 0.15s ease;
+  position: relative;
+  flex-shrink: 0;
+}
+
+.resizer:hover,
+.resizer.active {
+  background-color: var(--color-primary);
+}
+
+.resizer.collapsed {
+  width: 12px;
+  cursor: pointer;
+  background-color: var(--color-bg-tertiary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.resizer.collapsed:hover {
+  background-color: var(--color-primary);
+}
+
+.expandIcon {
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.resizer.collapsed:hover .expandIcon {
+  color: var(--color-text-primary);
+}
