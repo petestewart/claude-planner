@@ -11,8 +11,31 @@ import {
   type GitServiceOptions,
   type DiffOptions,
 } from '../services/git'
+import { fileWatcher } from '../services/files/fileWatcher'
 
 let gitService: GitService | null = null
+let fileChangeUnsubscribe: (() => void) | null = null
+
+/**
+ * Connect file watcher to git service for auto-commit
+ */
+function connectFileWatcherToGit(): void {
+  // Unsubscribe from previous connection if any
+  if (fileChangeUnsubscribe) {
+    fileChangeUnsubscribe()
+    fileChangeUnsubscribe = null
+  }
+
+  // Register callback that triggers auto-commit on file changes
+  fileChangeUnsubscribe = fileWatcher.onFileChange((_path, type) => {
+    if (!gitService) return
+
+    // Only trigger auto-commit for relevant events (file changes, not directory changes)
+    if (type === 'add' || type === 'change' || type === 'unlink') {
+      gitService.triggerAutoCommit()
+    }
+  })
+}
 
 export function registerGitHandlers(): void {
   // Initialize or switch git service to a directory
@@ -26,6 +49,10 @@ export function registerGitHandlers(): void {
 
       gitService = createGitService({ cwd, ...options })
       await gitService.init()
+
+      // Connect file watcher for auto-commit
+      connectFileWatcherToGit()
+
       return { success: true }
     }
   )
@@ -41,6 +68,12 @@ export function registerGitHandlers(): void {
 
       gitService = createGitService({ cwd, ...options })
       const isRepo = await gitService.isRepo()
+
+      // Connect file watcher for auto-commit if this is a valid repo
+      if (isRepo) {
+        connectFileWatcherToGit()
+      }
+
       return { isRepo }
     }
   )

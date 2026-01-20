@@ -32,6 +32,7 @@ class GitServiceImpl implements GitService {
   private autoCommitEnabled: boolean
   private autoCommitTimer: ReturnType<typeof setTimeout> | null = null
   private pendingChanges: Set<string> = new Set()
+  private debug: boolean
 
   constructor(private options: GitServiceOptions) {
     this.executor = new GitExecutor(
@@ -41,6 +42,16 @@ class GitServiceImpl implements GitService {
     )
     this.diffParser = new DiffParser()
     this.autoCommitEnabled = options.autoCommit ?? false
+    this.debug = options.debug ?? false
+  }
+
+  /**
+   * Log debug message (only if debug mode is enabled)
+   */
+  private debugLog(message: string, ...args: unknown[]): void {
+    if (this.debug) {
+      console.warn('[GitService]', message, ...args)
+    }
   }
 
   async init(): Promise<void> {
@@ -185,9 +196,11 @@ Thumbs.db
   }
 
   setAutoCommit(enabled: boolean): void {
+    this.debugLog(`Auto-commit ${enabled ? 'enabled' : 'disabled'}`)
     this.autoCommitEnabled = enabled
 
     if (!enabled && this.autoCommitTimer) {
+      this.debugLog('Cancelling pending auto-commit')
       clearTimeout(this.autoCommitTimer)
       this.autoCommitTimer = null
       this.pendingChanges.clear()
@@ -197,14 +210,19 @@ Thumbs.db
   triggerAutoCommit(): void {
     if (!this.autoCommitEnabled) return
 
+    this.debugLog('Auto-commit triggered, debouncing...')
+
     // Debounce auto-commit
     if (this.autoCommitTimer) {
       clearTimeout(this.autoCommitTimer)
     }
 
+    const delay = this.options.autoCommitDelay ?? 5000
+    this.debugLog(`Scheduling auto-commit in ${delay}ms`)
+
     this.autoCommitTimer = setTimeout(async () => {
       await this.performAutoCommit()
-    }, this.options.autoCommitDelay ?? 5000)
+    }, delay)
   }
 
   dispose(): void {
@@ -363,18 +381,31 @@ Thumbs.db
   }
 
   private async performAutoCommit(): Promise<void> {
+    this.debugLog('Starting auto-commit...')
+
     try {
       const status = await this.getStatus()
-      if (!status.isDirty) return
+      if (!status.isDirty) {
+        this.debugLog('Auto-commit skipped: no changes to commit')
+        return
+      }
+
+      this.debugLog(
+        `Auto-commit: staging ${status.staged.length} staged, ${status.modified.length} modified, ${status.untracked.length} untracked files`
+      )
 
       await this.stageAll()
 
       const message = this.generateCommitMessage(status)
-      await this.commit(message)
+      this.debugLog(`Auto-commit message: "${message}"`)
+
+      const commitInfo = await this.commit(message)
+      this.debugLog(`Auto-commit successful: ${commitInfo.shortHash}`)
 
       this.pendingChanges.clear()
     } catch (error) {
       console.error('Auto-commit failed:', error)
+      this.debugLog('Auto-commit failed:', error)
     }
   }
 

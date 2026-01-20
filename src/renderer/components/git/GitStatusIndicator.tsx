@@ -73,12 +73,18 @@ export function GitStatusIndicator({
       setIsConnected(result.isRepo)
       if (result.isRepo) {
         void refreshStatus()
+        // Sync auto-commit setting to git service
+        try {
+          await window.api.git.setAutoCommit(autoCommitEnabled)
+        } catch (err) {
+          console.error('Failed to sync auto-commit setting:', err)
+        }
       }
     } catch (err) {
       console.error('Failed to connect to git repo:', err)
       setIsConnected(false)
     }
-  }, [refreshStatus])
+  }, [refreshStatus, autoCommitEnabled])
 
   // Expose connect method
   useEffect(() => {

@@ -379,34 +379,34 @@
 
 ## Phase 15: Git Auto-Commit
 
-**Status:** 🔄 In Progress
+**Status:** ✅ Complete
 
 **Spec Reference:** [specs/git-integration.md](./specs/git-integration.md) §4.1
 
 ### Tasks
-- [ ] **15.1** Implement auto-commit in GitService
-- [ ] **15.2** Add debounce logic
-- [ ] **15.3** Generate commit messages
-- [ ] **15.4** Connect to file watcher
-- [ ] **15.5** Add auto-commit toggle to settings
-- [ ] **15.6** Add auto-commit indicator to UI
-- [ ] **15.7** Persist auto-commit setting
-- [ ] **15.8** Test with rapid file changes
-- [ ] **15.9** Handle commit failures gracefully
-- [ ] **15.10** Log auto-commit activity
+- [x] **15.1** Implement auto-commit in GitService
+- [x] **15.2** Add debounce logic
+- [x] **15.3** Generate commit messages
+- [x] **15.4** Connect to file watcher
+- [x] **15.5** Add auto-commit toggle to settings
+- [x] **15.6** Add auto-commit indicator to UI
+- [x] **15.7** Persist auto-commit setting
+- [x] **15.8** Test with rapid file changes
+- [x] **15.9** Handle commit failures gracefully
+- [x] **15.10** Log auto-commit activity
 
 ### Verification
-- [ ] Auto-commit triggers on file save
-- [ ] Debounce prevents rapid commits
-- [ ] Commit messages are descriptive
-- [ ] Toggle enables/disables feature
-- [ ] Failures don't crash app
+- [x] Auto-commit triggers on file save
+- [x] Debounce prevents rapid commits
+- [x] Commit messages are descriptive
+- [x] Toggle enables/disables feature
+- [x] Failures don't crash app
 
 ---
 
 ## Phase 16: Generation Modes
 
-**Status:** ⬜ Not Started
+**Status:** 🔄 In Progress
 
 **Spec Reference:** [specs/architecture.md](./specs/architecture.md) §3.1
 
