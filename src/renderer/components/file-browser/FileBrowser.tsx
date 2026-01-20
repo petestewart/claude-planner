@@ -1,7 +1,16 @@
 import type { MouseEvent as ReactMouseEvent, ReactElement, KeyboardEvent } from 'react'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import * as path from 'path'
 import type { FileNode } from '../../../shared/types/file'
+
+// Browser-compatible path helpers (no Node.js dependency)
+const pathJoin = (base: string, name: string): string => {
+  return base.endsWith('/') ? `${base}${name}` : `${base}/${name}`
+}
+
+const pathDirname = (filePath: string): string => {
+  const lastSlash = filePath.lastIndexOf('/')
+  return lastSlash > 0 ? filePath.substring(0, lastSlash) : filePath
+}
 import { useFileStore } from '../../stores/fileStore'
 import { FileTree } from './FileTree'
 import { FileBrowserToolbar } from './FileBrowserToolbar'
@@ -84,7 +93,7 @@ export function FileBrowser({ onOpenFile }: FileBrowserProps): ReactElement {
       const fileName = prompt('Enter file name:')
       if (!fileName) return
 
-      const filePath = path.join(parentPath, fileName)
+      const filePath = pathJoin(parentPath, fileName)
       try {
         await window.api.file.create(filePath)
         await refreshTree()
@@ -102,7 +111,7 @@ export function FileBrowser({ onOpenFile }: FileBrowserProps): ReactElement {
       const folderName = prompt('Enter folder name:')
       if (!folderName) return
 
-      const folderPath = path.join(parentPath, folderName)
+      const folderPath = pathJoin(parentPath, folderName)
       try {
         await window.api.dir.create(folderPath)
         await refreshTree()
@@ -118,8 +127,8 @@ export function FileBrowser({ onOpenFile }: FileBrowserProps): ReactElement {
       const newName = prompt('Enter new name:', node.name)
       if (!newName || newName === node.name) return
 
-      const parentDir = path.dirname(node.path)
-      const newPath = path.join(parentDir, newName)
+      const parentDir = pathDirname(node.path)
+      const newPath = pathJoin(parentDir, newName)
       try {
         await window.api.file.rename(node.path, newPath)
         await refreshTree()
@@ -153,13 +162,13 @@ export function FileBrowser({ onOpenFile }: FileBrowserProps): ReactElement {
 
   const handleNewFile = useCallback(() => {
     if (!rootPath) return
-    const targetDir = selectedPath ? path.dirname(selectedPath) : rootPath
+    const targetDir = selectedPath ? pathDirname(selectedPath) : rootPath
     void handleCreateFile(targetDir)
   }, [rootPath, selectedPath, handleCreateFile])
 
   const handleNewFolder = useCallback(() => {
     if (!rootPath) return
-    const targetDir = selectedPath ? path.dirname(selectedPath) : rootPath
+    const targetDir = selectedPath ? pathDirname(selectedPath) : rootPath
     void handleCreateFolder(targetDir)
   }, [rootPath, selectedPath, handleCreateFolder])
 
