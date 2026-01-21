@@ -5,8 +5,10 @@ import { TemplatePreview } from './TemplatePreview'
 import { TemplateManager } from './TemplateManager'
 import type { TemplateInfo, Template } from '../../../shared/types/template'
 import styles from './templates.module.css'
+import * as path from 'path'
 
 type WizardStep = 'select-folder' | 'select-template' | 'preview-template'
+type FolderMode = 'select' | 'create'
 
 interface NewProjectWizardProps {
   /** Whether the wizard is open */
@@ -42,11 +44,19 @@ export function NewProjectWizard({
   const [step, setStep] = useState<WizardStep>('select-folder')
   const [folderPath, setFolderPath] = useState<string | null>(null)
   const [templates, setTemplates] = useState<TemplateInfo[]>([])
-  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(null)
-  const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(null)
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string | null>(
+    null
+  )
+  const [selectedTemplate, setSelectedTemplate] = useState<Template | null>(
+    null
+  )
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [showTemplateManager, setShowTemplateManager] = useState(false)
+  const [folderMode, setFolderMode] = useState<FolderMode>('select')
+  const [parentFolderPath, setParentFolderPath] = useState<string | null>(null)
+  const [newFolderName, setNewFolderName] = useState('')
+  const [isCreatingFolder, setIsCreatingFolder] = useState(false)
 
   // Load templates when wizard opens
   useEffect(() => {
@@ -63,8 +73,25 @@ export function NewProjectWizard({
       setSelectedTemplateId(null)
       setSelectedTemplate(null)
       setError(null)
+      setFolderMode('select')
+      setParentFolderPath(null)
+      setNewFolderName('')
     }
   }, [isOpen])
+
+  // Handle Escape key to close wizard
+  useEffect(() => {
+    if (!isOpen) return
+
+    const handleKeyDown = (e: KeyboardEvent): void => {
+      if (e.key === 'Escape') {
+        onClose()
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [isOpen, onClose])
 
   const loadTemplates = async (): Promise<void> => {
     setIsLoading(true)
@@ -81,15 +108,72 @@ export function NewProjectWizard({
 
   const handleSelectFolder = useCallback(async () => {
     try {
-      const path = await window.api.dir.select()
-      if (path) {
-        setFolderPath(path)
+      const selectedPath = await window.api.dir.select()
+      if (selectedPath) {
+        setFolderPath(selectedPath)
         setStep('select-template')
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to select folder')
     }
   }, [])
+
+  const handleStartCreateFolder = useCallback(() => {
+    setFolderMode('create')
+    setError(null)
+  }, [])
+
+  const handleCancelCreateFolder = useCallback(() => {
+    setFolderMode('select')
+    setParentFolderPath(null)
+    setNewFolderName('')
+    setError(null)
+  }, [])
+
+  const handleSelectParentFolder = useCallback(async () => {
+    try {
+      const selectedPath = await window.api.dir.select()
+      if (selectedPath) {
+        setParentFolderPath(selectedPath)
+      }
+    } catch (err) {
+      setError(
+        err instanceof Error ? err.message : 'Failed to select parent folder'
+      )
+    }
+  }, [])
+
+  const handleCreateFolder = useCallback(async () => {
+    if (!parentFolderPath || !newFolderName.trim()) {
+      setError('Please select a parent folder and enter a folder name')
+      return
+    }
+
+    // Validate folder name (no path separators or invalid characters)
+    // eslint-disable-next-line no-control-regex
+    const invalidChars = /[<>:"/\\|?*\x00-\x1f]/
+    if (invalidChars.test(newFolderName)) {
+      setError('Folder name contains invalid characters')
+      return
+    }
+
+    setIsCreatingFolder(true)
+    setError(null)
+
+    try {
+      const newPath = path.join(parentFolderPath, newFolderName.trim())
+      await window.api.dir.create(newPath)
+      setFolderPath(newPath)
+      setFolderMode('select')
+      setParentFolderPath(null)
+      setNewFolderName('')
+      setStep('select-template')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to create folder')
+    } finally {
+      setIsCreatingFolder(false)
+    }
+  }, [parentFolderPath, newFolderName])
 
   const handleTemplateSelect = useCallback(async (templateId: string) => {
     setSelectedTemplateId(templateId)
@@ -125,7 +209,13 @@ export function NewProjectWizard({
       })
       onClose()
     }
-  }, [folderPath, selectedTemplateId, selectedTemplate, onProjectCreate, onClose])
+  }, [
+    folderPath,
+    selectedTemplateId,
+    selectedTemplate,
+    onProjectCreate,
+    onClose,
+  ])
 
   const handleManageTemplates = useCallback(() => {
     setShowTemplateManager(true)
@@ -207,20 +297,107 @@ export function NewProjectWizard({
           )}
 
           {/* Step 1: Select Folder */}
-          {step === 'select-folder' && (
+          {step === 'select-folder' && folderMode === 'select' && (
             <div className={styles.folderStep}>
               <div className={styles.folderIcon}>📁</div>
-              <h3 className={styles.folderTitle}>Where should we create your project?</h3>
+              <h3 className={styles.folderTitle}>
+                Where should we create your project?
+              </h3>
               <p className={styles.folderDescription}>
-                Choose an empty folder or a location where we can create a new project directory.
+                Choose an existing folder or create a new one for your project.
               </p>
-              <button
-                type="button"
-                className={styles.selectFolderButton}
-                onClick={handleSelectFolder}
-              >
-                Select Folder
-              </button>
+              <div className={styles.folderButtons}>
+                <button
+                  type="button"
+                  className={styles.selectFolderButton}
+                  onClick={handleSelectFolder}
+                >
+                  Select Existing Folder
+                </button>
+                <button
+                  type="button"
+                  className={styles.createFolderButton}
+                  onClick={handleStartCreateFolder}
+                >
+                  Create New Folder
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Step 1b: Create New Folder */}
+          {step === 'select-folder' && folderMode === 'create' && (
+            <div className={styles.folderStep}>
+              <div className={styles.folderIcon}>📁</div>
+              <h3 className={styles.folderTitle}>
+                Create a new project folder
+              </h3>
+              <p className={styles.folderDescription}>
+                Select a parent directory and enter a name for your new folder.
+              </p>
+              <div className={styles.createFolderForm}>
+                <div className={styles.formGroup}>
+                  <label className={styles.formLabel}>Parent Directory</label>
+                  <div className={styles.parentFolderSelect}>
+                    <span className={styles.parentFolderPath}>
+                      {parentFolderPath || 'No folder selected'}
+                    </span>
+                    <button
+                      type="button"
+                      className={styles.browseButton}
+                      onClick={handleSelectParentFolder}
+                    >
+                      Browse...
+                    </button>
+                  </div>
+                </div>
+                <div className={styles.formGroup}>
+                  <label className={styles.formLabel} htmlFor="newFolderName">
+                    Folder Name
+                  </label>
+                  <input
+                    id="newFolderName"
+                    type="text"
+                    className={styles.formInput}
+                    value={newFolderName}
+                    onChange={(e) => setNewFolderName(e.target.value)}
+                    placeholder="my-project"
+                    disabled={isCreatingFolder}
+                  />
+                </div>
+                {parentFolderPath && newFolderName && (
+                  <div className={styles.folderPreview}>
+                    <span className={styles.folderPreviewLabel}>
+                      Will create:
+                    </span>
+                    <span className={styles.folderPreviewPath}>
+                      {path.join(parentFolderPath, newFolderName.trim())}
+                    </span>
+                  </div>
+                )}
+                <div className={styles.createFolderActions}>
+                  <button
+                    type="button"
+                    className={styles.cancelButton}
+                    onClick={handleCancelCreateFolder}
+                    disabled={isCreatingFolder}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.selectFolderButton}
+                    onClick={handleCreateFolder}
+                    disabled={
+                      !parentFolderPath ||
+                      !newFolderName.trim() ||
+                      isCreatingFolder
+                    }
+                  >
+                    {isCreatingFolder ? 'Creating...' : 'Create Folder'}
+                  </button>
+                </div>
+              </div>
             </div>
           )}
 
@@ -228,7 +405,9 @@ export function NewProjectWizard({
           {step === 'select-template' && (
             <div className={styles.templateStep}>
               <div className={styles.selectedFolderInfo}>
-                <span className={styles.folderPathLabel}>Project Location:</span>
+                <span className={styles.folderPathLabel}>
+                  Project Location:
+                </span>
                 <span className={styles.folderPathValue}>{folderPath}</span>
                 <button
                   type="button"
@@ -252,7 +431,9 @@ export function NewProjectWizard({
           {step === 'preview-template' && selectedTemplate && (
             <div className={styles.previewStep}>
               <div className={styles.selectedFolderInfo}>
-                <span className={styles.folderPathLabel}>Project Location:</span>
+                <span className={styles.folderPathLabel}>
+                  Project Location:
+                </span>
                 <span className={styles.folderPathValue}>{folderPath}</span>
               </div>
               <TemplatePreview

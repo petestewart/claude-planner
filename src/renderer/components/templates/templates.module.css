@@ -987,8 +987,136 @@
   transition: opacity var(--transition-fast);
 }
 
-.selectFolderButton:hover {
+.selectFolderButton:hover:not(:disabled) {
   opacity: 0.9;
+}
+
+.selectFolderButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Folder Buttons Container */
+.folderButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+/* Create Folder Button */
+.createFolderButton {
+  padding: 14px 32px;
+  font-size: 16px;
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.createFolderButton:hover {
+  border-color: var(--color-accent);
+  background-color: var(--color-bg-tertiary);
+}
+
+/* Create Folder Form */
+.createFolderForm {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 500px;
+  text-align: left;
+}
+
+/* Parent Folder Select */
+.parentFolderSelect {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.parentFolderPath {
+  flex: 1;
+  font-family: var(--font-family-mono);
+  font-size: 13px;
+  color: var(--color-text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.browseButton {
+  padding: 6px 12px;
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--transition-fast);
+}
+
+.browseButton:hover {
+  border-color: var(--color-accent);
+}
+
+/* Folder Preview */
+.folderPreview {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+  background-color: var(--color-bg-secondary);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+}
+
+.folderPreviewLabel {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+}
+
+.folderPreviewPath {
+  font-family: var(--font-family-mono);
+  font-size: 13px;
+  color: var(--color-accent);
+  word-break: break-all;
+}
+
+/* Create Folder Actions */
+.createFolderActions {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding-top: 8px;
+}
+
+.cancelButton {
+  padding: 12px 24px;
+  font-size: 14px;
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.cancelButton:hover:not(:disabled) {
+  border-color: var(--color-accent);
+}
+
+.cancelButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Template Step */

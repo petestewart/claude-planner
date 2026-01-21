@@ -41,9 +41,9 @@ A: This is the beginning of our conversation — we haven't discussed anything y
 
 ### Issue 2: Cannot create new folders in project wizard
 
-**Status:** 🔄 In Progress
+**Status:** ✅ Complete
 
-- [ ] **2.1** Add "Create New Folder" option to project creation flow
+- [x] **2.1** Add "Create New Folder" option to project creation flow
 
 When creating a new project, the user should be able to create a new folder instead of only being able to select existing folders.
 
@@ -51,7 +51,7 @@ When creating a new project, the user should be able to create a new folder inst
 
 ### Issue 3: Project location not visible in UI
 
-**Status:** ⬜ Open
+**Status:** 🔄 In Progress
 
 - [ ] **3.1** Display parent folder path in UI (toolbar or status bar)
 
@@ -160,8 +160,8 @@ const divider = window.locator('[role="separator"]').first()
 | Issue | Description | Status |
 |-------|-------------|--------|
 | 1 | No conversation state persistence | ✅ Complete |
-| 2 | Cannot create new folders in project wizard | ⬜ Open |
-| 3 | Project location not visible in UI | ⬜ Open |
+| 2 | Cannot create new folders in project wizard | ✅ Complete |
+| 3 | Project location not visible in UI | 🔄 In Progress |
 | 4 | Context menu actions non-functional | ⬜ Open |
 | 5 | File browser toolbar buttons non-functional | ⬜ Open |
 | 6 | Incorrect Claude connection status | ⬜ Open |
