@@ -26,9 +26,24 @@ export class ProcessManager {
     args: string[],
     options: SpawnOptions
   ): AsyncGenerator<string, void, undefined> {
+    console.log('[ProcessManager] Spawning:', this.cliPath, args.join(' '))
+    console.log('[ProcessManager] Working directory:', options.cwd)
+
     const process = spawn(this.cliPath, args, {
       cwd: options.cwd,
       stdio: ['pipe', 'pipe', 'pipe'],
+    })
+
+    // Close stdin immediately - CLI doesn't need it in --print mode
+    process.stdin?.end()
+
+    // Log stderr for debugging
+    process.stderr?.on('data', (chunk) => {
+      console.error('[ProcessManager] stderr:', chunk.toString())
+    })
+
+    process.on('error', (err) => {
+      console.error('[ProcessManager] Process error:', err)
     })
 
     this.currentProcess = process
@@ -49,27 +64,40 @@ export class ProcessManager {
 
     try {
       // Yield stdout chunks as they arrive
+      console.log('[ProcessManager] Starting to read stdout...')
       if (process.stdout) {
         for await (const chunk of process.stdout) {
+          console.log('[ProcessManager] Got stdout chunk:', chunk.toString().substring(0, 100))
           yield chunk.toString()
         }
       }
+      console.log('[ProcessManager] Finished reading stdout')
 
       // Wait for process to close
+      console.log('[ProcessManager] Waiting for process to close...')
       const exitCode = await new Promise<number | null>((resolve, reject) => {
-        process.on('close', (code) => resolve(code))
-        process.on('error', (err) => reject(err))
+        process.on('close', (code) => {
+          console.log('[ProcessManager] Process closed with code:', code)
+          resolve(code)
+        })
+        process.on('error', (err) => {
+          console.error('[ProcessManager] Process error event:', err)
+          reject(err)
+        })
       })
 
       // Check exit code
       if (exitCode !== 0 && exitCode !== null) {
         const stderr = await this.collectStderr(process)
+        console.error('[ProcessManager] Non-zero exit code:', exitCode, 'stderr:', stderr)
         throw new ClaudeServiceError(
           `CLI exited with code ${exitCode}: ${stderr}`,
           'CLI_ERROR'
         )
       }
     } catch (error) {
+      console.error('[ProcessManager] Caught error:', error)
+      console.log('[ProcessManager] Signal aborted?', options.signal.aborted)
       if (options.signal.aborted) {
         throw new ClaudeServiceError('Request cancelled', 'CANCELLED')
       }

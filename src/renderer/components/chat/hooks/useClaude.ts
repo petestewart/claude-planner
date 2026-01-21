@@ -39,9 +39,12 @@ export function useClaude(options: UseClaudeOptions = {}): UseClaudeResult {
         return
       }
 
+      // Ensure we have a valid working directory
+      const workingDirectory = options.workingDirectory || '/'
+
       try {
         const initOptions: { workingDirectory: string; cliPath?: string; debug?: boolean } = {
-          workingDirectory: options.workingDirectory ?? process.cwd(),
+          workingDirectory,
         }
         if (options.cliPath) {
           initOptions.cliPath = options.cliPath
@@ -49,6 +52,8 @@ export function useClaude(options: UseClaudeOptions = {}): UseClaudeResult {
         if (options.debug !== undefined) {
           initOptions.debug = options.debug
         }
+
+        console.log('[useClaude] Initializing with options:', initOptions)
         const result = await window.api.claude.init(initOptions)
 
         initializedRef.current = true
@@ -56,6 +61,8 @@ export function useClaude(options: UseClaudeOptions = {}): UseClaudeResult {
 
         if (!result.available) {
           console.warn('[useClaude] Claude CLI not available')
+        } else {
+          console.log('[useClaude] Initialized successfully')
         }
       } catch (error) {
         console.error('[useClaude] Failed to initialize:', error)

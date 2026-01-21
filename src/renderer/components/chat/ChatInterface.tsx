@@ -32,11 +32,14 @@ interface ChatInterfaceProps {
   projectId?: string
   /** Working directory for Claude CLI */
   workingDirectory?: string
+  /** Path to Claude CLI executable */
+  cliPath?: string
 }
 
 export function ChatInterface({
   projectId = 'default',
   workingDirectory,
+  cliPath,
 }: ChatInterfaceProps): ReactElement {
   const inputAreaRef = useRef<InputAreaRef>(null)
   const session = useChatStore((state) => state.session)
@@ -55,7 +58,10 @@ export function ChatInterface({
   const setGenerationMode = useProjectStore((state) => state.setGenerationMode)
 
   // Initialize Claude service and set up stream listener
-  useClaude(workingDirectory ? { workingDirectory } : {})
+  useClaude({
+    ...(workingDirectory && { workingDirectory }),
+    ...(cliPath && { cliPath }),
+  })
 
   // Start a session when component mounts
   useEffect(() => {

@@ -138,7 +138,8 @@ class ClaudeServiceImpl implements ClaudeService {
   ): string[] {
     // Build command arguments for Claude CLI
     // Use --print flag for non-interactive mode and stream-json for structured output
-    const args: string[] = ['--print', '--output-format', 'stream-json']
+    // Note: --verbose is required when using --print with stream-json
+    const args: string[] = ['--print', '--output-format', 'stream-json', '--verbose']
 
     // Add context via system prompt if provided
     if (options?.context) {

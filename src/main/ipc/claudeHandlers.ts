@@ -44,7 +44,10 @@ export function registerClaudeHandlers(): void {
       message: string,
       context?: ProjectContext
     ): Promise<void> => {
+      console.log('[claudeHandlers] claude:send called with message:', message.substring(0, 50))
+
       if (!claudeService) {
+        console.error('[claudeHandlers] Claude service not initialized!')
         throw new Error('Claude service not initialized')
       }
 
@@ -56,13 +59,19 @@ export function registerClaudeHandlers(): void {
       // Stream events to renderer
       try {
         const sendOptions = context ? { context } : undefined
+        console.log('[claudeHandlers] Starting to stream messages...')
+        let eventCount = 0
         for await (const streamEvent of claudeService.sendMessage(message, sendOptions)) {
+          eventCount++
+          console.log('[claudeHandlers] Stream event:', streamEvent.type, streamEvent)
           // Check if window is still valid before sending
           if (!window.isDestroyed()) {
             window.webContents.send('claude:stream', streamEvent)
           }
         }
+        console.log('[claudeHandlers] Stream complete, total events:', eventCount)
       } catch (error) {
+        console.error('[claudeHandlers] Error during streaming:', error)
         const errorEvent: StreamEvent = {
           type: 'error',
           message: error instanceof Error ? error.message : 'Unknown error',

@@ -92,9 +92,22 @@ export class StreamParser {
     const json = JSON.parse(line) as JsonEvent
 
     switch (json.type) {
-      case 'assistant':
+      case 'assistant': {
+        // Assistant message with content array
+        // Format: {"type":"assistant","message":{"content":[{"type":"text","text":"..."}]}}
+        const message = json.message as { content?: Array<{ type: string; text?: string }> } | undefined
+        if (message?.content) {
+          for (const block of message.content) {
+            if (block.type === 'text' && block.text) {
+              return { type: 'text', content: block.text }
+            }
+          }
+        }
+        return null
+      }
+
       case 'assistant_text':
-        // Text content from assistant
+        // Text content from assistant (legacy format)
         if (json.text) {
           return { type: 'text', content: json.text }
         }
@@ -124,6 +137,14 @@ export class StreamParser {
       case 'tool_result':
         // Tool result - may indicate file operation completed
         return this.handleToolResult(json)
+
+      case 'result':
+        // Final result event - skip since content was already streamed via assistant events
+        return null
+
+      case 'system':
+        // System events (init, hooks) - ignore
+        return null
 
       case 'message_start':
       case 'message_delta':

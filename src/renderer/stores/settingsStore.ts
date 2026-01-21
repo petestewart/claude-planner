@@ -27,7 +27,7 @@ type SettingsStore = SettingsState & SettingsActions
 
 const DEFAULT_SETTINGS: SettingsState = {
   autoSaveDelay: 1000,
-  claudeCliPath: 'claude',
+  claudeCliPath: '/Users/petestewart/.local/bin/claude',
   claudeTimeout: 120,
   commitMessageTemplate: 'Auto: {action} {file}',
   customTemplatesPath: '',
