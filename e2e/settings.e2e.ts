@@ -15,6 +15,7 @@ import {
   launchApp,
   closeApp,
   waitForMainLayout,
+  dismissAllModals,
   type AppContext,
 } from './electron-app'
 
@@ -23,6 +24,9 @@ import {
  */
 async function openSettingsAndWait(context: AppContext): Promise<void> {
   const { window } = context
+
+  // First ensure no modals are blocking
+  await dismissAllModals(window)
 
   // Click the settings button
   const settingsButton = window.locator('button[aria-label="Settings"]')
@@ -39,17 +43,11 @@ async function openSettingsAndWait(context: AppContext): Promise<void> {
 
 /**
  * Helper function to close settings modal if open
+ * Uses the robust dismissAllModals from electron-app for reliability
  */
 async function closeSettingsIfOpen(context: AppContext): Promise<void> {
   const { window } = context
-  const settingsTitle = window.locator('h2:has-text("Settings")')
-
-  // Only try to close if settings is visible
-  const isVisible = await settingsTitle.isVisible().catch(() => false)
-  if (isVisible) {
-    await window.keyboard.press('Escape')
-    await window.waitForTimeout(200)
-  }
+  await dismissAllModals(window)
 }
 
 test.describe('Settings Modal - Open/Close (TC-037)', () => {

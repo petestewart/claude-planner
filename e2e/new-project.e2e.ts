@@ -13,6 +13,7 @@ import {
   launchApp,
   closeApp,
   waitForMainLayout,
+  dismissAllModals,
   type AppContext,
 } from './electron-app'
 
@@ -30,11 +31,20 @@ test.describe('New Project Flow', () => {
     }
   })
 
+  // Ensure clean state before each test
+  test.beforeEach(async () => {
+    if (context?.window) {
+      await dismissAllModals(context.window)
+    }
+  })
+
   test('should open new project wizard from toolbar', async () => {
     const { window } = context
 
     // Find and click the "New Project" button in the toolbar
-    const newProjectButton = window.locator('button:has-text("New"), button[aria-label*="new project" i]')
+    const newProjectButton = window.locator(
+      'button:has-text("New"), button[aria-label*="new project" i]'
+    )
 
     if (await newProjectButton.isVisible()) {
       await newProjectButton.click()
@@ -44,7 +54,9 @@ test.describe('New Project Flow', () => {
     }
 
     // Wait for the wizard modal to appear
-    const wizardModal = window.locator('[class*="wizardModal"], [class*="NewProjectWizard"]')
+    const wizardModal = window.locator(
+      '[class*="wizardModal"], [class*="NewProjectWizard"]'
+    )
     await expect(wizardModal).toBeVisible({ timeout: 5000 })
   })
 
@@ -56,7 +68,9 @@ test.describe('New Project Flow', () => {
     await expect(stepIndicator).toBeVisible()
 
     // First step should be active
-    const activeStep = window.locator('[class*="step"][class*="active"], [class*="step--active"]')
+    const activeStep = window.locator(
+      '[class*="step"][class*="active"], [class*="step--active"]'
+    )
     await expect(activeStep).toBeVisible()
   })
 
@@ -64,11 +78,15 @@ test.describe('New Project Flow', () => {
     const { window } = context
 
     // Look for folder selection UI
-    const selectFolderButton = window.locator('button:has-text("Select Folder"), button:has-text("Choose Folder")')
+    const selectFolderButton = window.locator(
+      'button:has-text("Select Folder"), button:has-text("Choose Folder")'
+    )
     await expect(selectFolderButton).toBeVisible()
 
     // Should also have some instructional text
-    const instructionText = window.locator('text=/select|choose|folder|directory/i')
+    const instructionText = window.locator(
+      'text=/select|choose|folder|directory/i'
+    )
     await expect(instructionText.first()).toBeVisible()
   })
 
@@ -76,7 +94,9 @@ test.describe('New Project Flow', () => {
     const { window } = context
 
     // Find and click the close button
-    const closeButton = window.locator('[class*="closeButton"], button:has-text("×"), button[aria-label*="close" i]')
+    const closeButton = window.locator(
+      '[class*="closeButton"], button:has-text("×"), button[aria-label*="close" i]'
+    )
 
     if (await closeButton.isVisible()) {
       await closeButton.click()
@@ -86,7 +106,9 @@ test.describe('New Project Flow', () => {
     }
 
     // Wizard should be closed
-    const wizardModal = window.locator('[class*="wizardModal"], [class*="NewProjectWizard"]')
+    const wizardModal = window.locator(
+      '[class*="wizardModal"], [class*="NewProjectWizard"]'
+    )
     await expect(wizardModal).not.toBeVisible({ timeout: 2000 })
   })
 
@@ -94,7 +116,9 @@ test.describe('New Project Flow', () => {
     const { window } = context
 
     // Open wizard again
-    const newProjectButton = window.locator('button:has-text("New"), button[aria-label*="new project" i]')
+    const newProjectButton = window.locator(
+      'button:has-text("New"), button[aria-label*="new project" i]'
+    )
 
     if (await newProjectButton.isVisible()) {
       await newProjectButton.click()
@@ -103,11 +127,15 @@ test.describe('New Project Flow', () => {
     }
 
     // Wizard should appear again in initial state
-    const wizardModal = window.locator('[class*="wizardModal"], [class*="NewProjectWizard"]')
+    const wizardModal = window.locator(
+      '[class*="wizardModal"], [class*="NewProjectWizard"]'
+    )
     await expect(wizardModal).toBeVisible({ timeout: 5000 })
 
     // Should be on step 1 again
-    const selectFolderButton = window.locator('button:has-text("Select Folder"), button:has-text("Choose Folder")')
+    const selectFolderButton = window.locator(
+      'button:has-text("Select Folder"), button:has-text("Choose Folder")'
+    )
     await expect(selectFolderButton).toBeVisible()
   })
 
@@ -132,24 +160,37 @@ test.describe('New Project - Template Selection', () => {
     }
   })
 
+  // Ensure clean state before each test
+  test.beforeEach(async () => {
+    if (context?.window) {
+      await dismissAllModals(context.window)
+    }
+  })
+
   test('should navigate to template selection when folder is provided', async () => {
     const { window } = context
 
     // Open the wizard
-    const newProjectButton = window.locator('button:has-text("New"), button[aria-label*="new project" i]')
+    const newProjectButton = window.locator(
+      'button:has-text("New"), button[aria-label*="new project" i]'
+    )
     if (await newProjectButton.isVisible()) {
       await newProjectButton.click()
     }
 
     // Wait for wizard
-    const wizardModal = window.locator('[class*="wizardModal"], [class*="NewProjectWizard"]')
+    const wizardModal = window.locator(
+      '[class*="wizardModal"], [class*="NewProjectWizard"]'
+    )
     await expect(wizardModal).toBeVisible({ timeout: 5000 })
 
     // Note: In a real E2E test, we would need to mock the dir.select() dialog
     // or use an automated approach to select a folder.
     // For now, we'll check that the UI is ready for folder selection
 
-    const selectFolderButton = window.locator('button:has-text("Select Folder"), button:has-text("Choose Folder")')
+    const selectFolderButton = window.locator(
+      'button:has-text("Select Folder"), button:has-text("Choose Folder")'
+    )
     await expect(selectFolderButton).toBeVisible()
     await expect(selectFolderButton).toBeEnabled()
   })
@@ -161,8 +202,12 @@ test.describe('New Project - Template Selection', () => {
     // In the actual app, this requires folder selection first
 
     // Check if we're showing templates (might be on different step)
-    const templateSelector = window.locator('[class*="templateSelector"], [class*="TemplateSelector"]')
-    const templateCards = window.locator('[class*="templateCard"], [class*="TemplateCard"]')
+    const templateSelector = window.locator(
+      '[class*="templateSelector"], [class*="TemplateSelector"]'
+    )
+    const templateCards = window.locator(
+      '[class*="templateCard"], [class*="TemplateCard"]'
+    )
 
     // If templates are visible, verify their structure
     if (await templateSelector.isVisible()) {
@@ -170,7 +215,9 @@ test.describe('New Project - Template Selection', () => {
       await expect(templateCards.first()).toBeVisible()
 
       // Templates should have names
-      const templateNames = window.locator('[class*="templateCard"] [class*="name"], [class*="TemplateCard"] [class*="title"]')
+      const templateNames = window.locator(
+        '[class*="templateCard"] [class*="name"], [class*="TemplateCard"] [class*="title"]'
+      )
       await expect(templateNames.first()).toBeVisible()
     }
   })
@@ -188,17 +235,28 @@ test.describe('New Project - Keyboard Navigation', () => {
     }
   })
 
+  // Ensure clean state before each test
+  test.beforeEach(async () => {
+    if (context?.window) {
+      await dismissAllModals(context.window)
+    }
+  })
+
   test('should close wizard on Escape key', async () => {
     const { window } = context
 
     // Open the wizard
-    const newProjectButton = window.locator('button:has-text("New"), button[aria-label*="new project" i]')
+    const newProjectButton = window.locator(
+      'button:has-text("New"), button[aria-label*="new project" i]'
+    )
     if (await newProjectButton.isVisible()) {
       await newProjectButton.click()
     }
 
     // Wait for wizard
-    const wizardModal = window.locator('[class*="wizardModal"], [class*="NewProjectWizard"]')
+    const wizardModal = window.locator(
+      '[class*="wizardModal"], [class*="NewProjectWizard"]'
+    )
     await expect(wizardModal).toBeVisible({ timeout: 5000 })
 
     // Press Escape
@@ -212,13 +270,17 @@ test.describe('New Project - Keyboard Navigation', () => {
     const { window } = context
 
     // Open the wizard
-    const newProjectButton = window.locator('button:has-text("New"), button[aria-label*="new project" i]')
+    const newProjectButton = window.locator(
+      'button:has-text("New"), button[aria-label*="new project" i]'
+    )
     if (await newProjectButton.isVisible()) {
       await newProjectButton.click()
     }
 
     // Wait for wizard
-    const wizardModal = window.locator('[class*="wizardModal"], [class*="NewProjectWizard"]')
+    const wizardModal = window.locator(
+      '[class*="wizardModal"], [class*="NewProjectWizard"]'
+    )
     await expect(wizardModal).toBeVisible({ timeout: 5000 })
 
     // Tab should move focus through interactive elements

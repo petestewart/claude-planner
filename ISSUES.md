@@ -144,27 +144,25 @@ The status is now passed from `App.tsx` to `StatusBar` via the chatStore.
 
 ### Issue 8: Resize cursor E2E test uses wrong selector
 
-**Status:** ⬜ Open
+**Status:** ✅ Complete
 
-- [ ] **8.1** Fix selector in `ui-polish.e2e.ts` for resize cursor test
+- [x] **8.1** Fix selector in `ui-polish.e2e.ts` for resize cursor test
 
 **Affected test:**
 - `should show resize cursor when hovering divider` (in `Layout Panel Resizing (TC-002)`)
 
 **Root cause:** The test looks for `[class*="resizer"], [class*="divider"], [class*="splitter"]` but the actual DOM elements are `<div role="separator">` with aria-labels like "Resize panels vertically" and "Resize panels horizontally".
 
-**Evidence:** Page snapshot shows:
-- `separator "Resize panels vertically" [ref=e26]`
-- `separator "Resize panels horizontally" [ref=e34]`
-
-**Recommended fix:**
+**Solution:** Updated the selector in `ui-polish.e2e.ts` from:
 ```typescript
-// Change from:
 const divider = window.locator('[class*="resizer"], [class*="divider"], [class*="splitter"]').first()
-
-// To:
+```
+To:
+```typescript
 const divider = window.locator('[role="separator"]').first()
 ```
+
+Updated all three tests that reference dividers: `should have vertical divider`, `should show resize cursor when hovering divider`, and `should be able to drag vertical divider`.
 
 ---
 
@@ -197,26 +195,30 @@ function joinPath(parentPath: string, childName: string): string {
 
 ### Issue 10: Settings modal overlay blocks tests across test suites
 
-**Status:** ⬜ Open
+**Status:** ✅ Complete
 
-- [ ] **10.1** Fix Settings modal state leakage between E2E test suites
+- [x] **10.1** Fix Settings modal state leakage between E2E test suites
 
 **Affected tests (14 failing):**
 - 4 tests in `new-project.e2e.ts` - New Project Flow tests
 - 9 tests in `settings.e2e.ts` - Settings Modal tests
 - 1 test in `ui-polish.e2e.ts` - Resize cursor test
 
-**Error pattern:**
-```
-<div role="dialog" aria-modal="true" class="_overlay_eclk9_1" aria-labelledby="settings-title">…</div> intercepts pointer events
-```
+**Root cause:** The Settings modal state was persisted via Zustand's `persist` middleware to localStorage. When tests ran and opened the Settings modal, the state persisted across test suites, causing the modal to reappear on subsequent app launches.
 
-**Root cause:** The Settings modal overlay remains visible between tests and blocks pointer events on other UI elements. The `closeSettingsIfOpen` helper function may not be reliably closing the modal before subsequent tests run.
+**Solution:** Implemented a multi-layered fix in `e2e/electron-app.ts`:
 
-**Potential causes:**
-1. Modal close animation timing - the modal may still be visible during close animation
-2. State not fully reset between `test.describe` blocks
-3. Escape key press not reliably closing the modal in headless mode
+1. **Clear localStorage on app launch**: Added `localStorage.clear()` and page reload in `launchApp()` to ensure each test suite starts with fresh state
+2. **Added `dismissSettingsIfVisible()`**: New helper function that specifically targets the Settings modal dialog using the correct selector `[role="dialog"][aria-labelledby="settings-title"]`
+3. **Added `dismissAllModals()`**: Generic function that dismisses any modal dialog (handles both Settings and New Project wizard)
+4. **Updated `launchApp()`**: Now calls `dismissAllModals()` after clearing localStorage to handle any modals that appear
+5. **Added `beforeEach` hooks**: All test.describe blocks in `settings.e2e.ts`, `new-project.e2e.ts`, and `ui-polish.e2e.ts` now call `dismissAllModals()` before each test
+
+**Updated files:**
+- `e2e/electron-app.ts` - Added helper functions and localStorage clearing
+- `e2e/settings.e2e.ts` - Imports `dismissAllModals`, uses it in helpers
+- `e2e/new-project.e2e.ts` - Added `beforeEach` hooks with `dismissAllModals`
+- `e2e/ui-polish.e2e.ts` - Added `beforeEach` hooks with `dismissAllModals`
 
 ---
 
@@ -231,6 +233,6 @@ function joinPath(parentPath: string, childName: string): string {
 | 5 | File browser toolbar buttons non-functional | ✅ Complete |
 | 6 | Incorrect Claude connection status | ✅ Complete |
 | 7 | Settings E2E tests flaky (9 tests) | ✅ Complete |
-| 8 | Resize cursor E2E test wrong selector (1 test) | ⬜ Open |
+| 8 | Resize cursor E2E test wrong selector (1 test) | ✅ Complete |
 | 9 | E2E tests blocked by preload/sandbox issue | ✅ Complete |
-| 10 | Settings modal overlay blocks tests (14 tests) | ⬜ Open |
+| 10 | Settings modal overlay blocks tests (14 tests) | ✅ Complete |

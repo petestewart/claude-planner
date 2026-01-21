@@ -50,8 +50,22 @@ export async function launchApp(): Promise<AppContext> {
   // Wait for the app to fully load
   await window.waitForLoadState('domcontentloaded')
 
-  // Wait longer for React to hydrate and render
+  // Clear localStorage to prevent persisted Zustand state from interfering with tests
+  // This ensures each test suite starts with a clean state
+  await window.evaluate(() => {
+    localStorage.clear()
+  })
+
+  // Reload the page after clearing localStorage to ensure React re-renders with fresh state
+  await window.reload()
+  await window.waitForLoadState('domcontentloaded')
+
+  // Wait for React to hydrate and render with fresh state
   await window.waitForTimeout(3000)
+
+  // Dismiss all modals that might be blocking the UI
+  // This handles both the New Project wizard and any persisted modal state (e.g., Settings)
+  await dismissAllModals(window)
 
   return { app, window }
 }
@@ -208,6 +222,118 @@ export async function closeModal(window: Page): Promise<void> {
   } else {
     await window.keyboard.press('Escape')
   }
+}
+
+/**
+ * Dismiss the New Project wizard if it's visible
+ * This wizard appears on first launch and blocks interaction with the app
+ */
+export async function dismissWizardIfVisible(window: Page): Promise<void> {
+  // Check if the wizard overlay is present
+  const wizardOverlay = window.locator('[class*="wizardOverlay"]')
+  const cancelButton = window.locator('button:has-text("Cancel")')
+  const closeButton = window.locator(
+    '[class*="wizard"] button[class*="close"], [class*="wizard"] button:has-text("X")'
+  )
+
+  try {
+    // Give the wizard a moment to appear
+    await window.waitForTimeout(500)
+
+    if (await wizardOverlay.isVisible({ timeout: 1000 })) {
+      // Try Cancel button first
+      if (await cancelButton.isVisible({ timeout: 500 })) {
+        await cancelButton.click()
+        await window.waitForTimeout(300)
+        return
+      }
+
+      // Try close button
+      if (await closeButton.isVisible({ timeout: 500 })) {
+        await closeButton.click()
+        await window.waitForTimeout(300)
+        return
+      }
+
+      // Fall back to Escape key
+      await window.keyboard.press('Escape')
+      await window.waitForTimeout(300)
+    }
+  } catch {
+    // Wizard not present, continue
+  }
+}
+
+/**
+ * Dismiss the Settings modal if it's visible
+ * This handles state leakage between test suites when Settings modal is left open
+ */
+export async function dismissSettingsIfVisible(window: Page): Promise<void> {
+  try {
+    // Look for the Settings modal dialog
+    const settingsDialog = window.locator(
+      '[role="dialog"][aria-labelledby="settings-title"]'
+    )
+
+    if (await settingsDialog.isVisible({ timeout: 500 })) {
+      // Try clicking the Close button first
+      const closeButton = settingsDialog.locator('button:has-text("Close")')
+      if (await closeButton.isVisible({ timeout: 300 })) {
+        await closeButton.click()
+        await window.waitForTimeout(300)
+
+        // Verify modal is closed
+        if (
+          !(await settingsDialog.isVisible({ timeout: 300 }).catch(() => false))
+        ) {
+          return
+        }
+      }
+
+      // Try the X close button
+      const xButton = settingsDialog.locator(
+        'button[aria-label="Close settings"]'
+      )
+      if (await xButton.isVisible({ timeout: 300 })) {
+        await xButton.click()
+        await window.waitForTimeout(300)
+
+        if (
+          !(await settingsDialog.isVisible({ timeout: 300 }).catch(() => false))
+        ) {
+          return
+        }
+      }
+
+      // Fall back to Escape key
+      await window.keyboard.press('Escape')
+      await window.waitForTimeout(300)
+    }
+  } catch {
+    // Settings modal not present, continue
+  }
+}
+
+/**
+ * Dismiss all modal dialogs that might be blocking the UI
+ * This should be called at the start of each test to ensure a clean state
+ */
+export async function dismissAllModals(window: Page): Promise<void> {
+  // Dismiss any modal dialog by pressing Escape multiple times
+  // This handles cases where multiple modals might be stacked or persisted state
+  for (let i = 0; i < 3; i++) {
+    const dialog = window.locator('[role="dialog"]')
+    if (await dialog.isVisible({ timeout: 300 }).catch(() => false)) {
+      await window.keyboard.press('Escape')
+      await window.waitForTimeout(200)
+    } else {
+      break
+    }
+  }
+
+  // Now specifically check for known modals
+  await dismissSettingsIfVisible(window)
+  await dismissWizardIfVisible(window)
 }
 
 /**
