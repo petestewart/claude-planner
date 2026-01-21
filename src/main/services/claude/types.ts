@@ -90,6 +90,12 @@ export interface SendMessageOptions {
 
   /** Files to include in context */
   includeFiles?: string[]
+
+  /** Session ID for conversation continuity */
+  sessionId?: string
+
+  /** Whether this is a continuation of an existing session */
+  continueSession?: boolean
 }
 
 /**

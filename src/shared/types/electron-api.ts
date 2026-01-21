@@ -1,5 +1,10 @@
 import type { FileNode, FileWatchEvent } from './file'
-import type { ClaudeStatus, StreamEvent, ClaudeInitOptions, ClaudeInitResult } from './git'
+import type {
+  ClaudeStatus,
+  StreamEvent,
+  ClaudeInitOptions,
+  ClaudeInitResult,
+} from './git'
 import type { ProjectState } from './project'
 import type { TemplateInfo, Template } from './template'
 import type {
@@ -9,6 +14,18 @@ import type {
   DiffOptions,
   FileDiff,
 } from '../../main/services/git/types'
+
+/**
+ * Options for sending a message to Claude
+ */
+export interface ClaudeSendOptions {
+  /** Project context to include */
+  context?: ProjectState
+  /** Session ID for conversation continuity */
+  sessionId?: string
+  /** Whether this is a continuation of an existing session */
+  continueSession?: boolean
+}
 
 /**
  * API exposed to renderer via contextBridge
@@ -33,15 +50,21 @@ export interface ElectronAPI {
 
   claude: {
     init(options: ClaudeInitOptions): Promise<ClaudeInitResult>
-    send(message: string, context?: ProjectState): Promise<void>
+    send(message: string, options?: ClaudeSendOptions): Promise<void>
     onStream(callback: (event: StreamEvent) => void): () => void
     cancel(): Promise<void>
     getStatus(): Promise<ClaudeStatus>
   }
 
   git: {
-    init(cwd: string, options?: Partial<GitServiceOptions>): Promise<{ success: boolean }>
-    connect(cwd: string, options?: Partial<GitServiceOptions>): Promise<{ isRepo: boolean }>
+    init(
+      cwd: string,
+      options?: Partial<GitServiceOptions>
+    ): Promise<{ success: boolean }>
+    connect(
+      cwd: string,
+      options?: Partial<GitServiceOptions>
+    ): Promise<{ isRepo: boolean }>
     isRepo(cwd?: string): Promise<boolean>
     status(): Promise<GitStatus>
     stage(files: string[]): Promise<void>
@@ -82,7 +105,14 @@ export interface ElectronAPI {
  * Status of the auto-updater
  */
 export interface UpdateStatus {
-  status: 'idle' | 'checking' | 'available' | 'not-available' | 'downloading' | 'downloaded' | 'error'
+  status:
+    | 'idle'
+    | 'checking'
+    | 'available'
+    | 'not-available'
+    | 'downloading'
+    | 'downloaded'
+    | 'error'
   updateInfo?: {
     version: string
     releaseDate: string

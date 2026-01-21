@@ -126,7 +126,9 @@ describe('ClaudeService', () => {
 
       expect(events.length).toBeGreaterThanOrEqual(2)
       expect(events[0]).toEqual(expect.objectContaining({ type: 'start' }))
-      expect(events[events.length - 1]).toEqual(expect.objectContaining({ type: 'complete' }))
+      expect(events[events.length - 1]).toEqual(
+        expect.objectContaining({ type: 'complete' })
+      )
     })
 
     it('parses stream chunks through StreamParser', async () => {
@@ -205,7 +207,9 @@ describe('ClaudeService', () => {
     it('includes system prompt when provided without context', async () => {
       mockSpawnFn.mockImplementation(() => mockSpawn([]))
 
-      for await (const event of service.sendMessage('Hello', { systemPrompt: 'Be helpful' })) {
+      for await (const event of service.sendMessage('Hello', {
+        systemPrompt: 'Be helpful',
+      })) {
         void event // Consume events
       }
 
@@ -230,38 +234,46 @@ describe('ClaudeService', () => {
     })
 
     it('emits error event when spawn throws', async () => {
-      mockSpawnFn.mockImplementation(async function* (): AsyncGenerator<string> {
-        yield '' // Required yield before throw
-        throw new Error('Spawn failed')
-      })
+      mockSpawnFn.mockImplementation(
+        async function* (): AsyncGenerator<string> {
+          yield '' // Required yield before throw
+          throw new Error('Spawn failed')
+        }
+      )
 
       const events: StreamEvent[] = []
       for await (const event of service.sendMessage('Test')) {
         events.push(event)
       }
 
-      expect(events).toContainEqual(expect.objectContaining({
-        type: 'error',
-        message: 'Spawn failed',
-      }))
+      expect(events).toContainEqual(
+        expect.objectContaining({
+          type: 'error',
+          message: 'Spawn failed',
+        })
+      )
     })
 
     it('emits cancelled error when request is cancelled', async () => {
-      mockSpawnFn.mockImplementation(async function* (): AsyncGenerator<string> {
-        yield '' // Required yield before throw
-        throw new ClaudeServiceError('Request cancelled', 'CANCELLED')
-      })
+      mockSpawnFn.mockImplementation(
+        async function* (): AsyncGenerator<string> {
+          yield '' // Required yield before throw
+          throw new ClaudeServiceError('Request cancelled', 'CANCELLED')
+        }
+      )
 
       const events: StreamEvent[] = []
       for await (const event of service.sendMessage('Test')) {
         events.push(event)
       }
 
-      expect(events).toContainEqual(expect.objectContaining({
-        type: 'error',
-        message: 'Request cancelled',
-        code: 'CANCELLED',
-      }))
+      expect(events).toContainEqual(
+        expect.objectContaining({
+          type: 'error',
+          message: 'Request cancelled',
+          code: 'CANCELLED',
+        })
+      )
     })
 
     it('returns to idle state after successful completion', async () => {
@@ -275,10 +287,12 @@ describe('ClaudeService', () => {
     })
 
     it('sets error state when non-cancelled error occurs', async () => {
-      mockSpawnFn.mockImplementation(async function* (): AsyncGenerator<string> {
-        yield '' // Required yield before throw
-        throw new Error('Unexpected error')
-      })
+      mockSpawnFn.mockImplementation(
+        async function* (): AsyncGenerator<string> {
+          yield '' // Required yield before throw
+          throw new Error('Unexpected error')
+        }
+      )
 
       for await (const event of service.sendMessage('Test')) {
         void event // Consume events
@@ -333,6 +347,91 @@ describe('ClaudeService', () => {
 
       const args = mockSpawnFn.mock.calls[0]?.[0] as string[]
       expect(args?.[args.length - 1]).toBe('My test message')
+    })
+
+    it('includes --session-id when sessionId is provided', async () => {
+      mockSpawnFn.mockImplementation(() => mockSpawn([]))
+
+      const sessionId = '550e8400-e29b-41d4-a716-446655440000'
+      for await (const event of service.sendMessage('Test', { sessionId })) {
+        void event // Consume
+      }
+
+      const args = mockSpawnFn.mock.calls[0]?.[0] as string[]
+      expect(args).toContain('--session-id')
+      expect(args).toContain(sessionId)
+    })
+
+    it('includes --continue when continueSession is true', async () => {
+      mockSpawnFn.mockImplementation(() => mockSpawn([]))
+
+      for await (const event of service.sendMessage('Test', {
+        continueSession: true,
+      })) {
+        void event // Consume
+      }
+
+      const args = mockSpawnFn.mock.calls[0]?.[0] as string[]
+      expect(args).toContain('--continue')
+    })
+
+    it('does not include --continue when continueSession is false', async () => {
+      mockSpawnFn.mockImplementation(() => mockSpawn([]))
+
+      for await (const event of service.sendMessage('Test', {
+        continueSession: false,
+      })) {
+        void event // Consume
+      }
+
+      const args = mockSpawnFn.mock.calls[0]?.[0] as string[]
+      expect(args).not.toContain('--continue')
+    })
+
+    it('includes both --session-id and --continue for continuation', async () => {
+      mockSpawnFn.mockImplementation(() => mockSpawn([]))
+
+      const sessionId = '550e8400-e29b-41d4-a716-446655440000'
+      for await (const event of service.sendMessage('Test', {
+        sessionId,
+        continueSession: true,
+      })) {
+        void event // Consume
+      }
+
+      const args = mockSpawnFn.mock.calls[0]?.[0] as string[]
+      expect(args).toContain('--session-id')
+      expect(args).toContain(sessionId)
+      expect(args).toContain('--continue')
+    })
+
+    it('does not include --system-prompt when continueSession is true', async () => {
+      mockSpawnFn.mockImplementation(() => mockSpawn([]))
+
+      for await (const event of service.sendMessage('Test', {
+        systemPrompt: 'Be helpful',
+        continueSession: true,
+      })) {
+        void event // Consume
+      }
+
+      const args = mockSpawnFn.mock.calls[0]?.[0] as string[]
+      expect(args).not.toContain('--system-prompt')
+    })
+
+    it('includes --system-prompt when continueSession is false', async () => {
+      mockSpawnFn.mockImplementation(() => mockSpawn([]))
+
+      for await (const event of service.sendMessage('Test', {
+        systemPrompt: 'Be helpful',
+        continueSession: false,
+      })) {
+        void event // Consume
+      }
+
+      const args = mockSpawnFn.mock.calls[0]?.[0] as string[]
+      expect(args).toContain('--system-prompt')
+      expect(args).toContain('Be helpful')
     })
   })
 })

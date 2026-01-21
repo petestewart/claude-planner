@@ -37,7 +37,9 @@ describe('chatStore', () => {
       expect(state.session?.projectId).toBe('project-123')
       expect(state.session?.messages).toHaveLength(1)
       expect(state.session?.messages[0]?.role).toBe('assistant')
-      expect(state.session?.messages[0]?.content).toContain('Welcome to Spec Planner')
+      expect(state.session?.messages[0]?.content).toContain(
+        'Welcome to Spec Planner'
+      )
     })
 
     it('clears previous error state', () => {
@@ -48,6 +50,24 @@ describe('chatStore', () => {
       const state = useChatStore.getState()
       expect(state.errorMessage).toBeNull()
       expect(state.status).toBe('idle')
+    })
+
+    it('generates a Claude session ID in UUID format', () => {
+      useChatStore.getState().startSession('project-123')
+
+      const state = useChatStore.getState()
+      expect(state.session?.claudeSessionId).toBeDefined()
+      // Verify UUID format: xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx
+      expect(state.session?.claudeSessionId).toMatch(
+        /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+      )
+    })
+
+    it('initializes messagesSentToClaude to 0', () => {
+      useChatStore.getState().startSession('project-123')
+
+      const state = useChatStore.getState()
+      expect(state.session?.messagesSentToClaude).toBe(0)
     })
   })
 
@@ -139,6 +159,64 @@ describe('chatStore', () => {
 
       expect(mockSend).not.toHaveBeenCalled()
     })
+
+    it('passes sessionId and continueSession=false on first message', async () => {
+      const mockSend = window.api.claude.send as jest.Mock
+      mockSend.mockResolvedValue(undefined)
+
+      useChatStore.getState().startSession('project-123')
+      const sessionId = useChatStore.getState().session?.claudeSessionId
+
+      await useChatStore.getState().sendMessage('First message')
+
+      expect(mockSend).toHaveBeenCalledWith('First message', {
+        sessionId,
+        continueSession: false,
+      })
+    })
+
+    it('passes sessionId and continueSession=true on subsequent messages', async () => {
+      const mockSend = window.api.claude.send as jest.Mock
+      mockSend.mockResolvedValue(undefined)
+
+      useChatStore.getState().startSession('project-123')
+      const sessionId = useChatStore.getState().session?.claudeSessionId
+
+      // First message
+      await useChatStore.getState().sendMessage('First message')
+      expect(mockSend).toHaveBeenLastCalledWith('First message', {
+        sessionId,
+        continueSession: false,
+      })
+
+      // Second message
+      await useChatStore.getState().sendMessage('Second message')
+      expect(mockSend).toHaveBeenLastCalledWith('Second message', {
+        sessionId,
+        continueSession: true,
+      })
+
+      // Third message
+      await useChatStore.getState().sendMessage('Third message')
+      expect(mockSend).toHaveBeenLastCalledWith('Third message', {
+        sessionId,
+        continueSession: true,
+      })
+    })
+
+    it('increments messagesSentToClaude counter', async () => {
+      const mockSend = window.api.claude.send as jest.Mock
+      mockSend.mockResolvedValue(undefined)
+
+      useChatStore.getState().startSession('project-123')
+      expect(useChatStore.getState().session?.messagesSentToClaude).toBe(0)
+
+      await useChatStore.getState().sendMessage('First message')
+      expect(useChatStore.getState().session?.messagesSentToClaude).toBe(1)
+
+      await useChatStore.getState().sendMessage('Second message')
+      expect(useChatStore.getState().session?.messagesSentToClaude).toBe(2)
+    })
   })
 
   describe('cancelGeneration', () => {
@@ -154,7 +232,8 @@ describe('chatStore', () => {
       await useChatStore.getState().cancelGeneration()
 
       const state = useChatStore.getState()
-      const lastMessage = state.session?.messages[state.session.messages.length - 1]
+      const lastMessage =
+        state.session?.messages[state.session.messages.length - 1]
       expect(lastMessage?.isStreaming).toBe(false)
       expect(lastMessage?.content).toContain('[Generation cancelled]')
       expect(state.status).toBe('idle')
@@ -173,7 +252,8 @@ describe('chatStore', () => {
       useChatStore.getState().appendStreamChunk('world!')
 
       const state = useChatStore.getState()
-      const lastMessage = state.session?.messages[state.session.messages.length - 1]
+      const lastMessage =
+        state.session?.messages[state.session.messages.length - 1]
       expect(lastMessage?.content).toBe('Hello world!')
     })
 
@@ -202,7 +282,8 @@ describe('chatStore', () => {
       useChatStore.getState().completeMessage()
 
       const state = useChatStore.getState()
-      const lastMessage = state.session?.messages[state.session.messages.length - 1]
+      const lastMessage =
+        state.session?.messages[state.session.messages.length - 1]
       expect(lastMessage?.isStreaming).toBe(false)
       expect(state.status).toBe('idle')
     })
@@ -220,7 +301,8 @@ describe('chatStore', () => {
       useChatStore.getState().completeMessage(fileChanges)
 
       const state = useChatStore.getState()
-      const lastMessage = state.session?.messages[state.session.messages.length - 1]
+      const lastMessage =
+        state.session?.messages[state.session.messages.length - 1]
       expect(lastMessage?.fileChanges).toEqual(fileChanges)
     })
   })
@@ -238,7 +320,8 @@ describe('chatStore', () => {
       const state = useChatStore.getState()
       expect(state.status).toBe('error')
       expect(state.errorMessage).toBe('Connection failed')
-      const lastMessage = state.session?.messages[state.session.messages.length - 1]
+      const lastMessage =
+        state.session?.messages[state.session.messages.length - 1]
       expect(lastMessage?.error).toBe('Connection failed')
       expect(lastMessage?.isStreaming).toBe(false)
     })

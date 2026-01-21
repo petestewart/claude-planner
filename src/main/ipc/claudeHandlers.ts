@@ -7,7 +7,11 @@
 
 import { ipcMain, BrowserWindow } from 'electron'
 import { createClaudeService } from '../services/claude'
-import type { ClaudeService, ProjectContext, StreamEvent } from '../services/claude'
+import type {
+  ClaudeService,
+  ProjectContext,
+  StreamEvent,
+} from '../services/claude'
 
 let claudeService: ClaudeService | null = null
 
@@ -17,6 +21,12 @@ interface InitOptions {
   debug?: boolean
 }
 
+interface SendOptions {
+  context?: ProjectContext
+  sessionId?: string
+  continueSession?: boolean
+}
+
 export function registerClaudeHandlers(): void {
   // Initialize service
   ipcMain.handle(
@@ -24,7 +34,10 @@ export function registerClaudeHandlers(): void {
     async (
       _event,
       options: InitOptions
-    ): Promise<{ available: boolean; status: ReturnType<ClaudeService['getStatus']> }> => {
+    ): Promise<{
+      available: boolean
+      status: ReturnType<ClaudeService['getStatus']>
+    }> => {
       claudeService = createClaudeService({
         workingDirectory: options.workingDirectory,
         ...(options.cliPath ? { cliPath: options.cliPath } : {}),
@@ -39,12 +52,15 @@ export function registerClaudeHandlers(): void {
   // Send message (starts streaming)
   ipcMain.handle(
     'claude:send',
-    async (
-      event,
-      message: string,
-      context?: ProjectContext
-    ): Promise<void> => {
-      console.log('[claudeHandlers] claude:send called with message:', message.substring(0, 50))
+    async (event, message: string, options?: SendOptions): Promise<void> => {
+      console.log(
+        '[claudeHandlers] claude:send called with message:',
+        message.substring(0, 50)
+      )
+      console.log('[claudeHandlers] Options:', {
+        sessionId: options?.sessionId,
+        continueSession: options?.continueSession,
+      })
 
       if (!claudeService) {
         console.error('[claudeHandlers] Claude service not initialized!')
@@ -58,18 +74,34 @@ export function registerClaudeHandlers(): void {
 
       // Stream events to renderer
       try {
-        const sendOptions = context ? { context } : undefined
+        const sendOptions = {
+          ...(options?.context ? { context: options.context } : {}),
+          ...(options?.sessionId ? { sessionId: options.sessionId } : {}),
+          ...(options?.continueSession !== undefined
+            ? { continueSession: options.continueSession }
+            : {}),
+        }
         console.log('[claudeHandlers] Starting to stream messages...')
         let eventCount = 0
-        for await (const streamEvent of claudeService.sendMessage(message, sendOptions)) {
+        for await (const streamEvent of claudeService.sendMessage(
+          message,
+          sendOptions
+        )) {
           eventCount++
-          console.log('[claudeHandlers] Stream event:', streamEvent.type, streamEvent)
+          console.log(
+            '[claudeHandlers] Stream event:',
+            streamEvent.type,
+            streamEvent
+          )
           // Check if window is still valid before sending
           if (!window.isDestroyed()) {
             window.webContents.send('claude:stream', streamEvent)
           }
         }
-        console.log('[claudeHandlers] Stream complete, total events:', eventCount)
+        console.log(
+          '[claudeHandlers] Stream complete, total events:',
+          eventCount
+        )
       } catch (error) {
         console.error('[claudeHandlers] Error during streaming:', error)
         const errorEvent: StreamEvent = {
@@ -93,7 +125,9 @@ export function registerClaudeHandlers(): void {
   // Get status
   ipcMain.handle(
     'claude:status',
-    (): ReturnType<ClaudeService['getStatus']> | { ready: false; state: 'idle' } => {
+    ():
+      | ReturnType<ClaudeService['getStatus']>
+      | { ready: false; state: 'idle' } => {
       return claudeService?.getStatus() ?? { ready: false, state: 'idle' }
     }
   )

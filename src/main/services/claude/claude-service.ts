@@ -50,7 +50,11 @@ class ClaudeServiceImpl implements ClaudeService {
       const args = this.buildCommand(message, options)
 
       if (this.options.debug) {
-        console.warn('[ClaudeService] Running:', this.options.cliPath ?? 'claude', args.join(' '))
+        console.warn(
+          '[ClaudeService] Running:',
+          this.options.cliPath ?? 'claude',
+          args.join(' ')
+        )
       }
 
       // Yield start event
@@ -88,7 +92,8 @@ class ClaudeServiceImpl implements ClaudeService {
       if (error instanceof ClaudeServiceError && error.code === 'CANCELLED') {
         yield { type: 'error', message: 'Request cancelled', code: 'CANCELLED' }
       } else {
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error'
+        const errorMessage =
+          error instanceof Error ? error.message : 'Unknown error'
         yield { type: 'error', message: errorMessage, code: 'UNKNOWN' }
         this.status.state = 'error'
         this.status.errorMessage = errorMessage
@@ -139,14 +144,31 @@ class ClaudeServiceImpl implements ClaudeService {
     // Build command arguments for Claude CLI
     // Use --print flag for non-interactive mode and stream-json for structured output
     // Note: --verbose is required when using --print with stream-json
-    const args: string[] = ['--print', '--output-format', 'stream-json', '--verbose']
+    const args: string[] = [
+      '--print',
+      '--output-format',
+      'stream-json',
+      '--verbose',
+    ]
 
-    // Add context via system prompt if provided
-    if (options?.context) {
-      const contextPrompt = this.buildContextPrompt(options.context)
-      args.push('--system-prompt', contextPrompt)
-    } else if (options?.systemPrompt) {
-      args.push('--system-prompt', options.systemPrompt)
+    // Add session ID for conversation continuity
+    if (options?.sessionId) {
+      args.push('--session-id', options.sessionId)
+    }
+
+    // Add --continue flag for subsequent messages in a session
+    if (options?.continueSession) {
+      args.push('--continue')
+    }
+
+    // Add context via system prompt if provided (only on first message)
+    if (!options?.continueSession) {
+      if (options?.context) {
+        const contextPrompt = this.buildContextPrompt(options.context)
+        args.push('--system-prompt', contextPrompt)
+      } else if (options?.systemPrompt) {
+        args.push('--system-prompt', options.systemPrompt)
+      }
     }
 
     // Add files to include in context

@@ -36,8 +36,8 @@ const api: ElectronAPI = {
 
   claude: {
     init: (options) => ipcRenderer.invoke('claude:init', options),
-    send: (message: string, context) =>
-      ipcRenderer.invoke('claude:send', message, context),
+    send: (message: string, options) =>
+      ipcRenderer.invoke('claude:send', message, options),
     onStream: (callback) => {
       const listener = (
         _event: Electron.IpcRendererEvent,
@@ -55,8 +55,10 @@ const api: ElectronAPI = {
   },
 
   git: {
-    init: (cwd: string, options?) => ipcRenderer.invoke('git:init', cwd, options),
-    connect: (cwd: string, options?) => ipcRenderer.invoke('git:connect', cwd, options),
+    init: (cwd: string, options?) =>
+      ipcRenderer.invoke('git:init', cwd, options),
+    connect: (cwd: string, options?) =>
+      ipcRenderer.invoke('git:connect', cwd, options),
     isRepo: (cwd?: string) => ipcRenderer.invoke('git:isRepo', cwd),
     status: () => ipcRenderer.invoke('git:status'),
     stage: (files: string[]) => ipcRenderer.invoke('git:stage', files),
@@ -65,7 +67,8 @@ const api: ElectronAPI = {
     commit: (message: string) => ipcRenderer.invoke('git:commit', message),
     diff: (options?) => ipcRenderer.invoke('git:diff', options),
     log: (limit?: number) => ipcRenderer.invoke('git:log', limit),
-    setAutoCommit: (enabled: boolean) => ipcRenderer.invoke('git:setAutoCommit', enabled),
+    setAutoCommit: (enabled: boolean) =>
+      ipcRenderer.invoke('git:setAutoCommit', enabled),
     triggerAutoCommit: () => ipcRenderer.invoke('git:triggerAutoCommit'),
   },
 
@@ -81,7 +84,8 @@ const api: ElectronAPI = {
     delete: (id: string) => ipcRenderer.invoke('template:delete', id),
     getCustomPath: () => ipcRenderer.invoke('template:getCustomPath'),
     getDefaultPath: () => ipcRenderer.invoke('template:getDefaultPath'),
-    setCustomPath: (path: string | null) => ipcRenderer.invoke('template:setCustomPath', path),
+    setCustomPath: (path: string | null) =>
+      ipcRenderer.invoke('template:setCustomPath', path),
   },
 
   updater: {

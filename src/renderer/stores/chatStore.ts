@@ -1,6 +1,18 @@
 import { create } from 'zustand'
 
 /**
+ * Generate a UUID v4 for session IDs
+ * This is compatible with Claude CLI's --session-id flag
+ */
+function generateUUID(): string {
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = (Math.random() * 16) | 0
+    const v = c === 'x' ? r : (r & 0x3) | 0x8
+    return v.toString(16)
+  })
+}
+
+/**
  * File change made by agent
  */
 export interface FileChange {
@@ -38,12 +50,16 @@ export interface ChatMessage {
 export interface ChatSession {
   /** Session ID */
   id: string
+  /** Claude CLI session ID (UUID format for --session-id flag) */
+  claudeSessionId: string
   /** Associated project ID */
   projectId: string
   /** All messages in session */
   messages: ChatMessage[]
   /** Session start time */
   startedAt: string
+  /** Number of messages sent to Claude (used to determine if --continue is needed) */
+  messagesSentToClaude: number
 }
 
 type ChatStatus = 'idle' | 'waiting' | 'streaming' | 'error'
@@ -108,6 +124,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
   startSession: (projectId: string) => {
     const session: ChatSession = {
       id: generateId(),
+      claudeSessionId: generateUUID(),
       projectId,
       messages: [
         {
@@ -118,6 +135,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
         },
       ],
       startedAt: new Date().toISOString(),
+      messagesSentToClaude: 0,
     }
     set({ session, status: 'idle', errorMessage: null })
   },
@@ -144,10 +162,13 @@ export const useChatStore = create<ChatStore>((set, get) => ({
     const { session, inputHistory, addMessage } = get()
     if (!session || !content.trim()) return
 
+    // Determine if this is a continuation (not the first message in the session)
+    const continueSession = session.messagesSentToClaude > 0
+
     // Add user message
     addMessage({ role: 'user', content: content.trim() })
 
-    // Update input history
+    // Update input history and increment messages sent counter
     const newHistory = [...inputHistory, content.trim()].slice(-50) // Keep last 50
 
     set({
@@ -155,20 +176,30 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       inputHistory: newHistory,
       historyIndex: -1,
       status: 'waiting',
+      session: {
+        ...session,
+        messages: get().session?.messages ?? session.messages,
+        messagesSentToClaude: session.messagesSentToClaude + 1,
+      },
     })
 
     // Add placeholder assistant message that will be streamed into
     addMessage({ role: 'assistant', content: '', isStreaming: true })
 
-    // Call Claude service via IPC
+    // Call Claude service via IPC with session continuity options
     // The response streaming is handled via the claude:stream event listener
     // in the useClaude hook
     try {
       if (window.api?.claude?.send) {
-        await window.api.claude.send(content.trim())
+        await window.api.claude.send(content.trim(), {
+          sessionId: session.claudeSessionId,
+          continueSession,
+        })
       }
     } catch (error) {
-      get().setError(error instanceof Error ? error.message : 'Failed to send message')
+      get().setError(
+        error instanceof Error ? error.message : 'Failed to send message'
+      )
     }
   },
 
