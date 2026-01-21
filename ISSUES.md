@@ -83,11 +83,13 @@ Right-clicking on a folder brings up a context menu with New File, New Folder, R
 
 - [x] **5.1** Fix "New File" toolbar button
 - [x] **5.2** Fix "New Folder" toolbar button
-- [ ] **5.3** Clarify or fix unclear icon (rectangle with horizontal line)
+- [x] **5.3** Clarify or fix unclear icon (rectangle with horizontal line)
 
 The four icons at the top right of the files pane appear to be for: new file, new folder, unclear function (rectangle with horizontal line), and refresh. Only Refresh works.
 
-**Solution:** The New File and New Folder toolbar buttons share the same code path as the context menu actions. They were fixed by the same `InputDialog` component solution from Issue 4. Task 5.3 remains open for a future review of the toolbar icons.
+**Solution:** The New File and New Folder toolbar buttons share the same code path as the context menu actions. They were fixed by the same `InputDialog` component solution from Issue 4.
+
+**5.3 Clarification:** The "rectangle with horizontal line" icon (`⊟`) is the "Collapse All" button which collapses all expanded folders in the file tree. The icon is a standard collapse/minus symbol and already has proper tooltip (`title="Collapse All"`) and accessibility attributes (`aria-label="Collapse All"`). The icon is functional and users can discover its purpose by hovering over it.
 
 ---
 
