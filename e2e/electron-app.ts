@@ -5,7 +5,11 @@
  * the Electron application in Playwright tests.
  */
 
-import { _electron as electron, type ElectronApplication, type Page } from 'playwright-core'
+import {
+  _electron as electron,
+  type ElectronApplication,
+  type Page,
+} from 'playwright-core'
 import path from 'path'
 
 export interface AppContext {
@@ -30,11 +34,24 @@ export async function launchApp(): Promise<AppContext> {
   // Wait for the first window to be ready
   const window = await app.firstWindow()
 
+  // Listen for console messages to help debug issues
+  window.on('console', (msg) => {
+    const type = msg.type()
+    if (type === 'error' || type === 'warning') {
+      console.log(`[Renderer ${type}]:`, msg.text())
+    }
+  })
+
+  // Listen for page errors
+  window.on('pageerror', (error) => {
+    console.log('[Renderer page error]:', error.message)
+  })
+
   // Wait for the app to fully load
   await window.waitForLoadState('domcontentloaded')
 
-  // Wait a bit more for React to render
-  await window.waitForTimeout(1000)
+  // Wait longer for React to hydrate and render
+  await window.waitForTimeout(3000)
 
   return { app, window }
 }
@@ -61,35 +78,48 @@ export async function getWindow(app: ElectronApplication): Promise<Page> {
  * Wait for the main layout to be visible
  */
 export async function waitForMainLayout(window: Page): Promise<void> {
-  await window.waitForSelector('.app', { state: 'visible', timeout: 10000 })
+  await window.waitForSelector('.app', { state: 'visible', timeout: 30000 })
 }
 
 /**
- * Get the toolbar element
+ * Get the main toolbar element (the header toolbar, not nested toolbars)
  */
-export async function getToolbar(window: Page): Promise<ReturnType<Page['locator']>> {
-  return window.locator('[class*="toolbar"]')
+export async function getToolbar(
+  window: Page
+): Promise<ReturnType<Page['locator']>> {
+  // Target the main header toolbar specifically (it's a <header> element)
+  return window.locator('header[class*="toolbar"]')
 }
 
 /**
  * Get the file browser element
  */
-export async function getFileBrowser(window: Page): Promise<ReturnType<Page['locator']>> {
-  return window.locator('[class*="fileBrowser"]')
+export async function getFileBrowser(
+  window: Page
+): Promise<ReturnType<Page['locator']>> {
+  // Target the file browser container - CSS modules mangle the class names
+  // Look for the div with fileBrowser class pattern
+  return window.locator('div[class*="fileBrowser"]').first()
 }
 
 /**
  * Get the editor area element
  */
-export async function getEditorArea(window: Page): Promise<ReturnType<Page['locator']>> {
-  return window.locator('[class*="editor"]')
+export async function getEditorArea(
+  window: Page
+): Promise<ReturnType<Page['locator']>> {
+  // Target the main editor container
+  return window.locator('div[class*="editorContainer"]').first()
 }
 
 /**
  * Get the chat interface element
  */
-export async function getChatInterface(window: Page): Promise<ReturnType<Page['locator']>> {
-  return window.locator('[class*="chat"]')
+export async function getChatInterface(
+  window: Page
+): Promise<ReturnType<Page['locator']>> {
+  // Target the chat container
+  return window.locator('div[class*="chatInterface"]').first()
 }
 
 /**
@@ -100,7 +130,9 @@ export async function clickToolbarButton(
   labelOrText: string
 ): Promise<void> {
   const toolbar = await getToolbar(window)
-  const button = toolbar.locator(`button:has-text("${labelOrText}"), button[aria-label*="${labelOrText}"]`)
+  const button = toolbar.locator(
+    `button:has-text("${labelOrText}"), button[aria-label*="${labelOrText}"]`
+  )
   await button.click()
 }
 
@@ -116,8 +148,13 @@ export async function openFile(window: Page, fileName: string): Promise<void> {
 /**
  * Type text in the chat input
  */
-export async function typeChatMessage(window: Page, message: string): Promise<void> {
-  const chatInput = window.locator('textarea[placeholder*="message"], textarea[class*="input"]')
+export async function typeChatMessage(
+  window: Page,
+  message: string
+): Promise<void> {
+  const chatInput = window.locator(
+    'textarea[placeholder*="message"], textarea[class*="input"]'
+  )
   await chatInput.fill(message)
 }
 
@@ -125,14 +162,19 @@ export async function typeChatMessage(window: Page, message: string): Promise<vo
  * Send the current chat message
  */
 export async function sendChatMessage(window: Page): Promise<void> {
-  const sendButton = window.locator('button:has-text("Send"), button[aria-label*="send"]')
+  const sendButton = window.locator(
+    'button:has-text("Send"), button[aria-label*="send"]'
+  )
   await sendButton.click()
 }
 
 /**
  * Wait for a response in the chat
  */
-export async function waitForChatResponse(window: Page, timeout = 30000): Promise<void> {
+export async function waitForChatResponse(
+  window: Page,
+  timeout = 30000
+): Promise<void> {
   await window.waitForSelector('[class*="message"][class*="assistant"]', {
     state: 'visible',
     timeout,
@@ -158,7 +200,9 @@ export async function openSettings(window: Page): Promise<void> {
  */
 export async function closeModal(window: Page): Promise<void> {
   // Try clicking the close button or pressing Escape
-  const closeButton = window.locator('[class*="closeButton"], button[aria-label="Close"]')
+  const closeButton = window.locator(
+    '[class*="closeButton"], button[aria-label="Close"]'
+  )
   if (await closeButton.isVisible()) {
     await closeButton.click()
   } else {

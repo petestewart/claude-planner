@@ -71,16 +71,19 @@ test.describe('Application Launch', () => {
   test('should show welcome message in chat', async () => {
     const { window } = context
 
-    // Look for a welcome message or initial prompt
-    const chatArea = window.locator('[class*="chat"]')
-    const welcomeText = chatArea.locator('text=/welcome|get started|Hello/i')
+    // Look for a welcome message in the chat interface
+    const chatInterface = await getChatInterface(window)
 
-    // This may or may not exist depending on implementation
+    // Look for the welcome text within the chat interface
+    const welcomeText = chatInterface
+      .locator('text=/welcome|get started/i')
+      .first()
+
+    // The chat container should exist
+    await expect(chatInterface).toBeVisible()
+
+    // Check if welcome message is visible
     const isVisible = await welcomeText.isVisible().catch(() => false)
-
-    // At minimum, the chat container should exist
-    await expect(chatArea).toBeVisible()
-
     if (isVisible) {
       await expect(welcomeText).toBeVisible()
     }
@@ -99,17 +102,20 @@ test.describe('Window Controls', () => {
   })
 
   test('should be able to resize the window', async () => {
-    const { app, window } = context
+    const { app } = context
 
-    // Get initial size
-    const initialSize = window.viewportSize()
+    // In Electron, we need to use the app API to get window bounds
+    // viewportSize() doesn't work the same way as in browser
+    const window = await app.firstWindow()
 
-    // This is Electron-specific - we can't easily resize in Playwright
-    // but we can at least verify the window has a reasonable size
-    expect(initialSize).toBeTruthy()
-    if (initialSize) {
-      expect(initialSize.width).toBeGreaterThan(600)
-      expect(initialSize.height).toBeGreaterThan(400)
-    }
+    // Evaluate window dimensions via the page
+    const dimensions = await window.evaluate(() => ({
+      width: document.documentElement.clientWidth,
+      height: document.documentElement.clientHeight,
+    }))
+
+    // Verify the window has a reasonable size
+    expect(dimensions.width).toBeGreaterThan(600)
+    expect(dimensions.height).toBeGreaterThan(400)
   })
 })

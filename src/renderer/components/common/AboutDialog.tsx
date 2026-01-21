@@ -8,11 +8,19 @@ interface AboutDialogProps {
 }
 
 const APP_VERSION = '0.1.0'
-const ELECTRON_VERSION = process.versions?.electron ?? 'Unknown'
-const NODE_VERSION = process.versions?.node ?? 'Unknown'
-const CHROME_VERSION = process.versions?.chrome ?? 'Unknown'
 
-export function AboutDialog({ isOpen, onClose }: AboutDialogProps): ReactElement | null {
+// Version info - process.versions is not available in renderer with contextIsolation
+// These would need to be exposed via preload if needed in the future
+const versions = {
+  electron: 'N/A',
+  node: 'N/A',
+  chrome: 'N/A',
+}
+
+export function AboutDialog({
+  isOpen,
+  onClose,
+}: AboutDialogProps): ReactElement | null {
   const handleOverlayClick = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
       if (e.target === e.currentTarget) {
@@ -62,15 +70,15 @@ export function AboutDialog({ isOpen, onClose }: AboutDialogProps): ReactElement
           <div className={styles.info}>
             <div className={styles.infoRow}>
               <span className={styles.infoLabel}>Electron</span>
-              <span className={styles.infoValue}>{ELECTRON_VERSION}</span>
+              <span className={styles.infoValue}>{versions.electron}</span>
             </div>
             <div className={styles.infoRow}>
               <span className={styles.infoLabel}>Node.js</span>
-              <span className={styles.infoValue}>{NODE_VERSION}</span>
+              <span className={styles.infoValue}>{versions.node}</span>
             </div>
             <div className={styles.infoRow}>
               <span className={styles.infoLabel}>Chromium</span>
-              <span className={styles.infoValue}>{CHROME_VERSION}</span>
+              <span className={styles.infoValue}>{versions.chrome}</span>
             </div>
           </div>
 
@@ -80,7 +88,11 @@ export function AboutDialog({ isOpen, onClose }: AboutDialogProps): ReactElement
         </div>
 
         <div className={styles.footer}>
-          <button type="button" className={styles.closeButton} onClick={onClose}>
+          <button
+            type="button"
+            className={styles.closeButton}
+            onClick={onClose}
+          >
             Close
           </button>
         </div>
