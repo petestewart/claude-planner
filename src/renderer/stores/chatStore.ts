@@ -64,11 +64,16 @@ export interface ChatSession {
 
 type ChatStatus = 'idle' | 'waiting' | 'streaming' | 'error'
 
+/** Claude CLI connection status for the status bar */
+type ClaudeConnectionStatus = 'connected' | 'disconnected' | 'error'
+
 interface ChatStore {
   /** Current chat session */
   session: ChatSession | null
   /** Chat status */
   status: ChatStatus
+  /** Claude CLI connection status */
+  claudeStatus: ClaudeConnectionStatus
   /** Error message if status is 'error' */
   errorMessage: string | null
   /** Input field value (controlled) */
@@ -90,6 +95,7 @@ interface ChatStore {
   setInputValue: (value: string) => void
   navigateHistory: (direction: 'up' | 'down') => void
   setStatus: (status: ChatStatus) => void
+  setClaudeStatus: (status: ClaudeConnectionStatus) => void
 }
 
 function generateId(): string {
@@ -116,6 +122,7 @@ Let's get started! What would you like to build?`
 export const useChatStore = create<ChatStore>((set, get) => ({
   session: null,
   status: 'idle',
+  claudeStatus: 'disconnected',
   errorMessage: null,
   inputValue: '',
   inputHistory: [],
@@ -351,5 +358,9 @@ export const useChatStore = create<ChatStore>((set, get) => ({
 
   setStatus: (status: ChatStatus) => {
     set({ status })
+  },
+
+  setClaudeStatus: (claudeStatus: ClaudeConnectionStatus) => {
+    set({ claudeStatus })
   },
 }))

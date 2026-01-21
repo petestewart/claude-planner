@@ -11,17 +11,23 @@ import { useKeyboardShortcuts } from './hooks/useKeyboardShortcuts'
 import { useLayoutStore } from './stores/layoutStore'
 import { useProjectStore } from './stores/projectStore'
 import { useFileStore } from './stores/fileStore'
+import { useChatStore } from './stores/chatStore'
 
 export function App(): ReactElement {
   useKeyboardShortcuts()
 
-  const newProjectWizardOpen = useLayoutStore((state) => state.newProjectWizardOpen)
-  const closeNewProjectWizard = useLayoutStore((state) => state.closeNewProjectWizard)
+  const newProjectWizardOpen = useLayoutStore(
+    (state) => state.newProjectWizardOpen
+  )
+  const closeNewProjectWizard = useLayoutStore(
+    (state) => state.closeNewProjectWizard
+  )
   const settingsModalOpen = useLayoutStore((state) => state.settingsModalOpen)
   const closeSettingsModal = useLayoutStore((state) => state.closeSettingsModal)
   const createProject = useProjectStore((state) => state.createProject)
   const setTemplateId = useProjectStore((state) => state.setTemplateId)
   const setRootPath = useFileStore((state) => state.setRootPath)
+  const claudeStatus = useChatStore((state) => state.claudeStatus)
 
   const handleProjectCreate = useCallback(
     (config: NewProjectConfig) => {
@@ -38,7 +44,7 @@ export function App(): ReactElement {
     <div className="app">
       <Toolbar />
       <MainLayout />
-      <StatusBar />
+      <StatusBar claudeStatus={claudeStatus} />
       <NewProjectWizard
         isOpen={newProjectWizardOpen}
         onClose={closeNewProjectWizard}

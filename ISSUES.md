@@ -95,11 +95,18 @@ The four icons at the top right of the files pane appear to be for: new file, ne
 
 ### Issue 6: Incorrect Claude connection status
 
-**Status:** 🔄 In Progress
+**Status:** ✅ Complete
 
-- [ ] **6.1** Fix Claude connection status indicator logic
+- [x] **6.1** Fix Claude connection status indicator logic
 
 The display says "Claude disconnected" at the lower left even when actively sending messages to and receiving messages from Claude Code.
+
+**Solution:** The `StatusBar` component was receiving no `claudeStatus` prop, always defaulting to "disconnected". Added `claudeStatus` state to `chatStore` and updated the `useClaude` hook to set this status when:
+- Claude CLI initializes successfully → "connected"
+- Claude CLI not available → "disconnected"
+- Error during initialization or streaming → "error"
+
+The status is now passed from `App.tsx` to `StatusBar` via the chatStore.
 
 ---
 
@@ -107,7 +114,7 @@ The display says "Claude disconnected" at the lower left even when actively send
 
 ### Issue 7: Settings E2E tests flaky due to shared context
 
-**Status:** ⬜ Open
+**Status:** 🔄 In Progress
 
 - [ ] **7.1** Refactor `settings.e2e.ts` to fix test isolation issues
 
@@ -170,6 +177,6 @@ const divider = window.locator('[role="separator"]').first()
 | 3 | Project location not visible in UI | ✅ Complete |
 | 4 | Context menu actions non-functional | ✅ Complete |
 | 5 | File browser toolbar buttons non-functional | ✅ Complete |
-| 6 | Incorrect Claude connection status | 🔄 In Progress |
-| 7 | Settings E2E tests flaky (9 tests) | ⬜ Open |
+| 6 | Incorrect Claude connection status | ✅ Complete |
+| 7 | Settings E2E tests flaky (9 tests) | 🔄 In Progress |
 | 8 | Resize cursor E2E test wrong selector (1 test) | ⬜ Open |

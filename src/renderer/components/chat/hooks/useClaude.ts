@@ -27,6 +27,7 @@ export function useClaude(options: UseClaudeOptions = {}): UseClaudeResult {
   const availableRef = useRef(false)
 
   const setStatus = useChatStore((state) => state.setStatus)
+  const setClaudeStatus = useChatStore((state) => state.setClaudeStatus)
   const appendStreamChunk = useChatStore((state) => state.appendStreamChunk)
   const completeMessage = useChatStore((state) => state.completeMessage)
   const setError = useChatStore((state) => state.setError)
@@ -43,7 +44,11 @@ export function useClaude(options: UseClaudeOptions = {}): UseClaudeResult {
       const workingDirectory = options.workingDirectory || '/'
 
       try {
-        const initOptions: { workingDirectory: string; cliPath?: string; debug?: boolean } = {
+        const initOptions: {
+          workingDirectory: string
+          cliPath?: string
+          debug?: boolean
+        } = {
           workingDirectory,
         }
         if (options.cliPath) {
@@ -61,16 +66,24 @@ export function useClaude(options: UseClaudeOptions = {}): UseClaudeResult {
 
         if (!result.available) {
           console.warn('[useClaude] Claude CLI not available')
+          setClaudeStatus('disconnected')
         } else {
           console.log('[useClaude] Initialized successfully')
+          setClaudeStatus('connected')
         }
       } catch (error) {
         console.error('[useClaude] Failed to initialize:', error)
+        setClaudeStatus('error')
       }
     }
 
     void init()
-  }, [options.workingDirectory, options.cliPath, options.debug])
+  }, [
+    options.workingDirectory,
+    options.cliPath,
+    options.debug,
+    setClaudeStatus,
+  ])
 
   // Subscribe to stream events
   useEffect(() => {
@@ -95,7 +108,9 @@ export function useClaude(options: UseClaudeOptions = {}): UseClaudeResult {
 
         case 'file_start':
           // Notify that a file operation started
-          appendStreamChunk(`\n\n*${event.action === 'create' ? 'Creating' : event.action === 'modify' ? 'Modifying' : 'Deleting'} file: ${event.path}*\n`)
+          appendStreamChunk(
+            `\n\n*${event.action === 'create' ? 'Creating' : event.action === 'modify' ? 'Modifying' : 'Deleting'} file: ${event.path}*\n`
+          )
           break
 
         case 'file_end':
@@ -112,6 +127,7 @@ export function useClaude(options: UseClaudeOptions = {}): UseClaudeResult {
 
         case 'error':
           setError(event.message)
+          setClaudeStatus('error')
           break
       }
     })
@@ -119,19 +135,24 @@ export function useClaude(options: UseClaudeOptions = {}): UseClaudeResult {
     return () => {
       unsubscribe()
     }
-  }, [setStatus, appendStreamChunk, completeMessage, setError])
+  }, [setStatus, setClaudeStatus, appendStreamChunk, completeMessage, setError])
 
-  const send = useCallback(async (message: string): Promise<void> => {
-    if (!window.api?.claude?.send) {
-      throw new Error('Claude API not available')
-    }
+  const send = useCallback(
+    async (message: string): Promise<void> => {
+      if (!window.api?.claude?.send) {
+        throw new Error('Claude API not available')
+      }
 
-    try {
-      await window.api.claude.send(message)
-    } catch (error) {
-      setError(error instanceof Error ? error.message : 'Failed to send message')
-    }
-  }, [setError])
+      try {
+        await window.api.claude.send(message)
+      } catch (error) {
+        setError(
+          error instanceof Error ? error.message : 'Failed to send message'
+        )
+      }
+    },
+    [setError]
+  )
 
   const cancel = useCallback(async (): Promise<void> => {
     if (!window.api?.claude?.cancel) {
