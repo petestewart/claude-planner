@@ -27,7 +27,7 @@ type SettingsStore = SettingsState & SettingsActions
 
 const DEFAULT_SETTINGS: SettingsState = {
   autoSaveDelay: 1000,
-  claudeCliPath: '/Users/petestewart/.local/bin/claude',
+  claudeCliPath: 'claude',
   claudeTimeout: 120,
   commitMessageTemplate: 'Auto: {action} {file}',
   customTemplatesPath: '',
@@ -46,7 +46,8 @@ export const useSettingsStore = create<SettingsStore>()(
       setClaudeTimeout: (timeout) =>
         set({ claudeTimeout: Math.max(30, Math.min(600, timeout)) }),
 
-      setCommitMessageTemplate: (template) => set({ commitMessageTemplate: template }),
+      setCommitMessageTemplate: (template) =>
+        set({ commitMessageTemplate: template }),
 
       setCustomTemplatesPath: (path) => set({ customTemplatesPath: path }),
 

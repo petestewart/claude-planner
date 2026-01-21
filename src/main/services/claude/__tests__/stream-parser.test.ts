@@ -13,13 +13,17 @@ describe('StreamParser', () => {
       expect(events).toEqual([{ type: 'text', content: 'Hello' }])
     })
 
-    it('parses text events from assistant type', () => {
-      const events = parser.parse('{"type":"assistant","text":"World"}\n')
+    it('parses text events from assistant type with message content', () => {
+      const events = parser.parse(
+        '{"type":"assistant","message":{"content":[{"type":"text","text":"World"}]}}\n'
+      )
       expect(events).toEqual([{ type: 'text', content: 'World' }])
     })
 
     it('parses thinking events', () => {
-      const events = parser.parse('{"type":"thinking","text":"Let me think..."}\n')
+      const events = parser.parse(
+        '{"type":"thinking","text":"Let me think..."}\n'
+      )
       expect(events).toEqual([{ type: 'thinking', content: 'Let me think...' }])
     })
 
@@ -43,13 +47,19 @@ describe('StreamParser', () => {
     })
 
     it('ignores empty lines', () => {
-      const events = parser.parse('\n\n{"type":"assistant_text","text":"Test"}\n\n')
+      const events = parser.parse(
+        '\n\n{"type":"assistant_text","text":"Test"}\n\n'
+      )
       expect(events).toEqual([{ type: 'text', content: 'Test' }])
     })
 
     it('parses error events', () => {
-      const events = parser.parse('{"type":"error","message":"Something went wrong"}\n')
-      expect(events).toEqual([{ type: 'error', message: 'Something went wrong' }])
+      const events = parser.parse(
+        '{"type":"error","message":"Something went wrong"}\n'
+      )
+      expect(events).toEqual([
+        { type: 'error', message: 'Something went wrong' },
+      ])
     })
 
     it('parses error events with code', () => {
@@ -129,7 +139,11 @@ describe('StreamParser', () => {
         '{"type":"tool_use","tool":"read_file","input":{"path":"/test/file.txt"}}\n'
       )
       expect(events).toEqual([
-        { type: 'tool_use', tool: 'read_file', input: { path: '/test/file.txt' } },
+        {
+          type: 'tool_use',
+          tool: 'read_file',
+          input: { path: '/test/file.txt' },
+        },
       ])
     })
   })
