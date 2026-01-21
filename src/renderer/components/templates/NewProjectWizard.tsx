@@ -5,7 +5,21 @@ import { TemplatePreview } from './TemplatePreview'
 import { TemplateManager } from './TemplateManager'
 import type { TemplateInfo, Template } from '../../../shared/types/template'
 import styles from './templates.module.css'
-import * as path from 'path'
+
+/**
+ * Browser-safe path join for display purposes.
+ * Works for both Unix-style and Windows-style paths by detecting the separator
+ * from the parent path.
+ */
+function joinPath(parentPath: string, childName: string): string {
+  // Detect the path separator from the parent path
+  const separator = parentPath.includes('\\') ? '\\' : '/'
+  // Remove trailing separator from parent if present
+  const cleanParent = parentPath.endsWith(separator)
+    ? parentPath.slice(0, -1)
+    : parentPath
+  return `${cleanParent}${separator}${childName}`
+}
 
 type WizardStep = 'select-folder' | 'select-template' | 'preview-template'
 type FolderMode = 'select' | 'create'
@@ -161,7 +175,7 @@ export function NewProjectWizard({
     setError(null)
 
     try {
-      const newPath = path.join(parentFolderPath, newFolderName.trim())
+      const newPath = joinPath(parentFolderPath, newFolderName.trim())
       await window.api.dir.create(newPath)
       setFolderPath(newPath)
       setFolderMode('select')
@@ -371,7 +385,7 @@ export function NewProjectWizard({
                       Will create:
                     </span>
                     <span className={styles.folderPreviewPath}>
-                      {path.join(parentFolderPath, newFolderName.trim())}
+                      {joinPath(parentFolderPath, newFolderName.trim())}
                     </span>
                   </div>
                 )}

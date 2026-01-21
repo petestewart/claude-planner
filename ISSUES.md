@@ -170,41 +170,53 @@ const divider = window.locator('[role="separator"]').first()
 
 ### Issue 9: E2E tests fail with "require is not defined" in preload
 
-**Status:** 🔄 In Progress
+**Status:** ✅ Complete
 
-- [ ] **9.1** Investigate and fix preload script compatibility with Electron 40 sandbox mode
+- [x] **9.1** Investigate and fix preload script compatibility with Electron 40 sandbox mode
 
-**Affected:** ALL E2E tests (complete test suite blocked)
+**Root cause identified:** The renderer code in `NewProjectWizard.tsx` was importing Node.js's `path` module (`import * as path from 'path'`). With `sandbox: true` enabled in Electron's webPreferences, Node.js modules are not available in the renderer process. The bundled renderer code contained `require("path")` which failed at runtime.
 
-**Error message:**
+**Solution:** Replaced the Node.js `path` import with a browser-safe `joinPath()` helper function in `src/renderer/components/templates/NewProjectWizard.tsx`:
+
+```typescript
+function joinPath(parentPath: string, childName: string): string {
+  const separator = parentPath.includes('\\') ? '\\' : '/'
+  const cleanParent = parentPath.endsWith(separator)
+    ? parentPath.slice(0, -1)
+    : parentPath
+  return `${cleanParent}${separator}${childName}`
+}
 ```
-[Renderer page error]: require is not defined
+
+**Results:**
+- E2E tests now run successfully (55 passed)
+- The "require is not defined" error is resolved
+- Remaining test failures (14) are unrelated to this issue and involve Settings modal state management between tests
+
+---
+
+### Issue 10: Settings modal overlay blocks tests across test suites
+
+**Status:** ⬜ Open
+
+- [ ] **10.1** Fix Settings modal state leakage between E2E test suites
+
+**Affected tests (14 failing):**
+- 4 tests in `new-project.e2e.ts` - New Project Flow tests
+- 9 tests in `settings.e2e.ts` - Settings Modal tests
+- 1 test in `ui-polish.e2e.ts` - Resize cursor test
+
+**Error pattern:**
+```
+<div role="dialog" aria-modal="true" class="_overlay_eclk9_1" aria-labelledby="settings-title">…</div> intercepts pointer events
 ```
 
-**Root cause:** The Electron preload script (`dist/main/preload.js`) uses `require("electron")` to import `contextBridge` and `ipcRenderer`. With Electron 40's sandboxed preload environment (`sandbox: true`), the polyfilled `require` function that Electron provides for accessing electron modules appears to not be working correctly in the E2E test environment (Playwright + xvfb).
-
-**Environment:**
-- Node.js: v25.2.1
-- Electron: 40.0.0
-- Playwright: 1.57.0
-- vite-plugin-electron: 0.29.0
-
-**Evidence:** The preload script is correctly bundled as CommonJS with `require("electron")`, which should work according to Electron documentation. However, when Playwright launches the Electron app via xvfb-run, the preload fails with "require is not defined".
+**Root cause:** The Settings modal overlay remains visible between tests and blocks pointer events on other UI elements. The `closeSettingsIfOpen` helper function may not be reliably closing the modal before subsequent tests run.
 
 **Potential causes:**
-1. Electron 40 + Playwright compatibility issue
-2. vite-plugin-electron bundling not correctly configured for sandbox mode
-3. Environment-specific issue with xvfb or headless execution
-
-**Attempted fixes (unsuccessful):**
-1. Removing `external: ['electron']` from preload build config
-2. Setting `sandbox: false` for NODE_ENV=test
-
-**Recommended investigation:**
-1. Test with older Electron version to isolate compatibility issue
-2. Check vite-plugin-electron GitHub issues for Electron 40 compatibility
-3. Try alternative preload bundling approach (esbuild direct)
-4. Test in GUI mode (not headless) to rule out xvfb issue
+1. Modal close animation timing - the modal may still be visible during close animation
+2. State not fully reset between `test.describe` blocks
+3. Escape key press not reliably closing the modal in headless mode
 
 ---
 
@@ -220,4 +232,5 @@ const divider = window.locator('[role="separator"]').first()
 | 6 | Incorrect Claude connection status | ✅ Complete |
 | 7 | Settings E2E tests flaky (9 tests) | ✅ Complete |
 | 8 | Resize cursor E2E test wrong selector (1 test) | ⬜ Open |
-| 9 | E2E tests blocked by preload/sandbox issue | 🔄 In Progress |
+| 9 | E2E tests blocked by preload/sandbox issue | ✅ Complete |
+| 10 | Settings modal overlay blocks tests (14 tests) | ⬜ Open |
