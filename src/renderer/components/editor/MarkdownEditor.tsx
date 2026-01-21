@@ -105,11 +105,10 @@ export function MarkdownEditor(): ReactElement {
     [setMode]
   )
 
-  const handleFormat = useCallback((action: FormatAction) => {
+  const handleFormat = useCallback((_action: FormatAction) => {
     // Format actions are handled by Milkdown's built-in keyboard shortcuts
     // The toolbar serves as a visual reference for available formatting options
     // Users can click buttons or use the keyboard shortcuts shown in tooltips
-    console.log('Format action:', action)
     // TODO: Integrate with Milkdown's command system for click-to-format
   }, [])
 

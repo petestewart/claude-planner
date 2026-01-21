@@ -162,6 +162,7 @@ describe('ClaudeService', () => {
     it('throws when service is busy', async () => {
       // Start a message that will hang
       async function* hangingSpawn(): AsyncGenerator<string> {
+        yield '' // Initial yield to keep generator alive
         await new Promise(() => {}) // Never resolves
       }
       mockSpawnFn.mockImplementation(hangingSpawn)
@@ -192,8 +193,8 @@ describe('ClaudeService', () => {
       }
 
       // Consume the generator
-      for await (const _ of service.sendMessage('Hello', { context })) {
-        // Just consume events
+      for await (const event of service.sendMessage('Hello', { context })) {
+        void event // Just consume events
       }
 
       expect(mockSpawnFn).toHaveBeenCalled()
@@ -204,8 +205,8 @@ describe('ClaudeService', () => {
     it('includes system prompt when provided without context', async () => {
       mockSpawnFn.mockImplementation(() => mockSpawn([]))
 
-      for await (const _ of service.sendMessage('Hello', { systemPrompt: 'Be helpful' })) {
-        // Consume events
+      for await (const event of service.sendMessage('Hello', { systemPrompt: 'Be helpful' })) {
+        void event // Consume events
       }
 
       const args = mockSpawnFn.mock.calls[0]?.[0] as string[]
@@ -216,10 +217,10 @@ describe('ClaudeService', () => {
     it('includes files when specified', async () => {
       mockSpawnFn.mockImplementation(() => mockSpawn([]))
 
-      for await (const _ of service.sendMessage('Hello', {
+      for await (const event of service.sendMessage('Hello', {
         includeFiles: ['/path/to/file1', '/path/to/file2'],
       })) {
-        // Consume events
+        void event // Consume events
       }
 
       const args = mockSpawnFn.mock.calls[0]?.[0] as string[]
@@ -229,7 +230,8 @@ describe('ClaudeService', () => {
     })
 
     it('emits error event when spawn throws', async () => {
-      mockSpawnFn.mockImplementation(async function* () {
+      mockSpawnFn.mockImplementation(async function* (): AsyncGenerator<string> {
+        yield '' // Required yield before throw
         throw new Error('Spawn failed')
       })
 
@@ -245,7 +247,8 @@ describe('ClaudeService', () => {
     })
 
     it('emits cancelled error when request is cancelled', async () => {
-      mockSpawnFn.mockImplementation(async function* () {
+      mockSpawnFn.mockImplementation(async function* (): AsyncGenerator<string> {
+        yield '' // Required yield before throw
         throw new ClaudeServiceError('Request cancelled', 'CANCELLED')
       })
 
@@ -264,20 +267,21 @@ describe('ClaudeService', () => {
     it('returns to idle state after successful completion', async () => {
       mockSpawnFn.mockImplementation(() => mockSpawn([]))
 
-      for await (const _ of service.sendMessage('Test')) {
-        // Consume events
+      for await (const event of service.sendMessage('Test')) {
+        void event // Consume events
       }
 
       expect(service.getStatus().state).toBe('idle')
     })
 
     it('sets error state when non-cancelled error occurs', async () => {
-      mockSpawnFn.mockImplementation(async function* () {
+      mockSpawnFn.mockImplementation(async function* (): AsyncGenerator<string> {
+        yield '' // Required yield before throw
         throw new Error('Unexpected error')
       })
 
-      for await (const _ of service.sendMessage('Test')) {
-        // Consume events
+      for await (const event of service.sendMessage('Test')) {
+        void event // Consume events
       }
 
       expect(service.getStatus().state).toBe('error')
@@ -308,10 +312,10 @@ describe('ClaudeService', () => {
 
   describe('command building', () => {
     it('always includes --print and --output-format stream-json', async () => {
-      mockSpawnFn.mockImplementation(async function* () {})
+      mockSpawnFn.mockImplementation(() => mockSpawn([]))
 
-      for await (const _ of service.sendMessage('Test')) {
-        // Consume
+      for await (const event of service.sendMessage('Test')) {
+        void event // Consume
       }
 
       const args = mockSpawnFn.mock.calls[0]?.[0] as string[]
@@ -321,10 +325,10 @@ describe('ClaudeService', () => {
     })
 
     it('includes message as final argument', async () => {
-      mockSpawnFn.mockImplementation(async function* () {})
+      mockSpawnFn.mockImplementation(() => mockSpawn([]))
 
-      for await (const _ of service.sendMessage('My test message')) {
-        // Consume
+      for await (const event of service.sendMessage('My test message')) {
+        void event // Consume
       }
 
       const args = mockSpawnFn.mock.calls[0]?.[0] as string[]

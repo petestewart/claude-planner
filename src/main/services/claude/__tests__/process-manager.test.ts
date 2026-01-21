@@ -102,8 +102,8 @@ describe('ProcessManager', () => {
       })
 
       // Consume generator
-      for await (const _ of gen) {
-        // Consume
+      for await (const chunk of gen) {
+        void chunk // Consume
       }
 
       expect(mockSpawn).toHaveBeenCalledWith(
@@ -126,11 +126,11 @@ describe('ProcessManager', () => {
       const abortController = new AbortController()
 
       await expect(async () => {
-        for await (const _ of manager.spawn(['test'], {
+        for await (const chunk of manager.spawn(['test'], {
           cwd: '/test',
           signal: abortController.signal,
         })) {
-          // Consume
+          void chunk // Consume
         }
       }).rejects.toThrow(ClaudeServiceError)
     })
@@ -153,11 +153,11 @@ describe('ProcessManager', () => {
       const abortController = new AbortController()
       const removeListenerSpy = jest.spyOn(abortController.signal, 'removeEventListener')
 
-      for await (const _ of manager.spawn(['test'], {
+      for await (const chunk of manager.spawn(['test'], {
         cwd: '/test',
         signal: abortController.signal,
       })) {
-        // Consume
+        void chunk // Consume
       }
 
       expect(removeListenerSpy).toHaveBeenCalledWith('abort', expect.any(Function))
@@ -172,11 +172,11 @@ describe('ProcessManager', () => {
       const abortController = new AbortController()
 
       await expect(async () => {
-        for await (const _ of manager.spawn(['test'], {
+        for await (const chunk of manager.spawn(['test'], {
           cwd: '/test',
           signal: abortController.signal,
         })) {
-          // Consume
+          void chunk // Consume
         }
       }).rejects.toThrow(ClaudeServiceError)
     })
@@ -194,12 +194,17 @@ describe('ProcessManager', () => {
       const stdoutEmitter = new EventEmitter()
       mockProcess.stdout = stdoutEmitter as unknown as Readable
       Object.assign(mockProcess.stdout, {
-        [Symbol.asyncIterator]: async function* () {
+        [Symbol.asyncIterator]: async function* (): AsyncGenerator<Buffer> {
+          yield Buffer.from('') // Initial yield
           await new Promise(() => {}) // Never resolves
         },
       })
       mockProcess.stderr = new EventEmitter() as unknown as Readable
-      Object.assign(mockProcess.stderr, { [Symbol.asyncIterator]: async function* () {} })
+      Object.assign(mockProcess.stderr, {
+        [Symbol.asyncIterator]: async function* (): AsyncGenerator<Buffer> {
+          yield Buffer.from('')
+        },
+      })
       mockProcess.kill = jest.fn().mockReturnValue(true)
 
       mockSpawn.mockReturnValue(mockProcess)

@@ -50,6 +50,9 @@ export default [
         EventListener: 'readonly',
         Node: 'readonly',
         prompt: 'readonly',
+        // Browser DOM globals
+        Element: 'readonly',
+        localStorage: 'readonly',
         // Node.js globals
         Buffer: 'readonly',
         NodeJS: 'readonly',
