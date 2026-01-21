@@ -519,7 +519,7 @@
 **Spec Reference:** [specs/architecture.md](./specs/architecture.md) §9
 
 ### Tasks
-- [ ] **20.1** Write unit tests for services (git, claude, template)
+- [x] **20.1** Write unit tests for services (git, claude, template)
 - [ ] **20.2** Write unit tests for stores
 - [ ] **20.3** Write component tests for major components
 - [ ] **20.4** Mock IPC for renderer tests
