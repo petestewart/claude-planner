@@ -1,8 +1,23 @@
 import type { ReactElement } from 'react'
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { GitStatusIndicator } from '../git'
 import { useProjectStore } from '../../stores/projectStore'
 import styles from './StatusBar.module.css'
+
+/**
+ * Formats a path for display, showing just the folder name and parent folder
+ * e.g., "/home/user/projects/my-app" becomes "projects/my-app"
+ */
+function formatProjectPath(path: string): string {
+  if (!path) return ''
+
+  const parts = path.split(/[/\\]/).filter(Boolean)
+  if (parts.length === 0) return path
+  if (parts.length === 1) return parts[0] ?? path
+
+  // Show last two parts of the path
+  return parts.slice(-2).join('/')
+}
 
 interface StatusBarProps {
   claudeStatus?: 'connected' | 'disconnected' | 'error'
@@ -17,8 +32,14 @@ export function StatusBar({
   cursorPosition = null,
   currentFile = null,
 }: StatusBarProps): ReactElement {
-  const gitConfig = useProjectStore((state) => state.project?.gitConfig)
+  const project = useProjectStore((state) => state.project)
+  const gitConfig = project?.gitConfig
   const setGitConfig = useProjectStore((state) => state.setGitConfig)
+
+  const projectPath = useMemo(() => {
+    if (!project?.rootPath) return null
+    return formatProjectPath(project.rootPath)
+  }, [project?.rootPath])
 
   const handleAutoCommitChange = useCallback(
     async (enabled: boolean) => {
@@ -53,6 +74,12 @@ export function StatusBar({
           />
           {statusIndicator.label}
         </span>
+        {projectPath && (
+          <span className={styles.projectPath} title={project?.rootPath}>
+            <span className={styles.folderIcon}>📁</span>
+            {projectPath}
+          </span>
+        )}
       </div>
       <div className={styles.center}>
         {gitEnabled && (

@@ -51,11 +51,13 @@ When creating a new project, the user should be able to create a new folder inst
 
 ### Issue 3: Project location not visible in UI
 
-**Status:** 🔄 In Progress
+**Status:** ✅ Complete
 
-- [ ] **3.1** Display parent folder path in UI (toolbar or status bar)
+- [x] **3.1** Display parent folder path in UI (toolbar or status bar)
 
 The display should show the parent folder that the project is in. Currently there does not appear to be any way the user can know where on the drive the project files are located unless they remember where they set it.
+
+**Solution:** Added project path display in the StatusBar component. The path is shown in a shortened format (last two folder levels, e.g., "projects/my-app") with the full path available as a tooltip on hover.
 
 ---
 
@@ -63,7 +65,7 @@ The display should show the parent folder that the project is in. Currently ther
 
 ### Issue 4: Context menu actions non-functional
 
-**Status:** ⬜ Open
+**Status:** 🔄 In Progress
 
 - [ ] **4.1** Fix "New File" context menu action
 - [ ] **4.2** Fix "New Folder" context menu action
@@ -161,8 +163,8 @@ const divider = window.locator('[role="separator"]').first()
 |-------|-------------|--------|
 | 1 | No conversation state persistence | ✅ Complete |
 | 2 | Cannot create new folders in project wizard | ✅ Complete |
-| 3 | Project location not visible in UI | 🔄 In Progress |
-| 4 | Context menu actions non-functional | ⬜ Open |
+| 3 | Project location not visible in UI | ✅ Complete |
+| 4 | Context menu actions non-functional | 🔄 In Progress |
 | 5 | File browser toolbar buttons non-functional | ⬜ Open |
 | 6 | Incorrect Claude connection status | ⬜ Open |
 | 7 | Settings E2E tests flaky (9 tests) | ⬜ Open |

@@ -5,7 +5,11 @@ import { useProjectStore } from '../../stores/projectStore'
 // Mock the stores and components
 jest.mock('../../stores/projectStore')
 jest.mock('../git', () => ({
-  GitStatusIndicator: ({ autoCommitEnabled, onAutoCommitChange, showDetails }: {
+  GitStatusIndicator: ({
+    autoCommitEnabled,
+    onAutoCommitChange,
+    showDetails,
+  }: {
     autoCommitEnabled: boolean
     onAutoCommitChange: (enabled: boolean) => void
     showDetails: boolean
@@ -29,9 +33,13 @@ jest.mock('./StatusBar.module.css', () => ({
   right: 'right',
   item: 'item',
   indicator: 'indicator',
+  projectPath: 'projectPath',
+  folderIcon: 'folderIcon',
 }))
 
-const mockUseProjectStore = useProjectStore as jest.MockedFunction<typeof useProjectStore>
+const mockUseProjectStore = useProjectStore as jest.MockedFunction<
+  typeof useProjectStore
+>
 
 describe('StatusBar', () => {
   const mockSetGitConfig = jest.fn()
@@ -105,7 +113,9 @@ describe('StatusBar', () => {
 
     render(<StatusBar gitEnabled={true} />)
 
-    const toggleButton = screen.getByRole('button', { name: /toggle auto-commit/i })
+    const toggleButton = screen.getByRole('button', {
+      name: /toggle auto-commit/i,
+    })
     fireEvent.click(toggleButton)
 
     await waitFor(() => {
@@ -124,11 +134,16 @@ describe('StatusBar', () => {
 
     render(<StatusBar gitEnabled={true} />)
 
-    const toggleButton = screen.getByRole('button', { name: /toggle auto-commit/i })
+    const toggleButton = screen.getByRole('button', {
+      name: /toggle auto-commit/i,
+    })
     fireEvent.click(toggleButton)
 
     await waitFor(() => {
-      expect(consoleSpy).toHaveBeenCalledWith('Failed to set auto-commit:', expect.any(Error))
+      expect(consoleSpy).toHaveBeenCalledWith(
+        'Failed to set auto-commit:',
+        expect.any(Error)
+      )
     })
 
     consoleSpy.mockRestore()
@@ -160,5 +175,88 @@ describe('StatusBar', () => {
 
     render(<StatusBar gitEnabled={true} />)
     expect(screen.getByText('Auto-commit: off')).toBeInTheDocument()
+  })
+
+  describe('project path display', () => {
+    it('does not show project path when no project is loaded', () => {
+      mockUseProjectStore.mockImplementation((selector) => {
+        const state = {
+          project: null,
+          setGitConfig: mockSetGitConfig,
+        }
+        return selector ? selector(state as never) : state
+      })
+
+      render(<StatusBar />)
+      expect(screen.queryByText(/📁/)).not.toBeInTheDocument()
+    })
+
+    it('shows formatted project path when project is loaded', () => {
+      mockUseProjectStore.mockImplementation((selector) => {
+        const state = {
+          project: {
+            rootPath: '/home/user/projects/my-app',
+            gitConfig: { autoCommit: false },
+          },
+          setGitConfig: mockSetGitConfig,
+        }
+        return selector ? selector(state as never) : state
+      })
+
+      render(<StatusBar />)
+      expect(screen.getByText('projects/my-app')).toBeInTheDocument()
+    })
+
+    it('shows full path as title attribute', () => {
+      const fullPath = '/home/user/projects/my-app'
+      mockUseProjectStore.mockImplementation((selector) => {
+        const state = {
+          project: {
+            rootPath: fullPath,
+            gitConfig: { autoCommit: false },
+          },
+          setGitConfig: mockSetGitConfig,
+        }
+        return selector ? selector(state as never) : state
+      })
+
+      render(<StatusBar />)
+      // The title is on the span that contains both the folder icon and path text
+      const pathContainer = screen.getByTitle(fullPath)
+      expect(pathContainer).toBeInTheDocument()
+      expect(pathContainer).toHaveTextContent('projects/my-app')
+    })
+
+    it('handles single-level paths', () => {
+      mockUseProjectStore.mockImplementation((selector) => {
+        const state = {
+          project: {
+            rootPath: '/root-folder',
+            gitConfig: { autoCommit: false },
+          },
+          setGitConfig: mockSetGitConfig,
+        }
+        return selector ? selector(state as never) : state
+      })
+
+      render(<StatusBar />)
+      expect(screen.getByText('root-folder')).toBeInTheDocument()
+    })
+
+    it('handles Windows-style paths', () => {
+      mockUseProjectStore.mockImplementation((selector) => {
+        const state = {
+          project: {
+            rootPath: 'C:\\Users\\dev\\projects\\my-app',
+            gitConfig: { autoCommit: false },
+          },
+          setGitConfig: mockSetGitConfig,
+        }
+        return selector ? selector(state as never) : state
+      })
+
+      render(<StatusBar />)
+      expect(screen.getByText('projects/my-app')).toBeInTheDocument()
+    })
   })
 })
