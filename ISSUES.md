@@ -65,25 +65,29 @@ The display should show the parent folder that the project is in. Currently ther
 
 ### Issue 4: Context menu actions non-functional
 
-**Status:** 🔄 In Progress
+**Status:** ✅ Complete
 
-- [ ] **4.1** Fix "New File" context menu action
-- [ ] **4.2** Fix "New Folder" context menu action
-- [ ] **4.3** Fix "Rename" context menu action
+- [x] **4.1** Fix "New File" context menu action
+- [x] **4.2** Fix "New Folder" context menu action
+- [x] **4.3** Fix "Rename" context menu action
 
 Right-clicking on a folder brings up a context menu with New File, New Folder, Rename, Delete. Only Delete works; the other three options do nothing when clicked.
+
+**Solution:** The browser's native `prompt()` function doesn't work reliably in Electron's renderer process. Created a new `InputDialog` component (`src/renderer/components/common/InputDialog.tsx`) that provides a proper modal dialog for text input. Updated `FileBrowser.tsx` to use `InputDialog` for New File, New Folder, and Rename operations instead of `prompt()`.
 
 ---
 
 ### Issue 5: File browser toolbar buttons non-functional
 
-**Status:** ⬜ Open
+**Status:** ✅ Complete
 
-- [ ] **5.1** Fix "New File" toolbar button
-- [ ] **5.2** Fix "New Folder" toolbar button
+- [x] **5.1** Fix "New File" toolbar button
+- [x] **5.2** Fix "New Folder" toolbar button
 - [ ] **5.3** Clarify or fix unclear icon (rectangle with horizontal line)
 
 The four icons at the top right of the files pane appear to be for: new file, new folder, unclear function (rectangle with horizontal line), and refresh. Only Refresh works.
+
+**Solution:** The New File and New Folder toolbar buttons share the same code path as the context menu actions. They were fixed by the same `InputDialog` component solution from Issue 4. Task 5.3 remains open for a future review of the toolbar icons.
 
 ---
 
@@ -91,7 +95,7 @@ The four icons at the top right of the files pane appear to be for: new file, ne
 
 ### Issue 6: Incorrect Claude connection status
 
-**Status:** ⬜ Open
+**Status:** 🔄 In Progress
 
 - [ ] **6.1** Fix Claude connection status indicator logic
 
@@ -164,8 +168,8 @@ const divider = window.locator('[role="separator"]').first()
 | 1 | No conversation state persistence | ✅ Complete |
 | 2 | Cannot create new folders in project wizard | ✅ Complete |
 | 3 | Project location not visible in UI | ✅ Complete |
-| 4 | Context menu actions non-functional | 🔄 In Progress |
-| 5 | File browser toolbar buttons non-functional | ⬜ Open |
-| 6 | Incorrect Claude connection status | ⬜ Open |
+| 4 | Context menu actions non-functional | ✅ Complete |
+| 5 | File browser toolbar buttons non-functional | ✅ Complete |
+| 6 | Incorrect Claude connection status | 🔄 In Progress |
 | 7 | Settings E2E tests flaky (9 tests) | ⬜ Open |
 | 8 | Resize cursor E2E test wrong selector (1 test) | ⬜ Open |

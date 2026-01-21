@@ -1,4 +1,8 @@
-import type { MouseEvent as ReactMouseEvent, ReactElement, KeyboardEvent } from 'react'
+import type {
+  MouseEvent as ReactMouseEvent,
+  ReactElement,
+  KeyboardEvent,
+} from 'react'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import type { FileNode } from '../../../shared/types/file'
 
@@ -15,7 +19,7 @@ import { useFileStore } from '../../stores/fileStore'
 import { FileTree } from './FileTree'
 import { FileBrowserToolbar } from './FileBrowserToolbar'
 import { useFileWatcher } from './hooks/useFileWatcher'
-import { ContextMenu, type ContextMenuItem } from '../common'
+import { ContextMenu, type ContextMenuItem, InputDialog } from '../common'
 import styles from './file-browser.module.css'
 
 interface FileBrowserProps {
@@ -26,6 +30,14 @@ interface ContextMenuState {
   x: number
   y: number
   node: FileNode
+}
+
+type InputDialogMode = 'newFile' | 'newFolder' | 'rename' | null
+
+interface InputDialogState {
+  mode: InputDialogMode
+  parentPath: string
+  nodeToRename: FileNode | null
 }
 
 export function FileBrowser({ onOpenFile }: FileBrowserProps): ReactElement {
@@ -45,6 +57,11 @@ export function FileBrowser({ onOpenFile }: FileBrowserProps): ReactElement {
   } = useFileStore()
 
   const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null)
+  const [inputDialog, setInputDialog] = useState<InputDialogState>({
+    mode: null,
+    parentPath: '',
+    nodeToRename: null,
+  })
 
   // Enable file watching for real-time updates
   useFileWatcher()
@@ -88,59 +105,76 @@ export function FileBrowser({ onOpenFile }: FileBrowserProps): ReactElement {
     [selectFile, onOpenFile]
   )
 
-  const handleCreateFile = useCallback(
-    async (parentPath: string) => {
-      const fileName = prompt('Enter file name:')
-      if (!fileName) return
+  // Open dialog for creating a new file
+  const openNewFileDialog = useCallback((parentPath: string) => {
+    setInputDialog({
+      mode: 'newFile',
+      parentPath,
+      nodeToRename: null,
+    })
+  }, [])
 
-      const filePath = pathJoin(parentPath, fileName)
+  // Open dialog for creating a new folder
+  const openNewFolderDialog = useCallback((parentPath: string) => {
+    setInputDialog({
+      mode: 'newFolder',
+      parentPath,
+      nodeToRename: null,
+    })
+  }, [])
+
+  // Open dialog for renaming a file or folder
+  const openRenameDialog = useCallback((node: FileNode) => {
+    setInputDialog({
+      mode: 'rename',
+      parentPath: pathDirname(node.path),
+      nodeToRename: node,
+    })
+  }, [])
+
+  // Close the input dialog
+  const closeInputDialog = useCallback(() => {
+    setInputDialog({
+      mode: null,
+      parentPath: '',
+      nodeToRename: null,
+    })
+  }, [])
+
+  // Handle dialog submission
+  const handleInputDialogSubmit = useCallback(
+    async (value: string) => {
+      const { mode, parentPath, nodeToRename } = inputDialog
+
       try {
-        await window.api.file.create(filePath)
-        await refreshTree()
-        selectFile(filePath)
-        onOpenFile?.(filePath)
-      } catch (err) {
-        console.error('Failed to create file:', err)
-      }
-    },
-    [refreshTree, selectFile, onOpenFile]
-  )
-
-  const handleCreateFolder = useCallback(
-    async (parentPath: string) => {
-      const folderName = prompt('Enter folder name:')
-      if (!folderName) return
-
-      const folderPath = pathJoin(parentPath, folderName)
-      try {
-        await window.api.dir.create(folderPath)
-        await refreshTree()
-      } catch (err) {
-        console.error('Failed to create folder:', err)
-      }
-    },
-    [refreshTree]
-  )
-
-  const handleRename = useCallback(
-    async (node: FileNode) => {
-      const newName = prompt('Enter new name:', node.name)
-      if (!newName || newName === node.name) return
-
-      const parentDir = pathDirname(node.path)
-      const newPath = pathJoin(parentDir, newName)
-      try {
-        await window.api.file.rename(node.path, newPath)
-        await refreshTree()
-        if (node.type === 'file') {
-          selectFile(newPath)
-          onOpenFile?.(newPath)
+        if (mode === 'newFile') {
+          const filePath = pathJoin(parentPath, value)
+          await window.api.file.create(filePath)
+          await refreshTree()
+          selectFile(filePath)
+          onOpenFile?.(filePath)
+        } else if (mode === 'newFolder') {
+          const folderPath = pathJoin(parentPath, value)
+          await window.api.dir.create(folderPath)
+          await refreshTree()
+        } else if (mode === 'rename' && nodeToRename) {
+          if (value !== nodeToRename.name) {
+            const newPath = pathJoin(parentPath, value)
+            await window.api.file.rename(nodeToRename.path, newPath)
+            await refreshTree()
+            if (nodeToRename.type === 'file') {
+              selectFile(newPath)
+              onOpenFile?.(newPath)
+            }
+          }
         }
       } catch (err) {
-        console.error('Failed to rename:', err)
+        console.error(`Failed to ${mode}:`, err)
       }
+
+      closeInputDialog()
     },
-    [refreshTree, selectFile, onOpenFile]
+    [inputDialog, refreshTree, selectFile, onOpenFile, closeInputDialog]
   )
 
   const handleDelete = useCallback(
@@ -163,14 +197,14 @@ export function FileBrowser({ onOpenFile }: FileBrowserProps): ReactElement {
   const handleNewFile = useCallback(() => {
     if (!rootPath) return
     const targetDir = selectedPath ? pathDirname(selectedPath) : rootPath
-    void handleCreateFile(targetDir)
-  }, [rootPath, selectedPath, handleCreateFile])
+    openNewFileDialog(targetDir)
+  }, [rootPath, selectedPath, openNewFileDialog])
 
   const handleNewFolder = useCallback(() => {
     if (!rootPath) return
     const targetDir = selectedPath ? pathDirname(selectedPath) : rootPath
-    void handleCreateFolder(targetDir)
-  }, [rootPath, selectedPath, handleCreateFolder])
+    openNewFolderDialog(targetDir)
+  }, [rootPath, selectedPath, openNewFolderDialog])
 
   const getContextMenuItems = useCallback(
     (node: FileNode): ContextMenuItem[] => {
@@ -188,7 +222,7 @@ export function FileBrowser({ onOpenFile }: FileBrowserProps): ReactElement {
             label: 'Rename',
             icon: '✏️',
             shortcut: 'F2',
-            handler: () => void handleRename(node),
+            handler: () => openRenameDialog(node),
           },
           {
             id: 'delete',
@@ -206,13 +240,13 @@ export function FileBrowser({ onOpenFile }: FileBrowserProps): ReactElement {
           id: 'newFile',
           label: 'New File',
           icon: '📄',
-          handler: () => void handleCreateFile(node.path),
+          handler: () => openNewFileDialog(node.path),
         },
         {
           id: 'newFolder',
           label: 'New Folder',
           icon: '📁',
-          handler: () => void handleCreateFolder(node.path),
+          handler: () => openNewFolderDialog(node.path),
         },
         { id: 'sep1', separator: true },
         {
@@ -220,7 +254,7 @@ export function FileBrowser({ onOpenFile }: FileBrowserProps): ReactElement {
           label: 'Rename',
           icon: '✏️',
           shortcut: 'F2',
-          handler: () => void handleRename(node),
+          handler: () => openRenameDialog(node),
         },
         {
           id: 'delete',
@@ -231,7 +265,13 @@ export function FileBrowser({ onOpenFile }: FileBrowserProps): ReactElement {
         },
       ]
     },
-    [handleOpenFile, handleRename, handleDelete, handleCreateFile, handleCreateFolder]
+    [
+      handleOpenFile,
+      openRenameDialog,
+      handleDelete,
+      openNewFileDialog,
+      openNewFolderDialog,
+    ]
   )
 
   // Keyboard navigation
@@ -243,7 +283,11 @@ export function FileBrowser({ onOpenFile }: FileBrowserProps): ReactElement {
         const result: FileNode[] = []
         const traverse = (n: FileNode): void => {
           result.push(n)
-          if (n.type === 'directory' && expandedPaths.has(n.path) && n.children) {
+          if (
+            n.type === 'directory' &&
+            expandedPaths.has(n.path) &&
+            n.children
+          ) {
             n.children.forEach(traverse)
           }
         }
@@ -281,11 +325,17 @@ export function FileBrowser({ onOpenFile }: FileBrowserProps): ReactElement {
           event.preventDefault()
           const currentNode = flatNodes[currentIndex]
           if (currentNode) {
-            if (currentNode.type === 'directory' && expandedPaths.has(currentNode.path)) {
+            if (
+              currentNode.type === 'directory' &&
+              expandedPaths.has(currentNode.path)
+            ) {
               toggleExpanded(currentNode.path)
             } else {
               // Go to parent
-              const parentPath = currentNode.path.substring(0, currentNode.path.lastIndexOf('/'))
+              const parentPath = currentNode.path.substring(
+                0,
+                currentNode.path.lastIndexOf('/')
+              )
               const parentNode = flatNodes.find((n) => n.path === parentPath)
               if (parentNode) {
                 selectFile(parentNode.path)
@@ -300,7 +350,10 @@ export function FileBrowser({ onOpenFile }: FileBrowserProps): ReactElement {
           if (currentNode?.type === 'directory') {
             if (!expandedPaths.has(currentNode.path)) {
               toggleExpanded(currentNode.path)
-            } else if (currentNode.children && currentNode.children.length > 0) {
+            } else if (
+              currentNode.children &&
+              currentNode.children.length > 0
+            ) {
               const firstChild = currentNode.children[0]
               if (firstChild) {
                 selectFile(firstChild.path)
@@ -366,9 +419,7 @@ export function FileBrowser({ onOpenFile }: FileBrowserProps): ReactElement {
             <span className={styles.hint}>Open a project to see files</span>
           </div>
         )}
-        {isLoading && !tree && (
-          <div className={styles.loading}>Loading...</div>
-        )}
+        {isLoading && !tree && <div className={styles.loading}>Loading...</div>}
         {tree && (
           <FileTree
             root={tree}
@@ -390,6 +441,31 @@ export function FileBrowser({ onOpenFile }: FileBrowserProps): ReactElement {
           onClose={closeContextMenu}
         />
       )}
+      <InputDialog
+        isOpen={inputDialog.mode === 'newFile'}
+        title="New File"
+        label="Enter file name:"
+        placeholder="filename.txt"
+        onSubmit={handleInputDialogSubmit}
+        onCancel={closeInputDialog}
+      />
+      <InputDialog
+        isOpen={inputDialog.mode === 'newFolder'}
+        title="New Folder"
+        label="Enter folder name:"
+        placeholder="folder-name"
+        onSubmit={handleInputDialogSubmit}
+        onCancel={closeInputDialog}
+      />
+      <InputDialog
+        isOpen={inputDialog.mode === 'rename'}
+        title="Rename"
+        label="Enter new name:"
+        defaultValue={inputDialog.nodeToRename?.name ?? ''}
+        submitLabel="Rename"
+        onSubmit={handleInputDialogSubmit}
+        onCancel={closeInputDialog}
+      />
     </div>
   )
 }
