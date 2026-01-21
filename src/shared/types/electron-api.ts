@@ -68,6 +68,33 @@ export interface ElectronAPI {
     getDefaultPath(): Promise<string>
     setCustomPath(path: string | null): Promise<void>
   }
+
+  updater: {
+    check(): Promise<UpdateStatus>
+    download(): Promise<void>
+    install(): Promise<void>
+    getStatus(): Promise<UpdateStatus>
+    onStatus(callback: (status: UpdateStatus) => void): () => void
+  }
+}
+
+/**
+ * Status of the auto-updater
+ */
+export interface UpdateStatus {
+  status: 'idle' | 'checking' | 'available' | 'not-available' | 'downloading' | 'downloaded' | 'error'
+  updateInfo?: {
+    version: string
+    releaseDate: string
+    releaseNotes?: string | null
+  }
+  progress?: {
+    percent: number
+    bytesPerSecond: number
+    total: number
+    transferred: number
+  }
+  error?: string
 }
 
 declare global {

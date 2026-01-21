@@ -83,6 +83,25 @@ const api: ElectronAPI = {
     getDefaultPath: () => ipcRenderer.invoke('template:getDefaultPath'),
     setCustomPath: (path: string | null) => ipcRenderer.invoke('template:setCustomPath', path),
   },
+
+  updater: {
+    check: () => ipcRenderer.invoke('updater:check'),
+    download: () => ipcRenderer.invoke('updater:download'),
+    install: () => ipcRenderer.invoke('updater:install'),
+    getStatus: () => ipcRenderer.invoke('updater:status'),
+    onStatus: (callback) => {
+      const listener = (
+        _event: Electron.IpcRendererEvent,
+        status: Parameters<typeof callback>[0]
+      ): void => {
+        callback(status)
+      }
+      ipcRenderer.on('updater:status', listener)
+      return () => {
+        ipcRenderer.removeListener('updater:status', listener)
+      }
+    },
+  },
 }
 
 contextBridge.exposeInMainWorld('api', api)

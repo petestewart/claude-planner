@@ -14,9 +14,14 @@
     "format": "prettier --write \"src/**/*.{ts,tsx,css}\"",
     "test": "jest",
     "test:watch": "jest --watch",
-    "package:mac": "electron-builder --mac",
-    "package:win": "electron-builder --win",
-    "package:linux": "electron-builder --linux"
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:debug": "playwright test --debug",
+    "test:e2e:ci": "xvfb-run --auto-servernum -- playwright test",
+    "package:mac": "electron-builder --mac --config electron-builder.config.mjs",
+    "package:win": "electron-builder --win --config electron-builder.config.mjs",
+    "package:linux": "electron-builder --linux --config electron-builder.config.mjs",
+    "icons": "bash scripts/generate-icons.sh"
   },
   "keywords": [
     "electron",
@@ -29,6 +34,7 @@
   "license": "MIT",
   "devDependencies": {
     "@eslint/js": "^9.39.2",
+    "@playwright/test": "^1.57.0",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@types/handlebars": "^4.0.40",
@@ -48,6 +54,7 @@
     "identity-obj-proxy": "^3.0.0",
     "jest": "^30.2.0",
     "jest-environment-jsdom": "^30.2.0",
+    "playwright-core": "^1.57.0",
     "prettier": "^3.8.0",
     "ts-jest": "^29.4.6",
     "typescript": "^5.9.3",
@@ -82,6 +89,7 @@
     "@milkdown/utils": "^7.18.0",
     "@types/prismjs": "^1.26.5",
     "chokidar": "^5.0.0",
+    "electron-updater": "^6.7.3",
     "handlebars": "^4.7.8",
     "prismjs": "^1.30.0",
     "react": "^19.2.3",

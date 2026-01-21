@@ -6,8 +6,10 @@ import { registerProjectHandlers } from './ipc/projectHandlers'
 import { registerTemplateHandlers } from './ipc/templateHandlers'
 import { registerGitHandlers } from './ipc/gitHandlers'
 import { createApplicationMenu } from './menu'
+import { createUpdaterService, UpdaterService } from './services/updater'
 
 let mainWindow: BrowserWindow | null = null
+let updaterService: UpdaterService | null = null
 
 // Handle uncaught exceptions in main process
 process.on('uncaughtException', (error) => {
@@ -76,6 +78,19 @@ app.whenReady().then(() => {
   // Set up application menu
   const menu = createApplicationMenu(mainWindow)
   Menu.setApplicationMenu(menu)
+
+  // Initialize auto-updater (only in production)
+  if (!process.env['VITE_DEV_SERVER_URL']) {
+    updaterService = createUpdaterService({
+      autoDownload: false, // Ask user before downloading
+      autoInstallOnAppQuit: true,
+      checkOnStartup: true,
+      checkInterval: 3600000, // Check every hour
+    })
+    if (mainWindow) {
+      updaterService.initialize(mainWindow)
+    }
+  }
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
