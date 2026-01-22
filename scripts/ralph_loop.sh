@@ -1,26 +1,41 @@
 #!/bin/bash
 
-while grep -q '\- \[ \]' PLAN.md; do
+PLAN_FILE="ISSUES.md"
+
+while grep -q '\- \[ \]' "$PLAN_FILE"; do
   echo "=== Running next task ==="
 
-  # NOTE: `claude -p` defaults to --output-format=text which is *final-only* (no streaming).
-  # For streaming output, use stream-json + partial messages and render deltas as they arrive.
   if command -v jq >/dev/null 2>&1; then
-    # `--verbose` is required for --output-format=stream-json when using --print.
     claude -p "$(cat prompt.md)" \
       --output-format=stream-json \
       --include-partial-messages \
       --verbose \
       --dangerously-skip-permissions \
-      | jq -rj 'select(.type=="stream_event" and .event.type=="content_block_delta" and .event.delta.type=="text_delta") | .event.delta.text'
+      | jq -rj '
+        if .type == "stream_event" then
+          if .event.type == "content_block_start" and .event.content_block.type == "text" then
+            "\u001b[97m🤖 "
+          elif .event.type == "content_block_delta" and .event.delta.type == "text_delta" then
+            .event.delta.text
+          elif .event.type == "content_block_stop" then
+            "\u001b[0m\n"
+          else empty end
+        elif .type == "user" and .tool_use_result then
+          "\u001b[90m➜ " + ((.tool_use_result.stdout // .content // "result") | tostring)[0:200] + "\u001b[0m\n"
+        elif .type == "assistant" and .message.usage then
+          "\u001b[90m   [" + (((.message.usage.input_tokens // 0) + (.message.usage.cache_read_input_tokens // 0) + (.message.usage.cache_creation_input_tokens // 0)) | tostring) + " tokens]\u001b[0m\n"
+        else empty end
+      '
     exit_code=${PIPESTATUS[0]}
     echo ""
   else
-    stdbuf -oL -eL claude -p "$(cat prompt.md)" --dangerously-skip-permissions
+    stdbuf -oL -eL claude -p "$(cat prompt.md)" --output-format=stream-json \
+      --include-partial-messages \
+      --verbose \
+      --dangerously-skip-permissions
     exit_code=$?
   fi
 
-  # Check if claude exited with an error (could be API limit)
   if [ $exit_code -ne 0 ]; then
     echo ""
     echo "Claude exited with error (exit code: $exit_code). Waiting 15 minutes before retry..."
